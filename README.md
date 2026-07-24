@@ -1,5 +1,7 @@
 # FPTR Joint Beam and Resource Scheduler
 
+**English** | [简体中文](README.zh-CN.md)
+
 This is the code-only public release of **FPTR (Feasibility-Preserving Transactional Refinement)** for deadline-constrained joint beam and resource allocation.
 
 The manuscript, compiled papers, third-party literature PDFs, and sealed experimental artifacts are intentionally excluded from this repository.
