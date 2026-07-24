@@ -4,7 +4,7 @@
 
 这是 **FPTR（Feasibility-Preserving Transactional Refinement，可行性保持事务式细化）** 面向截止时间约束联合波束与资源分配的纯代码公开版本。
 
-本仓库有意不包含论文正文、编译后的论文、第三方文献 PDF 和封存实验工件。
+本仓库仍不公开论文正文、编译后的论文、第三方文献 PDF 和封存实验工件；此次公开范围仅新增下方四张经确认的说明性论文图件。
 
 ## 方法概览
 
@@ -18,6 +18,32 @@
 4. `CG`：兼容组约束下的合法多用户共享；
 5. `Remask`：基于剩余需求的波束掩码修复；
 6. `Full`：在上述阶段之后执行双资源 ruin-and-recreate。
+
+## 图示概览
+
+### 问题场景与约束耦合
+
+资源容量、用户需求、波束掩码、兼容组、链路自适应和截止时间共同构成紧密耦合的调度问题。
+
+![FPTR 问题场景与约束耦合](docs/images/scenario_constraint_coupling.png)
+
+### 可行性保持发布路径
+
+每个有界细化阶段都在私有状态中构造候选解，并通过统一的提交或丢弃规则保护 incumbent，从而形成随时可发布的可行解路径。
+
+![FPTR 可行性保持发布路径](docs/images/fptr_release_path.png)
+
+### 质量与运行时间
+
+主实验概括了累积细化如何在在线运行时间预算内提升资源分配质量。
+
+![FPTR 质量与运行时间结果](docs/images/results_quality_runtime.png)
+
+### 压力测试与最优性校准
+
+压力场景用于检验截止时间鲁棒性，小规模精确求解则用于校准相对于最优解的质量表现。
+
+![FPTR 压力测试与最优性结果](docs/images/results_stress_optimality.png)
 
 ## 仓库结构
 

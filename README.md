@@ -4,7 +4,7 @@
 
 This is the code-only public release of **FPTR (Feasibility-Preserving Transactional Refinement)** for deadline-constrained joint beam and resource allocation.
 
-The manuscript, compiled papers, third-party literature PDFs, and sealed experimental artifacts are intentionally excluded from this repository.
+The manuscript text, compiled papers, third-party literature PDFs, and sealed experimental artifacts remain excluded from this repository. This public release includes only the source tree, project documentation, and the four approved explanatory figures below.
 
 ## Method overview
 
@@ -18,6 +18,32 @@ The cumulative stages are:
 4. `CG`: compatibility-group-aware legal sharing;
 5. `Remask`: residual-demand mask repair;
 6. `Full`: two-resource ruin-and-recreate after all preceding stages.
+
+## Visual overview
+
+### Problem scenario and coupled constraints
+
+Resource capacities, user demands, beam masks, compatibility groups, link adaptation, and deadlines form a tightly coupled scheduling problem.
+
+![FPTR problem scenario and coupled constraints](docs/images/scenario_constraint_coupling.png)
+
+### Feasibility-preserving release path
+
+Each bounded refinement stage constructs a private candidate. A shared commit-or-discard rule protects the incumbent and provides an anytime-feasible release path.
+
+![FPTR feasibility-preserving release path](docs/images/fptr_release_path.png)
+
+### Quality and runtime
+
+The main evaluation summarizes how cumulative refinement improves allocation quality under the online runtime budget.
+
+![FPTR quality and runtime results](docs/images/results_quality_runtime.png)
+
+### Stress tests and optimality calibration
+
+Stress scenarios evaluate deadline robustness, while exact small-instance comparisons calibrate solution quality against the optimum.
+
+![FPTR stress-test and optimality results](docs/images/results_stress_optimality.png)
 
 ## Repository layout
 
