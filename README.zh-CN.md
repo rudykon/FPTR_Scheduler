@@ -1,85 +1,142 @@
-# FPTR 联合波束与资源调度器
+<p align="center">
+  <a href="README.md">English</a> · <strong>简体中文</strong>
+</p>
 
-[English](README.md) | **简体中文**
+<h1 align="center">FPTR 联合波束与资源调度器</h1>
 
-这是 **FPTR（Feasibility-Preserving Transactional Refinement，可行性保持事务式细化）** 面向截止时间约束联合波束与资源分配的纯代码公开版本。
+<p align="center">
+  <strong>面向截止时间约束无线调度的可行性保持事务式细化方法</strong><br>
+  一套仅包含代码的 C++17/Python 公开版本，覆盖联合波束规划、资源分配、验证、实验与图件生成。
+</p>
 
-本仓库仍不公开论文正文、编译后的论文、第三方文献 PDF 和封存实验工件；此次公开范围仅新增下方四张经确认的说明性论文图件。
+<p align="center">
+  <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="C++17"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3"></a>
+  <a href="#validation"><img src="https://img.shields.io/badge/Validation-unittest%20%2B%20validator-2CA02C?style=flat-square" alt="单元测试与验证器"></a>
+  <a href="#public-release-boundary"><img src="https://img.shields.io/badge/Release-code--only-F28E2B?style=flat-square" alt="仅代码公开版本"></a>
+</p>
 
-## 方法概览
+<p align="center">
+  <a href="#overview">项目概览</a> ·
+  <a href="#method">方法</a> ·
+  <a href="#visual-summary">图示</a> ·
+  <a href="#quick-start">快速开始</a> ·
+  <a href="#experiments">实验</a> ·
+  <a href="#repository-map">项目结构</a> ·
+  <a href="#public-release-boundary">公开边界</a>
+</p>
 
-单线程 C++17 调度器持续保留一个可行 incumbent，同时由有界细化阶段在私有状态中构造候选解。候选解只有在完整、及时、结构合法且严格提升目标值时才会整体提交；否则直接丢弃，原 incumbent 保持不变。
+> [!IMPORTANT]
+> 本仓库是公开代码版本，刻意不包含论文正文、编译后的论文文件、第三方文献 PDF、封存实验工件和本地生成产物。
 
-累积阶段包括：
+<a id="overview"></a>
+## 项目概览
 
-1. `BeamFirst`：独立的聚合波束掩码参考方法；
-2. `Base`：基于多样化掩码的可行解构造；
-3. `Global`：面向缓存的边际收益重定价；
-4. `CG`：兼容组约束下的合法多用户共享；
-5. `Remask`：基于剩余需求的波束掩码修复；
-6. `Full`：在上述阶段之后执行双资源 ruin-and-recreate。
+FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务式细化）的缩写，是面向截止时间约束联合波束与资源分配的单线程启发式调度器。它始终保留一个可发布的可行 incumbent，在私有状态中构造每个细化候选，并且只有当候选解完整、及时、结构合法且严格提升传输量时才提交。
 
+| 目标 | 实现方式 | 公开证据路径 |
+| --- | --- | --- |
+| 在紧截止时间内返回合法分配 | 空分配兜底 + 随时可发布的可行 incumbent | 独立 Python 解析器、验证器和目标值重算 |
+| 在耦合约束下提升传输量 | 从 `Base` 到 `Full` 的累积 FPTR 阶段 | 阶段轨迹与可复现合成实验框架 |
+| 在不公开封存文件的情况下保持可审计 | 显式输出到被忽略的本地目录 | 单元测试、快速集成运行和图件生成脚本 |
+
+调度器从标准输入读取一个分配实例，并将分配结果写入标准输出。可选轨迹写入标准错误，因此诊断信息不会改变解的输出格式。
+
+<a id="method"></a>
+## 方法
+
+资源容量、用户缓存、波束掩码、兼容组、链路自适应和截止时间彼此耦合。FPTR 通过以下累积阶段处理这种耦合：
+
+| 阶段 | 作用 |
+| --- | --- |
+| `BeamFirst` | 独立聚合波束掩码参考方法 |
+| `Base` | 基于多样化掩码的可行解构造 |
+| `Global` | 面向缓存的边际收益重定价 |
+| `CG` | 兼容组约束下的合法多用户共享 |
+| `Remask` | 基于剩余需求的掩码修复 |
+| `Full` | 在前述阶段之后执行双资源 ruin-and-recreate |
+
+各阶段共享同一提交规则：被拒绝、超时、不完整或不可行的候选解不能修改 incumbent。
+
+<a id="visual-summary"></a>
 ## 图示概览
 
-### 问题场景与约束耦合
+<p align="center">
+  <a href="docs/images/scenario_constraint_coupling.png">
+    <img src="docs/images/scenario_constraint_coupling.png" alt="FPTR 问题场景与约束耦合" width="92%">
+  </a>
+</p>
+<p align="center"><em>图 1｜资源容量、用户需求、掩码、共享组、链路自适应和截止时间共同定义耦合调度实例。</em></p>
 
-资源容量、用户需求、波束掩码、兼容组、链路自适应和截止时间共同构成紧密耦合的调度问题。
+<p align="center">
+  <a href="docs/images/fptr_release_path.png">
+    <img src="docs/images/fptr_release_path.png" alt="FPTR 可行性保持发布路径" width="92%">
+  </a>
+</p>
+<p align="center"><em>图 2｜每个有界细化阶段都构造私有候选解，并且只能通过提交或丢弃验证进入 incumbent。</em></p>
 
-![FPTR 问题场景与约束耦合](docs/images/scenario_constraint_coupling.png)
+<details>
+<summary><strong>展开结果与压力测试图</strong></summary>
+<br>
 
-### 可行性保持发布路径
+<p align="center">
+  <a href="docs/images/results_quality_runtime.png">
+    <img src="docs/images/results_quality_runtime.png" alt="FPTR 质量与运行时间结果" width="92%">
+  </a>
+</p>
+<p align="center"><em>图 3｜累积细化在在线运行时间预算内提升分配质量。</em></p>
 
-每个有界细化阶段都在私有状态中构造候选解，并通过统一的提交或丢弃规则保护 incumbent，从而形成随时可发布的可行解路径。
+<p align="center">
+  <a href="docs/images/results_stress_optimality.png">
+    <img src="docs/images/results_stress_optimality.png" alt="FPTR 压力测试与最优性结果" width="92%">
+  </a>
+</p>
+<p align="center"><em>图 4｜压力测试检验截止时间鲁棒性，小规模精确比较用于校准相对最优解的质量。</em></p>
 
-![FPTR 可行性保持发布路径](docs/images/fptr_release_path.png)
+</details>
 
-### 质量与运行时间
-
-主实验概括了累积细化如何在在线运行时间预算内提升资源分配质量。
-
-![FPTR 质量与运行时间结果](docs/images/results_quality_runtime.png)
-
-### 压力测试与最优性校准
-
-压力场景用于检验截止时间鲁棒性，小规模精确求解则用于校准相对于最优解的质量表现。
-
-![FPTR 压力测试与最优性结果](docs/images/results_stress_optimality.png)
-
-## 仓库结构
-
-- `src/`：C++17 调度器实现及各阶段封装；
-- `experiments/`：实例生成、实验编排、分析与绘图代码；
-- `tools/scheduler_validator.py`：独立解析器、可行性验证器和目标值重算工具；
-- `tools/audit_exact_suite.py`：针对外部结果工件的独立精确审计流程；
-- `tools/check_paper_release.py`：为可复现工作流保留的发布检查工具；
-- `tests/`：验证器、模型契约、调度器和工具回归测试；
-- `PROJECT_OVERVIEW.md`：模型、算法和组件概览。
-
-## 编译调度器
+<a id="quick-start"></a>
+## 快速开始
 
 ```bash
+git clone https://github.com/rudykon/FPTR_Scheduler.git
+cd FPTR_Scheduler
+
 g++ -std=c++17 -O2 src/scheduler.cpp src/core.cpp -o scheduler
+./scheduler --help
 ```
 
-可执行文件从标准输入读取一个调度实例。例如，选择完整累积阶段和 87 ms 时间预算：
+对单个实例运行完整累积调度器：
 
 ```bash
 ./scheduler --stage full --budget-ms 87 < instance.in
 ```
 
-加入 `--trace` 可将阶段诊断写入标准错误，同时不改变标准输出中的分配结果。
+加入 `--trace` 可查看累积阶段轨迹，同时不改变写入标准输出的分配结果：
 
-## 运行测试
+```bash
+./scheduler --stage full --budget-ms 87 --trace < instance.in > allocation.out
+```
+
+<a id="validation"></a>
+## 验证
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-测试会在临时目录中编译调度器，并检查输入契约、可行性约束、链路自适应、兼容组共享、累积阶段轨迹和发布检查辅助函数。
+测试会在临时目录中编译 C++ 调度器，并检查解析器、可行性规则、链路自适应、兼容组共享、累积阶段轨迹、精确审计辅助函数和发布检查工具。
 
-## 运行实验
+如需独立验证已生成的分配结果，可使用：
 
-部分实验脚本保留了历史 `paper/...` 默认路径。由于公共仓库不包含论文工件，请显式指定输出路径。
+```bash
+python3 tools/scheduler_validator.py --help
+```
+
+<a id="experiments"></a>
+## 实验
+
+部分实验脚本保留了历史 `paper/...` 默认路径。由于本公开仓库不包含论文工件，请显式指定输出路径。
 
 快速集成运行：
 
@@ -89,7 +146,7 @@ python3 experiments/paper_experiments.py \
   --out /tmp/fptr-quick-results
 ```
 
-完整协议示例，结果写入已被 Git 忽略的本地目录：
+完整协议示例，结果写入被 Git 忽略的本地目录：
 
 ```bash
 python3 experiments/paper_experiments.py \
@@ -108,7 +165,7 @@ python3 experiments/paper_experiments.py \
   --out artifacts/results
 ```
 
-## 生成图件
+重新生成说明图与定量图：
 
 ```bash
 python3 -m pip install -r requirements-figures.txt
@@ -119,4 +176,37 @@ python3 experiments/plot_paper_results.py \
   --output-dir artifacts/figures
 ```
 
-生成的结果和图件建议放入 `artifacts/`；该目录默认被 Git 忽略。
+生成的结果和图件应放在 `artifacts/` 下，该目录已被 Git 忽略。
+
+<a id="repository-map"></a>
+## 项目结构
+
+| 路径 | 作用 |
+| --- | --- |
+| `src/` | C++17 调度器实现、共享模型和阶段入口 |
+| `tools/scheduler_validator.py` | 独立解析器、可行性验证器和目标值重算工具 |
+| `tools/audit_exact_suite.py` | 针对外部结果工件的独立精确审计流程 |
+| `tools/check_paper_release.py` | 为可复现工作流保留的发布检查工具 |
+| `experiments/` | 确定性实例生成、实验编排、分析与绘图 |
+| `tests/` | 验证器、模型契约、调度器和发布辅助工具回归测试 |
+| `docs/images/` | 用于公开 README 的已确认说明图与结果图 |
+| `PROJECT_OVERVIEW.md` | 模型、算法和组件概览 |
+
+<a id="public-release-boundary"></a>
+## 公开边界
+
+已包含：
+
+- C++17 调度器源码与阶段封装。
+- Python 验证、审计、实验和绘图代码。
+- 公开项目文档。
+- `docs/images/` 下四张已确认说明图/结果图。
+
+未包含：
+
+- 论文源码与编译后的论文文件。
+- 第三方文献 PDF。
+- 封存或私有评估工件。
+- 本地构建、生成实验输出和临时文件。
+
+性能结论应基于重新生成的工件或另行提供的封存证据进行评估。保留历史 `paper/...` 默认路径的脚本，在本代码公开版本中应显式指定输入/输出路径。

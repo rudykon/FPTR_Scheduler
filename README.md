@@ -1,85 +1,142 @@
-# FPTR Joint Beam and Resource Scheduler
+<p align="center">
+  <strong>English</strong> · <a href="README.zh-CN.md">简体中文</a>
+</p>
 
-**English** | [简体中文](README.zh-CN.md)
+<h1 align="center">FPTR Joint Beam and Resource Scheduler</h1>
 
-This is the code-only public release of **FPTR (Feasibility-Preserving Transactional Refinement)** for deadline-constrained joint beam and resource allocation.
+<p align="center">
+  <strong>Deadline-aware wireless scheduling with feasibility-preserving transactional refinement</strong><br>
+  A code-only C++17/Python release for joint beam planning, resource allocation, validation, experiments, and figure generation.
+</p>
 
-The manuscript text, compiled papers, third-party literature PDFs, and sealed experimental artifacts remain excluded from this repository. This public release includes only the source tree, project documentation, and the four approved explanatory figures below.
+<p align="center">
+  <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="C++17"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3"></a>
+  <a href="#validation"><img src="https://img.shields.io/badge/Validation-unittest%20%2B%20validator-2CA02C?style=flat-square" alt="Unit tests and validator"></a>
+  <a href="#public-release-boundary"><img src="https://img.shields.io/badge/Release-code--only-F28E2B?style=flat-square" alt="Code-only release"></a>
+</p>
 
-## Method overview
+<p align="center">
+  <a href="#overview">Overview</a> ·
+  <a href="#method">Method</a> ·
+  <a href="#visual-summary">Figures</a> ·
+  <a href="#quick-start">Quick Start</a> ·
+  <a href="#experiments">Experiments</a> ·
+  <a href="#repository-map">Repository</a> ·
+  <a href="#public-release-boundary">Release Boundary</a>
+</p>
 
-The single-threaded C++17 scheduler maintains a feasible incumbent while bounded refinement stages construct private candidates. A candidate is committed only when it is complete, timely, structurally valid, and strictly improves the objective; otherwise it is discarded without changing the incumbent.
+> [!IMPORTANT]
+> This repository is a public code release. It intentionally excludes manuscript text, compiled papers, third-party literature PDFs, sealed experimental artifacts, and local generated outputs.
 
-The cumulative stages are:
+<a id="overview"></a>
+## Overview
 
-1. `BeamFirst`: independent aggregate-mask reference;
-2. `Base`: diversified-mask feasible construction;
-3. `Global`: buffer-aware marginal repricing;
-4. `CG`: compatibility-group-aware legal sharing;
-5. `Remask`: residual-demand mask repair;
-6. `Full`: two-resource ruin-and-recreate after all preceding stages.
+FPTR, short for Feasibility-Preserving Transactional Refinement, is a single-threaded heuristic scheduler for deadline-constrained joint beam and resource allocation. It keeps a releasable feasible incumbent at all times, builds each refinement candidate in private state, and commits a candidate only when it is complete, timely, structurally valid, and strictly better in transmitted traffic.
 
-## Visual overview
+| Goal | Implementation | Public evidence path |
+| --- | --- | --- |
+| Return a legal allocation under tight deadlines | Empty-allocation fallback plus anytime feasible incumbent | Independent Python parser, validator, and score recomputation |
+| Improve transmitted traffic under coupled constraints | Cumulative FPTR stages from `Base` to `Full` | Stage traces and reproducible synthetic experiment harness |
+| Keep experiments auditable without sealed files | Explicit output paths under ignored local directories | Unit tests, quick integration run, and figure-generation scripts |
 
-### Problem scenario and coupled constraints
+The scheduler reads one allocation instance from standard input and writes the allocation contract to standard output. Optional traces go to standard error, so diagnostics do not change the solution format.
 
-Resource capacities, user demands, beam masks, compatibility groups, link adaptation, and deadlines form a tightly coupled scheduling problem.
+<a id="method"></a>
+## Method
 
-![FPTR problem scenario and coupled constraints](docs/images/scenario_constraint_coupling.png)
+Resource capacities, user buffers, beam masks, compatibility groups, link adaptation, and deadlines are coupled. FPTR handles that coupling through cumulative stages:
 
-### Feasibility-preserving release path
+| Stage | Role |
+| --- | --- |
+| `BeamFirst` | Independent aggregate-mask reference method |
+| `Base` | Diversified-mask feasible construction |
+| `Global` | Buffer-aware marginal repricing |
+| `CG` | Compatibility-group-aware legal sharing |
+| `Remask` | Residual-demand mask repair |
+| `Full` | Two-resource ruin-and-recreate after the preceding stages |
 
-Each bounded refinement stage constructs a private candidate. A shared commit-or-discard rule protects the incumbent and provides an anytime-feasible release path.
+Across stages, the commit rule is the same: rejected, expired, incomplete, or infeasible candidates cannot modify the incumbent.
 
-![FPTR feasibility-preserving release path](docs/images/fptr_release_path.png)
+<a id="visual-summary"></a>
+## Visual Summary
 
-### Quality and runtime
+<p align="center">
+  <a href="docs/images/scenario_constraint_coupling.png">
+    <img src="docs/images/scenario_constraint_coupling.png" alt="FPTR problem scenario and coupled constraints" width="92%">
+  </a>
+</p>
+<p align="center"><em>Figure 1 | Resource capacities, demands, masks, sharing groups, link adaptation, and deadlines define the coupled scheduling instance.</em></p>
 
-The main evaluation summarizes how cumulative refinement improves allocation quality under the online runtime budget.
+<p align="center">
+  <a href="docs/images/fptr_release_path.png">
+    <img src="docs/images/fptr_release_path.png" alt="FPTR feasibility-preserving release path" width="92%">
+  </a>
+</p>
+<p align="center"><em>Figure 2 | Each bounded refinement stage builds a private candidate and reaches the incumbent only through commit-or-discard validation.</em></p>
 
-![FPTR quality and runtime results](docs/images/results_quality_runtime.png)
+<details>
+<summary><strong>Open result and stress-test figures</strong></summary>
+<br>
 
-### Stress tests and optimality calibration
+<p align="center">
+  <a href="docs/images/results_quality_runtime.png">
+    <img src="docs/images/results_quality_runtime.png" alt="FPTR quality and runtime results" width="92%">
+  </a>
+</p>
+<p align="center"><em>Figure 3 | Cumulative refinement improves allocation quality under the online runtime budget.</em></p>
 
-Stress scenarios evaluate deadline robustness, while exact small-instance comparisons calibrate solution quality against the optimum.
+<p align="center">
+  <a href="docs/images/results_stress_optimality.png">
+    <img src="docs/images/results_stress_optimality.png" alt="FPTR stress-test and optimality results" width="92%">
+  </a>
+</p>
+<p align="center"><em>Figure 4 | Stress tests evaluate deadline robustness, while exact small-instance comparisons calibrate quality against optimum.</em></p>
 
-![FPTR stress-test and optimality results](docs/images/results_stress_optimality.png)
+</details>
 
-## Repository layout
-
-- `src/`: C++17 scheduler implementation and stage wrappers;
-- `experiments/`: instance generation, experiment orchestration, analysis, and plotting code;
-- `tools/scheduler_validator.py`: independent parser, feasibility validator, and objective recomputation;
-- `tools/audit_exact_suite.py`: independent exact-audit workflow for externally supplied result artifacts;
-- `tools/check_paper_release.py`: release-checking utility retained for reproducibility workflows;
-- `tests/`: validator, model-contract, scheduler, and utility regression tests;
-- `PROJECT_OVERVIEW.md`: model, algorithm, and component overview.
-
-## Build the scheduler
+<a id="quick-start"></a>
+## Quick Start
 
 ```bash
+git clone https://github.com/rudykon/FPTR_Scheduler.git
+cd FPTR_Scheduler
+
 g++ -std=c++17 -O2 src/scheduler.cpp src/core.cpp -o scheduler
+./scheduler --help
 ```
 
-The executable reads one scheduling instance from standard input. Select a cumulative stage and time budget with, for example:
+Run the full cumulative scheduler on one instance:
 
 ```bash
 ./scheduler --stage full --budget-ms 87 < instance.in
 ```
 
-Use `--trace` to write stage diagnostics to standard error without changing the allocation on standard output.
+Use `--trace` to inspect cumulative stages without changing the allocation written to standard output:
 
-## Run tests
+```bash
+./scheduler --stage full --budget-ms 87 --trace < instance.in > allocation.out
+```
+
+<a id="validation"></a>
+## Validation
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-The tests compile the scheduler in a temporary directory and validate the input contract, feasibility rules, link adaptation, compatibility-group sharing, cumulative-stage traces, and release-checking helpers.
+The tests compile the C++ scheduler in a temporary directory and check the parser, feasibility rules, link adaptation, compatibility-group sharing, cumulative-stage traces, exact-audit helpers, and release-checking utilities.
 
-## Run experiments
+For independent validation of produced allocations, use:
 
-Some experiment scripts retain historical `paper/...` defaults. Because manuscript artifacts are not part of this public repository, pass explicit output paths.
+```bash
+python3 tools/scheduler_validator.py --help
+```
+
+<a id="experiments"></a>
+## Experiments
+
+Some experiment scripts retain historical `paper/...` defaults. Because this public repository does not include manuscript artifacts, pass explicit output paths.
 
 Quick integration run:
 
@@ -89,7 +146,7 @@ python3 experiments/paper_experiments.py \
   --out /tmp/fptr-quick-results
 ```
 
-Example full protocol outputting to an ignored local directory:
+Example full protocol writing to an ignored local directory:
 
 ```bash
 python3 experiments/paper_experiments.py \
@@ -108,7 +165,7 @@ python3 experiments/paper_experiments.py \
   --out artifacts/results
 ```
 
-## Generate figures
+Regenerate explanatory and quantitative figures:
 
 ```bash
 python3 -m pip install -r requirements-figures.txt
@@ -120,3 +177,36 @@ python3 experiments/plot_paper_results.py \
 ```
 
 Generated results and figures belong under `artifacts/`, which is ignored by Git.
+
+<a id="repository-map"></a>
+## Repository Map
+
+| Path | Purpose |
+| --- | --- |
+| `src/` | C++17 scheduler implementation, shared model, and stage entry points |
+| `tools/scheduler_validator.py` | Independent parser, feasibility validator, and objective recomputation |
+| `tools/audit_exact_suite.py` | Independent exact-audit workflow for externally supplied result artifacts |
+| `tools/check_paper_release.py` | Release-checking utility retained for reproducibility workflows |
+| `experiments/` | Deterministic instance generation, experiment orchestration, analysis, and plotting |
+| `tests/` | Validator, model-contract, scheduler, and release-helper regression tests |
+| `docs/images/` | Approved explanatory and result figures for the public README |
+| `PROJECT_OVERVIEW.md` | Compact model, algorithm, and component overview |
+
+<a id="public-release-boundary"></a>
+## Public-Release Boundary
+
+Included:
+
+- C++17 scheduler source and stage wrappers.
+- Python validation, audit, experiment, and plotting code.
+- Public project documentation.
+- Four approved explanatory/result figures under `docs/images/`.
+
+Excluded:
+
+- Manuscript source and compiled paper files.
+- Third-party literature PDFs.
+- Sealed or private evaluation artifacts.
+- Local builds, generated experiment outputs, and scratch artifacts.
+
+Evaluate performance claims using newly generated artifacts or separately supplied sealed evidence. Scripts that retain historical `paper/...` defaults should be invoked with explicit input/output paths in this code-only release.
