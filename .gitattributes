@@ -1,0 +1,7 @@
+# Preserve scheduling instance bytes and CRLF line endings.
+*.in -text
+
+# Treat generated visual artifacts as binary when added locally.
+*.pdf binary
+*.png binary
+*.tiff binary

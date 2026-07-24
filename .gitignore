@@ -1,0 +1,31 @@
+.secrets/
+github_token.json
+*.token
+.env
+.env.*
+__pycache__/
+*.py[cod]
+
+# Local builds and generated outputs.
+scheduler
+build/
+artifacts/
+paper/
+
+# LaTeX and editor intermediates.
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.xdv
+*.orig
+*.rej
+*.bak
+*.swp
+*.swo
+
+archive/
