@@ -125,7 +125,7 @@ Use `--trace` to inspect cumulative stages without changing the allocation writt
 python3 -m unittest discover -s tests -v
 ```
 
-The tests compile the C++ scheduler in a temporary directory and check the parser, feasibility rules, link adaptation, compatibility-group sharing, cumulative-stage traces, exact-audit helpers, and release-checking utilities.
+The tests compile the C++ scheduler in a temporary directory and check the parser, feasibility rules, link adaptation, compatibility-group sharing, cumulative-stage traces, and exact-audit helpers.
 
 For independent validation of produced allocations, use:
 
@@ -186,7 +186,6 @@ Generated results and figures belong under `artifacts/`, which is ignored by Git
 | `src/` | C++17 scheduler implementation, shared model, and stage entry points |
 | `tools/scheduler_validator.py` | Independent parser, feasibility validator, and objective recomputation |
 | `tools/audit_exact_suite.py` | Independent exact-audit workflow for externally supplied result artifacts |
-| `tools/check_paper_release.py` | Release-checking utility retained for reproducibility workflows |
 | `experiments/` | Deterministic instance generation, experiment orchestration, analysis, and plotting |
 | `tests/` | Validator, model-contract, scheduler, and release-helper regression tests |
 | `docs/images/` | Approved explanatory and result figures for the public README |

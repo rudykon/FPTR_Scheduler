@@ -125,7 +125,7 @@ g++ -std=c++17 -O2 src/scheduler.cpp src/core.cpp -o scheduler
 python3 -m unittest discover -s tests -v
 ```
 
-测试会在临时目录中编译 C++ 调度器，并检查解析器、可行性规则、链路自适应、兼容组共享、累积阶段轨迹、精确审计辅助函数和发布检查工具。
+测试会在临时目录中编译 C++ 调度器，并检查解析器、可行性规则、链路自适应、兼容组共享、累积阶段轨迹和精确审计辅助函数。
 
 如需独立验证已生成的分配结果，可使用：
 
@@ -186,9 +186,8 @@ python3 experiments/plot_paper_results.py \
 | `src/` | C++17 调度器实现、共享模型和阶段入口 |
 | `tools/scheduler_validator.py` | 独立解析器、可行性验证器和目标值重算工具 |
 | `tools/audit_exact_suite.py` | 针对外部结果工件的独立精确审计流程 |
-| `tools/check_paper_release.py` | 为可复现工作流保留的发布检查工具 |
 | `experiments/` | 确定性实例生成、实验编排、分析与绘图 |
-| `tests/` | 验证器、模型契约、调度器和发布辅助工具回归测试 |
+| `tests/` | 验证器、模型契约和调度器回归测试 |
 | `docs/images/` | 用于公开 README 的已确认说明图与结果图 |
 | `PROJECT_OVERVIEW.md` | 模型、算法和组件概览 |
 
