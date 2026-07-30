@@ -13,7 +13,6 @@
   <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="C++17"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3"></a>
   <a href="#validation"><img src="https://img.shields.io/badge/Validation-unittest%20%2B%20validator-2CA02C?style=flat-square" alt="Unit tests and validator"></a>
-  <a href="#public-release-boundary"><img src="https://img.shields.io/badge/Release-code--only-F28E2B?style=flat-square" alt="Code-only release"></a>
 </p>
 
 <p align="center">
@@ -23,11 +22,7 @@
   <a href="#quick-start">Quick Start</a> ·
   <a href="#experiments">Experiments</a> ·
   <a href="#repository-map">Repository</a> ·
-  <a href="#public-release-boundary">Release Boundary</a>
 </p>
-
-> [!IMPORTANT]
-> This repository is a public code release. It intentionally excludes manuscript text, compiled papers, third-party literature PDFs, sealed experimental artifacts, and local generated outputs.
 
 <a id="overview"></a>
 ## Overview
@@ -38,7 +33,7 @@ FPTR, short for Feasibility-Preserving Transactional Refinement, is a single-thr
 | --- | --- | --- |
 | Return a legal allocation under tight deadlines | Empty-allocation fallback plus anytime feasible incumbent | Independent Python parser, validator, and score recomputation |
 | Improve transmitted traffic under coupled constraints | Cumulative FPTR stages from `Base` to `Full` | Stage traces and reproducible synthetic experiment harness |
-| Keep experiments auditable without sealed files | Explicit output paths under ignored local directories | Unit tests, quick integration run, and figure-generation scripts |
+| Keep experiment outputs auditable | Explicit output paths under ignored local directories | Unit tests, quick integration run, and figure-generation scripts |
 
 The scheduler reads one allocation instance from standard input and writes the allocation contract to standard output. Optional traces go to standard error, so diagnostics do not change the solution format.
 
@@ -136,7 +131,7 @@ python3 tools/scheduler_validator.py --help
 <a id="experiments"></a>
 ## Experiments
 
-Some experiment scripts retain historical `paper/...` defaults. Because this public repository does not include manuscript artifacts, pass explicit output paths.
+Pass explicit output paths when running experiment scripts so generated artifacts remain in the chosen local directory.
 
 Quick integration run:
 
@@ -190,22 +185,3 @@ Generated results and figures belong under `artifacts/`, which is ignored by Git
 | `tests/` | Validator, model-contract, scheduler, and release-helper regression tests |
 | `docs/images/` | Approved explanatory and result figures for the public README |
 | `PROJECT_OVERVIEW.md` | Compact model, algorithm, and component overview |
-
-<a id="public-release-boundary"></a>
-## Public-Release Boundary
-
-Included:
-
-- C++17 scheduler source and stage wrappers.
-- Python validation, audit, experiment, and plotting code.
-- Public project documentation.
-- Four approved explanatory/result figures under `docs/images/`.
-
-Excluded:
-
-- Manuscript source and compiled paper files.
-- Third-party literature PDFs.
-- Sealed or private evaluation artifacts.
-- Local builds, generated experiment outputs, and scratch artifacts.
-
-Evaluate performance claims using newly generated artifacts or separately supplied sealed evidence. Scripts that retain historical `paper/...` defaults should be invoked with explicit input/output paths in this code-only release.

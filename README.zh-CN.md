@@ -13,7 +13,6 @@
   <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="C++17"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3"></a>
   <a href="#validation"><img src="https://img.shields.io/badge/Validation-unittest%20%2B%20validator-2CA02C?style=flat-square" alt="单元测试与验证器"></a>
-  <a href="#public-release-boundary"><img src="https://img.shields.io/badge/Release-code--only-F28E2B?style=flat-square" alt="仅代码公开版本"></a>
 </p>
 
 <p align="center">
@@ -23,11 +22,7 @@
   <a href="#quick-start">快速开始</a> ·
   <a href="#experiments">实验</a> ·
   <a href="#repository-map">项目结构</a> ·
-  <a href="#public-release-boundary">公开边界</a>
 </p>
-
-> [!IMPORTANT]
-> 本仓库是公开代码版本，刻意不包含论文正文、编译后的论文文件、第三方文献 PDF、封存实验工件和本地生成产物。
 
 <a id="overview"></a>
 ## 项目概览
@@ -38,7 +33,7 @@ FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务
 | --- | --- | --- |
 | 在紧截止时间内返回合法分配 | 空分配兜底 + 随时可发布的可行 incumbent | 独立 Python 解析器、验证器和目标值重算 |
 | 在耦合约束下提升传输量 | 从 `Base` 到 `Full` 的累积 FPTR 阶段 | 阶段轨迹与可复现合成实验框架 |
-| 在不公开封存文件的情况下保持可审计 | 显式输出到被忽略的本地目录 | 单元测试、快速集成运行和图件生成脚本 |
+| 保持实验输出可审计 | 显式输出到被忽略的本地目录 | 单元测试、快速集成运行和图件生成脚本 |
 
 调度器从标准输入读取一个分配实例，并将分配结果写入标准输出。可选轨迹写入标准错误，因此诊断信息不会改变解的输出格式。
 
@@ -136,7 +131,7 @@ python3 tools/scheduler_validator.py --help
 <a id="experiments"></a>
 ## 实验
 
-部分实验脚本保留了历史 `paper/...` 默认路径。由于本公开仓库不包含论文工件，请显式指定输出路径。
+运行实验脚本时请显式指定输出路径，使生成工件保存在所选本地目录中。
 
 快速集成运行：
 
@@ -190,22 +185,3 @@ python3 experiments/plot_paper_results.py \
 | `tests/` | 验证器、模型契约和调度器回归测试 |
 | `docs/images/` | 用于公开 README 的已确认说明图与结果图 |
 | `PROJECT_OVERVIEW.md` | 模型、算法和组件概览 |
-
-<a id="public-release-boundary"></a>
-## 公开边界
-
-已包含：
-
-- C++17 调度器源码与阶段封装。
-- Python 验证、审计、实验和绘图代码。
-- 公开项目文档。
-- `docs/images/` 下四张已确认说明图/结果图。
-
-未包含：
-
-- 论文源码与编译后的论文文件。
-- 第三方文献 PDF。
-- 封存或私有评估工件。
-- 本地构建、生成实验输出和临时文件。
-
-性能结论应基于重新生成的工件或另行提供的封存证据进行评估。保留历史 `paper/...` 默认路径的脚本，在本代码公开版本中应显式指定输入/输出路径。
