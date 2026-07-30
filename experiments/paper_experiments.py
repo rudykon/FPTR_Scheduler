@@ -1760,7 +1760,9 @@ def main() -> None:
     parser.add_argument("--cpu", type=int)
     parser.add_argument("--compiler", default="g++")
     parser.add_argument("--binary", type=Path)
-    parser.add_argument("--out", type=Path, default=ROOT / "paper" / "results")
+    parser.add_argument(
+        "--out", type=Path, default=ROOT / "reproducibility" / "results"
+    )
     parser.add_argument("--quick", action="store_true")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()

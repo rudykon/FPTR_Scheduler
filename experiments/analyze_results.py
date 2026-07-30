@@ -355,13 +355,13 @@ def main() -> None:
     parser.add_argument(
         "--input",
         type=Path,
-        default=Path("paper/results/synthetic_results.csv"),
+        default=Path("reproducibility/results/synthetic_results.csv"),
         help="per-instance independent-process aggregate CSV",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("paper/results/paired_analysis.json"),
+        default=Path("reproducibility/results/paired_analysis.json"),
     )
     parser.add_argument(
         "--trace-input",
@@ -371,7 +371,7 @@ def main() -> None:
     parser.add_argument(
         "--trace-output",
         type=Path,
-        default=Path("paper/results/trace_ablation_analysis.json"),
+        default=Path("reproducibility/results/trace_ablation_analysis.json"),
     )
     parser.add_argument("--bootstrap-samples", type=int, default=5000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260722)

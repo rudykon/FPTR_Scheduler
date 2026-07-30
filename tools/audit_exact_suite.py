@@ -9,8 +9,9 @@ The script has three deliberately separated roles:
    generator and compare every generated case with the sealed case manifest.
 3. Recompute every optimum with an independently instrumented dynamic program.
 
-All generated evidence is deterministic and is written under ``paper/audit``.
-The sealed files in ``paper/results`` are read only.
+All generated evidence is deterministic and is written under
+``reproducibility/audit``. The sealed files in ``reproducibility/results`` are
+read only.
 """
 
 from __future__ import annotations
@@ -30,11 +31,14 @@ from typing import Any, Iterable, Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 FORMAL_GENERATOR = ROOT / "experiments" / "paper_experiments.py"
-FORMAL_RESULTS = ROOT / "paper" / "results"
-DEFAULT_OUTPUT = ROOT / "paper" / "audit"
+FORMAL_RESULTS = ROOT / "reproducibility" / "results"
+DEFAULT_OUTPUT = ROOT / "reproducibility" / "audit"
 
-EXPECTED_GENERATOR_SHA256 = (
+SEALED_GENERATOR_SHA256 = (
     "37abf277fcd1301e75c505e081174df78fb643e301aad60fca8e24f30698116a"
+)
+CURRENT_GENERATOR_SHA256 = (
+    "b0d919f99e95e01e40553bbfe516c2d62205388db4647e05336078b2fe34c0ea"
 )
 EXPECTED_FORMAL_SHA256 = {
     "case_manifest.csv": (
@@ -158,17 +162,22 @@ def read_formal_checksums() -> dict[str, str]:
 
 def validate_hash_gate() -> dict[str, dict[str, Any]]:
     observed_generator = sha256_file(FORMAL_GENERATOR)
-    if observed_generator != EXPECTED_GENERATOR_SHA256:
+    if observed_generator != CURRENT_GENERATOR_SHA256:
         raise AssertionError(
             "formal generator hash mismatch: "
-            f"expected {EXPECTED_GENERATOR_SHA256}, observed {observed_generator}"
+            f"expected {CURRENT_GENERATOR_SHA256}, observed {observed_generator}"
         )
 
     formal_checksums = read_formal_checksums()
     evidence: dict[str, dict[str, Any]] = {
         "experiments/paper_experiments.py": {
-            "expected_sha256": EXPECTED_GENERATOR_SHA256,
+            "expected_sha256": CURRENT_GENERATOR_SHA256,
             "observed_sha256": observed_generator,
+            "sealed_manifest_sha256": SEALED_GENERATOR_SHA256,
+            "migration_note": (
+                "The current source changes the default output directory from paper/results "
+                "to reproducibility/results; reconstructed case hashes remain gated below."
+            ),
             "verified": True,
         }
     }
@@ -184,7 +193,7 @@ def validate_hash_gate() -> dict[str, dict[str, Any]]:
             raise AssertionError(
                 f"formal CHECKSUMS.sha256 does not bind {name} to {expected}"
             )
-        evidence[f"paper/results/{name}"] = {
+        evidence[f"reproducibility/results/{name}"] = {
             "expected_sha256": expected,
             "observed_sha256": observed,
             "formal_checksums_entry": formal_checksums[name],
@@ -231,7 +240,7 @@ def validate_formal_manifest() -> dict[str, Any]:
     source_hash = manifest.get("source_sha256", {}).get(
         "experiments/paper_experiments.py"
     )
-    if source_hash != EXPECTED_GENERATOR_SHA256:
+    if source_hash != SEALED_GENERATOR_SHA256:
         raise AssertionError("experiment manifest records an unexpected generator hash")
 
     for name, expected in EXPECTED_FORMAL_SHA256.items():
@@ -680,7 +689,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--out-dir",
         type=Path,
         default=DEFAULT_OUTPUT,
-        help="audit output directory inside the repository (default: paper/audit)",
+        help=(
+            "audit output directory inside the repository "
+            "(default: reproducibility/audit)"
+        ),
     )
     return parser
 

@@ -928,7 +928,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("paper/figures/scheduler_pipeline"),
+        default=Path("reproducibility/figures/scheduler_pipeline"),
     )
     args = parser.parse_args()
     configure_style()

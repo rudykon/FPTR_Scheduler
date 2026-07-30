@@ -34,9 +34,13 @@ from PIL import Image
 
 
 # Mandatory publication settings: labels remain editable in SVG/PDF.
-plt.rcParams["font.family"] = "sans-serif"
-plt.rcParams["font.sans-serif"] = ["Arial", "DejaVu Sans", "Liberation Sans"]
-plt.rcParams["svg.fonttype"] = "none"
+mpl.rcParams.update({
+    "font.family": "serif",
+    "font.serif": ["Times New Roman", "Liberation Serif", "Nimbus Roman", "DejaVu Serif", "Arial"],
+    "mathtext.fontset": "stix",
+    "svg.fonttype": "none",
+    "pdf.fonttype": 42,
+})
 
 FIGURE_WIDTH_IN = 4.80
 QUALITY_FIGURE_HEIGHT_IN = 3.05
@@ -107,6 +111,8 @@ def configure_style() -> None:
     mpl.rcParams.update(
         {
             "font.size": BODY_FONT_PT,
+            "font.family": "serif",
+            "font.serif": ["Times New Roman", "Liberation Serif", "Nimbus Roman", "DejaVu Serif", "Arial"],
             "axes.labelsize": BODY_FONT_PT,
             "axes.titlesize": TITLE_FONT_PT,
             "axes.titleweight": "normal",
@@ -1064,7 +1070,7 @@ def draw_exact_gap(
         ax.text(
             0.585,
             0.95,
-            "★ wider",
+            r"$\star$ wider",
             transform=ax.transAxes,
             ha="left",
             va="top",
@@ -1075,7 +1081,7 @@ def draw_exact_gap(
         ax.text(
             0.985,
             0.95,
-            "◇ mean",
+            r"$\diamond$ mean",
             transform=ax.transAxes,
             ha="right",
             va="top",
@@ -1660,12 +1666,12 @@ def main() -> None:
     parser.add_argument(
         "--results-dir",
         type=Path,
-        default=Path("paper/results"),
+        default=Path("reproducibility/results"),
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("paper/figures/results_overview"),
+        default=Path("reproducibility/figures/results_overview"),
     )
     parser.add_argument("--bootstrap-samples", type=int, default=5000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260722)
@@ -1898,13 +1904,19 @@ def split_main() -> None:
     parser.add_argument(
         "--results-dir",
         type=Path,
-        default=Path("paper/results"),
+        default=Path("reproducibility/results"),
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("paper/figures"),
+        default=Path("reproducibility/figures"),
         help="default directory for the two primary figure stems",
+    )
+    parser.add_argument(
+        "--paper-figure-dir",
+        type=Path,
+        default=Path("paper/figures"),
+        help="copy the two manuscript PDF figures into this directory",
     )
     parser.add_argument(
         "--quality-output",
@@ -2196,6 +2208,13 @@ def split_main() -> None:
         **stress_export,
     }
     write_qa(stress_output, stress_qa)
+
+    args.paper_figure_dir.mkdir(parents=True, exist_ok=True)
+    for output in (quality_output, stress_output):
+        source_pdf = output.with_suffix(".pdf")
+        destination_pdf = args.paper_figure_dir / source_pdf.name
+        if source_pdf.resolve() != destination_pdf.resolve():
+            shutil.copy2(source_pdf, destination_pdf)
 
     if args.legacy_output is not None:
         legacy_fig, legacy_axes, legacy_legend, legacy_notes, legacy_panels = (
