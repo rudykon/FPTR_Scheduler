@@ -21,7 +21,7 @@
   <a href="#visual-summary">图示</a> ·
   <a href="#quick-start">快速开始</a> ·
   <a href="#experiments">实验</a> ·
-  <a href="#repository-map">项目结构</a> ·
+  <a href="#repository-map">项目结构</a>
 </p>
 
 <a id="overview"></a>

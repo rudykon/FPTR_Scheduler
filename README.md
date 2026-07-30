@@ -21,7 +21,7 @@
   <a href="#visual-summary">Figures</a> ·
   <a href="#quick-start">Quick Start</a> ·
   <a href="#experiments">Experiments</a> ·
-  <a href="#repository-map">Repository</a> ·
+  <a href="#repository-map">Repository</a>
 </p>
 
 <a id="overview"></a>
