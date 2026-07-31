@@ -32,9 +32,11 @@ from experiments import paper_experiments as protocol  # noqa: E402
 from tools import scheduler_validator  # noqa: E402
 
 
-MAIN_METHODS = ("BeamFirst", "Base", "Full", "ALNS", "Tabu", "GA")
-BUDGET_METHODS = ("Full", "ALNS", "Tabu", "GA")
-EXTERNAL_METHODS = ("ALNS", "Tabu", "GA")
+MAIN_METHODS = (
+    "BeamFirst", "Base", "Full", "ALNS", "Tabu", "GA", "SA", "ILS", "GRASP"
+)
+BUDGET_METHODS = ("Full", "ALNS", "Tabu", "GA", "SA", "ILS", "GRASP")
+EXTERNAL_METHODS = ("ALNS", "Tabu", "GA", "SA", "ILS", "GRASP")
 STAGE_ARGUMENT = {
     "BeamFirst": "beamfirst",
     "Base": "base",
@@ -43,6 +45,9 @@ STAGE_ARGUMENT = {
 EXTERNAL_ARGUMENT = {
     "Tabu": "tabu",
     "GA": "ga",
+    "SA": "sa",
+    "ILS": "ils",
+    "GRASP": "grasp",
 }
 
 
@@ -85,10 +90,20 @@ def compile_binaries(build_dir: Path, compiler: str) -> tuple[Path, dict[str, Pa
         "ALNS": ROOT / "src" / "external_alns_baseline.cpp",
         "Tabu": ROOT / "src" / "external_tabu_ga_baseline.cpp",
         "GA": ROOT / "src" / "external_tabu_ga_baseline.cpp",
+        "SA": ROOT / "src" / "external_sa_ils_grasp.cpp",
+        "ILS": ROOT / "src" / "external_sa_ils_grasp.cpp",
+        "GRASP": ROOT / "src" / "external_sa_ils_grasp.cpp",
+    }
+    binary_names = {
+        "ALNS": "external_alns",
+        "Tabu": "external_tabu_ga",
+        "GA": "external_tabu_ga",
+        "SA": "external_sa_ils_grasp",
+        "ILS": "external_sa_ils_grasp",
+        "GRASP": "external_sa_ils_grasp",
     }
     external_binaries = {
-        method: build_dir / ("external_alns" if method == "ALNS" else "external_tabu_ga")
-        for method in external_sources
+        method: build_dir / binary_names[method] for method in external_sources
     }
     commands = [
         (
@@ -104,37 +119,25 @@ def compile_binaries(build_dir: Path, compiler: str) -> tuple[Path, dict[str, Pa
             ],
         )
     ]
+    seen_outputs = {output for output, _ in commands}
     for method, source in external_sources.items():
-        if method == "GA" or method == "Tabu":
-            if any(output == external_binaries[method] for output, _ in commands):
-                continue
-            commands.append(
-                (
-                    external_binaries[method],
-                    [
-                        compiler,
-                        "-std=c++17",
-                        "-O2",
-                        str(source),
-                        "-o",
-                        str(external_binaries[method]),
-                    ],
-                )
+        output = external_binaries[method]
+        if output in seen_outputs:
+            continue
+        commands.append(
+            (
+                output,
+                [
+                    compiler,
+                    "-std=c++17",
+                    "-O2",
+                    str(source),
+                    "-o",
+                    str(output),
+                ],
             )
-        else:
-            commands.append(
-                (
-                    external_binaries[method],
-                    [
-                        compiler,
-                        "-std=c++17",
-                        "-O2",
-                        str(source),
-                        "-o",
-                        str(external_binaries[method]),
-                    ],
-                )
-            )
+        )
+        seen_outputs.add(output)
     for output, command in commands:
         result = subprocess.run(
             command, cwd=ROOT, text=True, capture_output=True, check=False
@@ -801,6 +804,9 @@ def main() -> None:
                     "ALNS": "src/external_alns_baseline.cpp",
                     "Tabu": "src/external_tabu_ga_baseline.cpp",
                     "GA": "src/external_tabu_ga_baseline.cpp",
+                    "SA": "src/external_sa_ils_grasp.cpp",
+                    "ILS": "src/external_sa_ils_grasp.cpp",
+                    "GRASP": "src/external_sa_ils_grasp.cpp",
                 },
             },
             "launches": len(records),
@@ -813,7 +819,7 @@ def main() -> None:
             "exact": exact_summary(aggregates, optima) if optima else {},
             "budget_curve": {},
         }
-        for baseline in ("BeamFirst", "Base", "ALNS", "Tabu", "GA"):
+        for baseline in ("BeamFirst", "Base", "ALNS", "Tabu", "GA", "SA", "ILS", "GRASP"):
             if baseline in args.methods and "Full" in args.methods:
                 summary["comparisons"][f"Full_vs_{baseline}"] = paired_comparison(
                     aggregates,
@@ -853,7 +859,7 @@ def main() -> None:
 
         manifest = {
             "schema_version": 1,
-            "generator": "external-comparison-v2",
+            "generator": "external-comparison-v3",
             "experiments": list(experiments),
             "methods": list(args.methods),
             "budget_methods": list(args.budget_methods),
@@ -870,6 +876,7 @@ def main() -> None:
                     ROOT / "src" / "core.cpp",
                     ROOT / "src" / "external_alns_baseline.cpp",
                     ROOT / "src" / "external_tabu_ga_baseline.cpp",
+                    ROOT / "src" / "external_sa_ils_grasp.cpp",
                     ROOT / "tools" / "scheduler_validator.py",
                     ROOT / "experiments" / "paper_experiments.py",
                     ROOT / "experiments" / "external_comparison.py",
