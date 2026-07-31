@@ -21,6 +21,7 @@
   <a href="#visual-summary">图示</a> ·
   <a href="#quick-start">快速开始</a> ·
   <a href="#experiments">实验</a> ·
+  <a href="#appendices">附录</a> ·
   <a href="#repository-map">项目结构</a>
 </p>
 
@@ -172,6 +173,16 @@ python3 experiments/plot_paper_results.py \
 ```
 
 生成的结果和图件应放在 `artifacts/` 下，该目录已被 Git 忽略。
+
+<a id="appendices"></a>
+## 独立证据附录
+
+公开版本还提供两份独立证据附录：
+
+- [英文附录（PDF）](docs/appendices/Appendix.pdf)
+- [中文附录（PDF）](docs/appendices/Appendix_zh.pdf)
+
+附录汇总执行核算、外部基线比较、精确校准和工件完整性。论文正文和文献文件仍不包含在这个以代码为主的公开版本中。
 
 <a id="repository-map"></a>
 ## 项目结构

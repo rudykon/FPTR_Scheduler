@@ -21,6 +21,7 @@
   <a href="#visual-summary">Figures</a> ·
   <a href="#quick-start">Quick Start</a> ·
   <a href="#experiments">Experiments</a> ·
+  <a href="#appendices">Appendices</a> ·
   <a href="#repository-map">Repository</a>
 </p>
 
@@ -172,6 +173,16 @@ python3 experiments/plot_paper_results.py \
 ```
 
 Generated results and figures belong under `artifacts/`, which is ignored by Git.
+
+<a id="appendices"></a>
+## Standalone Evidence Appendices
+
+The public release also provides two standalone evidence appendices:
+
+- [English Appendix (PDF)](docs/appendices/Appendix.pdf)
+- [Chinese Appendix (PDF)](docs/appendices/Appendix_zh.pdf)
+
+They summarize execution accounting, external-baseline comparisons, exact calibration, and artifact integrity. The main manuscript and literature files remain outside this code-focused release.
 
 <a id="repository-map"></a>
 ## Repository Map
