@@ -66,7 +66,7 @@ Across stages, the commit rule is the same: rejected, expired, incomplete, or in
 
 <p align="center">
   <a href="https://github.com/rudykon/FPTR_Scheduler/blob/main/docs/images/Deadline_Aware_FPTR_Scheduler.pdf">
-    <strong>Open the latest Deadline-Aware FPTR Scheduler PDF</strong>
+    <img src="docs/images/Deadline_Aware_FPTR_Scheduler.png?v=20260806-2338" alt="Deadline-aware FPTR scheduler" width="92%">
   </a>
 </p>
 <p align="center"><em>Figure 2 | Each bounded refinement stage builds a private candidate and reaches the incumbent only through commit-or-discard validation.</em></p>
