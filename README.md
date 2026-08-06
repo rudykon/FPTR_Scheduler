@@ -65,7 +65,7 @@ Across stages, the commit rule is the same: rejected, expired, incomplete, or in
 <p align="center"><em>Figure 1 | Resource capacities, demands, masks, sharing groups, link adaptation, and deadlines define the coupled scheduling instance.</em></p>
 
 <p align="center">
-  <a href="docs/images/Deadline_Aware_FPTR_Scheduler.pdf">
+  <a href="https://github.com/rudykon/FPTR_Scheduler/blob/main/docs/images/Deadline_Aware_FPTR_Scheduler.pdf">
     <img src="docs/images/Deadline_Aware_FPTR_Scheduler.png?v=20260806-1727" alt="Deadline-aware FPTR scheduler" width="92%">
   </a>
 </p>
