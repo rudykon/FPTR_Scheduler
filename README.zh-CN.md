@@ -66,7 +66,7 @@ FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务
 
 <p align="center">
   <a href="https://github.com/rudykon/FPTR_Scheduler/blob/main/docs/images/Deadline_Aware_FPTR_Scheduler.pdf">
-    <img src="docs/images/Deadline_Aware_FPTR_Scheduler.png?v=20260806-1727" alt="面向截止时间的 FPTR 调度器" width="92%">
+    <strong>打开最新的面向截止时间的 FPTR 调度器 PDF</strong>
   </a>
 </p>
 <p align="center"><em>图 2｜每个有界细化阶段都构造私有候选解，并且只能通过提交或丢弃验证进入 incumbent。</em></p>
