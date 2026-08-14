@@ -2,6 +2,10 @@
   <a href="README.md">English</a> · <strong>简体中文</strong>
 </p>
 
+<p align="center">
+  <img src="docs/brand-mark.svg" width="520" alt="FPTR Scheduler 品牌标识">
+</p>
+
 <h1 align="center">FPTR 联合波束与资源调度器</h1>
 
 <p align="center">
@@ -196,3 +200,4 @@ python3 experiments/plot_paper_results.py \
 | `tests/` | 验证器、模型契约和调度器回归测试 |
 | `docs/images/` | 用于公开 README 的已确认说明图与结果图 |
 | `PROJECT_OVERVIEW.md` | 模型、算法和组件概览 |
+

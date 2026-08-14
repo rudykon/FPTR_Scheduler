@@ -2,6 +2,10 @@
   <strong>English</strong> · <a href="README.zh-CN.md">简体中文</a>
 </p>
 
+<p align="center">
+  <img src="docs/brand-mark.svg" width="520" alt="FPTR Scheduler brand mark">
+</p>
+
 <h1 align="center">FPTR Joint Beam and Resource Scheduler</h1>
 
 <p align="center">
@@ -196,3 +200,4 @@ They summarize execution accounting, external-baseline comparisons, exact calibr
 | `tests/` | Validator, model-contract, scheduler, and release-helper regression tests |
 | `docs/images/` | Approved explanatory and result figures for the public README |
 | `PROJECT_OVERVIEW.md` | Compact model, algorithm, and component overview |
+
