@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#001b3d" />
+    <meta name="theme-color" content="#f6faff" />
     <meta name="description" content="FPTR 的可行性保持事务式细化、四项提交检查与 87 ms 累积阶段链。" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="方法 · FPTR Scheduler" />
@@ -23,14 +23,14 @@
     <div class="site-shell" id="top">
       <header class="site-header">
         <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
-          <img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" />
+          <img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" />
         </a>
         <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../" data-i18n="navOverview">概览</a>
-          <a href="../problem/" data-i18n="navProblem">问题</a>
-          <a href="../method/" aria-current="page" data-i18n="navMethod">方法</a>
-          <a href="../evidence/" data-i18n="navEvidence">证据</a>
-          <a href="../reproduce/" data-i18n="navReproduce">复现</a>
+          <a href="../"><i aria-hidden="true">✦</i><span data-i18n="navOverview">概览</span></a>
+          <a href="../problem/"><i aria-hidden="true">⌁</i><span data-i18n="navProblem">问题</span></a>
+          <a href="../method/" aria-current="page"><i aria-hidden="true">◇</i><span data-i18n="navMethod">方法</span></a>
+          <a href="../evidence/"><i aria-hidden="true">✓</i><span data-i18n="navEvidence">证据</span></a>
+          <a href="../reproduce/"><i aria-hidden="true">›_</i><span data-i18n="navReproduce">复现</span></a>
         </nav>
         <div class="header-actions">
           <div class="language-switch" aria-label="Language">
@@ -49,6 +49,7 @@
             <h1 data-i18n="methodTitle">像事务一样细化：候选只能整体提交或整体丢弃。</h1>
             <p data-i18n="methodBody">I 是始终可发布的 incumbent，C 是隔离构造的候选。四项检查全部通过才执行 I ← C；任一检查失败，I 保持不变。</p>
           </div>
+          <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
 
         <section class="method-section detail-section">
@@ -96,7 +97,7 @@
       </main>
 
       <footer class="site-footer">
-        <div><img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
+        <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
         <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
       </footer>
     </div>
