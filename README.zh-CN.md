@@ -14,17 +14,18 @@
 </p>
 
 <p align="center">
-  <a href="https://fptr-scheduler.config-h.chatgpt.site"><img src="https://img.shields.io/badge/项目主页-打开_FPTR-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="打开 FPTR 项目主页"></a>
+  <a href="https://rudykon.github.io/FPTR_Scheduler/"><img src="https://img.shields.io/badge/项目主页-打开_FPTR-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="打开 FPTR 项目主页"></a>
 </p>
 
 <p align="center">
   <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="C++17"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3"></a>
+  <a href="https://github.com/rudykon/FPTR_Scheduler/actions/workflows/pages.yml"><img src="https://github.com/rudykon/FPTR_Scheduler/actions/workflows/pages.yml/badge.svg" alt="GitHub Pages 自动部署"></a>
   <a href="#validation"><img src="https://img.shields.io/badge/Validation-unittest%20%2B%20validator-2CA02C?style=flat-square" alt="单元测试与验证器"></a>
 </p>
 
 <p align="center">
-  <a href="https://fptr-scheduler.config-h.chatgpt.site">项目主页</a> ·
+  <a href="https://rudykon.github.io/FPTR_Scheduler/">项目主页</a> ·
   <a href="#overview">项目概览</a> ·
   <a href="#method">方法</a> ·
   <a href="#visual-summary">图示</a> ·
@@ -204,5 +205,7 @@ python3 experiments/plot_paper_results.py \
 | `experiments/` | 确定性实例生成、实验编排、分析与绘图 |
 | `tests/` | 验证器、模型契约和调度器回归测试 |
 | `docs/images/` | 用于公开 README 的已确认说明图与结果图 |
+| `docs/index.html` | 通过 GitHub Pages 部署的双语静态项目网页 |
+| `.github/workflows/pages.yml` | GitHub Pages 自动部署工作流 |
 | `PROJECT_OVERVIEW.md` | 模型、算法和组件概览 |
 
