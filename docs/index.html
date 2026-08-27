@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#08204c" />
+    <meta name="theme-color" content="#001b3d" />
     <meta
       name="description"
       content="FPTR：面向截止时间约束的联合波束与资源调度器，以可行性保持的事务式细化持续提升传输量。"
@@ -18,7 +18,8 @@
     <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/Deadline_Aware_FPTR_Scheduler.png" />
     <title>FPTR Scheduler · 联合波束与资源调度</title>
     <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/" />
-    <link rel="icon" href="./assets/fptr-favicon.png" />
+    <link rel="icon" type="image/png" href="./assets/brand/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="./assets/brand/apple-touch-icon.png" />
     <link rel="stylesheet" href="./assets/site.css" />
     <script src="./assets/site.js" defer></script>
   </head>
@@ -28,7 +29,7 @@
     <div class="site-shell" id="top">
       <header class="site-header">
         <a class="brand-link" href="#top" aria-label="FPTR Scheduler home">
-          <img src="./FPTR%20Scheduler.png" alt="FPTR Scheduler" />
+          <img src="./assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" />
         </a>
 
         <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
@@ -79,40 +80,18 @@
             </dl>
           </div>
 
-          <div class="scheduler-console" aria-label="一次有界调度运行" data-i18n-aria="consoleTitle">
-            <div class="console-bar">
-              <div class="console-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-              <span data-i18n="consoleTitle">一次有界调度运行</span>
-              <b><i></i><span data-i18n="consoleStatus">随时可发布</span></b>
-            </div>
-            <div class="console-canvas">
-              <div class="input-node"><span class="large-symbol" aria-hidden="true">⌁</span><span data-i18n="consoleInput">耦合调度实例</span></div>
-              <span class="flow-arrow" aria-hidden="true">→</span>
-              <div class="state-stack">
-                <div class="state-card incumbent-card">
-                  <span>I</span>
-                  <div><small data-i18n="consoleIncumbent">当前 incumbent</small><strong>feasible · score 124</strong></div>
-                  <b aria-hidden="true">✓</b>
-                </div>
-                <div class="state-card candidate-card">
-                  <span>C</span>
-                  <div><small data-i18n="consoleCandidate">私有候选 C</small><strong>complete · score 129</strong></div>
-                  <b aria-hidden="true">◷</b>
-                </div>
-              </div>
-              <div class="commit-route">
-                <div class="mini-gate"><span aria-hidden="true">◇</span><span data-i18n="consoleCommit">验证后提交</span></div>
-                <span aria-hidden="true">›</span>
-                <div class="commit-pill"><span aria-hidden="true">✓</span> COMMIT</div>
-              </div>
-              <div class="console-timeline" aria-hidden="true">
-                <span class="timeline-segment blue"></span><span class="timeline-segment green"></span><span class="timeline-segment cyan"></span><span class="timeline-segment orange"></span><span class="timeline-segment violet"></span>
-              </div>
-              <div class="console-footer">
-                <span>0 ms</span><strong><span aria-hidden="true">ϟ</span><span data-i18n="consoleFinal">87 ms 前输出合法分配</span></strong><span>87 ms</span>
-              </div>
-            </div>
-          </div>
+          <figure class="hero-visual">
+            <img
+              src="./assets/brand/hero-light-1280x720.webp"
+              alt="智能基站协调彩色资源块与截止路径"
+              data-i18n-alt="heroArtAlt"
+            />
+            <figcaption class="hero-art-caption">
+              <span><i class="signal-key" aria-hidden="true"></i><b data-i18n="heroArtSignal">智能协同</b></span>
+              <span><i class="feasible-key" aria-hidden="true"></i><b data-i18n="heroArtFeasible">保持可行</b></span>
+              <span><i class="deadline-key" aria-hidden="true"></i><b data-i18n="heroArtDeadline">截止时间感知</b></span>
+            </figcaption>
+          </figure>
         </section>
 
         <section class="problem-section" id="problem">
@@ -278,7 +257,7 @@ python3 -m unittest discover -s tests -v</code></pre>
       </main>
 
       <footer class="site-footer">
-        <div><img src="./FPTR%20Scheduler.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
+        <div><img src="./assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
         <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
       </footer>
     </div>
