@@ -16,11 +16,11 @@ em++ \
   -sEXPORT_NAME=createFPTRModule \
   -sENVIRONMENT=web,node \
   -sALLOW_MEMORY_GROWTH=1 \
-  -sSINGLE_FILE=1 \
   -sFILESYSTEM=0 \
   -sASSERTIONS=0 \
   -sEXPORTED_FUNCTIONS='["_fptr_run","_malloc","_free"]' \
   -sEXPORTED_RUNTIME_METHODS='["ccall"]'
 
 test -s "${script_dir}/wasm/fptr_solver.js"
-echo "Built ${script_dir}/wasm/fptr_solver.js"
+test -s "${script_dir}/wasm/fptr_solver.wasm"
+echo "Built ${script_dir}/wasm/fptr_solver.js and fptr_solver.wasm"

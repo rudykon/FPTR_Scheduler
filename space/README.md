@@ -49,6 +49,9 @@ node space/tests/smoke_wasm.js
 python3 -m http.server --directory space 8000
 ```
 
+The build emits a standard `wasm/fptr_solver.js` loader and
+`wasm/fptr_solver.wasm` binary pair.
+
 ![FPTR cumulative transactional refinement pipeline](assets/pipeline.png)
 
 Source: [rudykon/FPTR_Scheduler](https://github.com/rudykon/FPTR_Scheduler)
