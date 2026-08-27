@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 2,
+  "execution": "browser-webassembly",
+  "schedulerSourceCommit": "dca2f77141c2abd8a4741b229bb9c5f3053792ec",
+  "budgets": [
+    20,
+    50,
+    87,
+    125,
+    180
+  ],
+  "stages": [
+    {
+      "id": "full",
+      "label": "Full pipeline",
+      "labelZh": "完整流水线"
+    },
+    {
+      "id": "remask",
+      "label": "Through remask",
+      "labelZh": "截至掩码修复"
+    },
+    {
+      "id": "cg",
+      "label": "Through legal sharing",
+      "labelZh": "截至合法共享"
+    },
+    {
+      "id": "global",
+      "label": "Through repricing",
+      "labelZh": "截至全局重定价"
+    },
+    {
+      "id": "base",
+      "label": "Feasible construction",
+      "labelZh": "可行构造"
+    },
+    {
+      "id": "beamfirst",
+      "label": "BeamFirst reference",
+      "labelZh": "BeamFirst 基线"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "small-balanced",
+      "label": "Small · balanced",
+      "labelZh": "小型 · 均衡",
+      "note": "20 users · balanced traffic and channels · quickest live example",
+      "noteZh": "20 用户 · 流量与信道均衡 · 最快的实时示例",
+      "seed": 20260801,
+      "path": "data/cases/small-balanced.in",
+      "sha256": "0953cfca842f49831d2785540da052047df56c6fd0f377912862397a9a512074",
+      "dimensions": {
+        "users": 20,
+        "resources": 18,
+        "beams": 8,
+        "subbands": 4,
+        "beamMax": 14
+      }
+    },
+    {
+      "id": "medium-longtail",
+      "label": "Medium · long-tail traffic",
+      "labelZh": "中型 · 长尾流量",
+      "note": "50 users · long-tail demand · clustered channel strengths",
+      "noteZh": "50 用户 · 长尾需求 · 聚类信道强度",
+      "seed": 20261801,
+      "path": "data/cases/medium-longtail.in",
+      "sha256": "1da043794c11a7e8e6386ef08fe0f763c75d0cbb7278a281a55a732d36a819bf",
+      "dimensions": {
+        "users": 50,
+        "resources": 36,
+        "beams": 16,
+        "subbands": 9,
+        "beamMax": 46
+      }
+    },
+    {
+      "id": "medium-tight",
+      "label": "Medium · tight beam budget",
+      "labelZh": "中型 · 紧张波束预算",
+      "note": "50 users · heterogeneous channels · scarce beams",
+      "noteZh": "50 用户 · 异构信道 · 波束预算紧张",
+      "seed": 20262801,
+      "path": "data/cases/medium-tight.in",
+      "sha256": "21a9f3acccf44702979cdf34638d510db77c31eb3395f5cf2714cf1a28db7744",
+      "dimensions": {
+        "users": 50,
+        "resources": 36,
+        "beams": 16,
+        "subbands": 9,
+        "beamMax": 26
+      }
+    },
+    {
+      "id": "large-mixed",
+      "label": "Large · mixed workload",
+      "labelZh": "大型 · 混合工作负载",
+      "note": "100 users · 72 resources · high compatibility coverage",
+      "noteZh": "100 用户 · 72 个资源 · 高兼容组覆盖率",
+      "seed": 20263801,
+      "path": "data/cases/large-mixed.in",
+      "sha256": "1917804bf3a220dfc5f81519e69746d8d06477939083c8fd5d416b99af34c8fc",
+      "dimensions": {
+        "users": 100,
+        "resources": 72,
+        "beams": 32,
+        "subbands": 18,
+        "beamMax": 127
+      }
+    },
+    {
+      "id": "large-nonadjacent",
+      "label": "Large · non-adjacent overlap",
+      "labelZh": "大型 · 非相邻重叠",
+      "note": "100 users · tight beams · mostly non-adjacent dual memberships",
+      "noteZh": "100 用户 · 波束紧张 · 以非相邻双子带归属为主",
+      "seed": 20264801,
+      "path": "data/cases/large-nonadjacent.in",
+      "sha256": "e097e3e99837ec31ad6dd7b75531bbd657d8c4d91356e4757b425208fd32223a",
+      "dimensions": {
+        "users": 100,
+        "resources": 72,
+        "beams": 32,
+        "subbands": 18,
+        "beamMax": 92
+      }
+    }
+  ]
+}

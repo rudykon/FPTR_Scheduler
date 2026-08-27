@@ -4,12 +4,12 @@ const COPY = {
   en: {
     eyebrow: "INTERACTIVE SCHEDULER WALKTHROUGH",
     title: "See joint beam and resource scheduling take shape.",
-    intro: "Pick a workload, deadline, and FPTR stopping stage. Every view is backed by a validated snapshot produced by the repository's real C++17 scheduler.",
-    realSnapshots: "Real C++ snapshots", audit: "Independent validator", freeStatic: "Free static Space",
-    configure: "Configure the snapshot", configureHint: "Changes apply instantly—no queue and no server round-trip.",
+    intro: "Choose a workload, deadline, and FPTR stopping stage, then execute the repository's real C++17 scheduler directly in your browser.",
+    realSnapshots: "Live C++17 WebAssembly", audit: "Independent validator", freeStatic: "Runs locally in your browser",
+    configure: "Configure a live run", configureHint: "Choose an input, then launch a real deadline-bounded run.",
     scenario: "Traffic scenario", deadline: "Deadline budget", deadlineHint: "The same cutoff controls every compared method.",
     stopStage: "FPTR stopping stage", stageHint: "Later stages may only commit complete, feasible improvements.",
-    inspect: "Inspect the incumbent", download: "Download snapshot", transactional: "TRANSACTIONAL REFINEMENT",
+    inspect: "Inspect the live result", download: "Download run record", transactional: "TRANSACTIONAL REFINEMENT",
     pipelineTitle: "Cumulative incumbent score", pipelineNote: "A stage is accepted only after the candidate passes the full feasibility contract.",
     readChart: "HOW TO READ THIS", whyTransactional: "Why “transactional”?", propose: "Propose", proposeText: "change beams or assignments",
     validate: "Validate", validateText: "check budget, sharing, and subbands", commit: "Commit", commitText: "keep only a complete score gain",
@@ -18,26 +18,34 @@ const COPY = {
     demandTitle: "Delivered versus unmet demand", maskDesign: "MASK DESIGN", beamTitle: "Active beams by subband",
     verify: "Verify the details", verifyHint: "Trace every accepted stage and every user's served traffic.",
     auditTrail: "Stage audit", userDetail: "User detail", provenance: "Provenance",
-    footerText: "Synthetic public scenarios · validated C++17 outputs · browser-only visualization", viewSource: "View source ↗",
-    ready: "Validated snapshots ready", loadError: "Could not load snapshots", transmitted: "Transmitted", demandServed: "Demand served",
+    footerText: "Real C++17 execution · independent browser validation · no server upload", viewSource: "View source ↗",
+    ready: "C++ WebAssembly ready", loadError: "Could not load the WebAssembly demo", transmitted: "Transmitted", demandServed: "Demand served",
     versus: "vs BeamFirst", algorithmTime: "Algorithm time", beamBudget: "Beam budget", ofDemand: "of demand", sameBudget: "same instance & budget",
     throughAudit: "through final audit", globalSlots: "global mask slots", users: "users", resources: "resources", beams: "beams",
     subbands: "subbands", groups: "groups", dual: "dual memberships", stage: "Stage", score: "Score", gain: "Gain",
     elapsed: "Elapsed", cutoff: "Cutoff", decision: "Decision", reference: "External reference", validated: "Independently validated",
     improved: "Improved incumbent", retained: "Incumbent retained", cutoffReached: "cutoff reached", user: "User", requested: "Requested",
     delivered: "Delivered", served: "Served", assigned: "Assigned resources", instanceHash: "Instance SHA-256", sourceCommit: "Scheduler source commit",
-    snapshotContract: "Snapshot contract", validContract: "Validator passed · score recomputed · allocation feasible", fixedSeed: "Deterministic seed",
-    currentStage: "Selected stopping stage", staticNote: "The browser visualizes precomputed outputs from the real scheduler; it does not approximate FPTR in JavaScript.",
-    resource: "Resource", shareSize: "Share size", unmet: "Unmet", active: "active", inactive: "off"
+    snapshotContract: "Live-run contract", validContract: "Input parsed · output feasible · score recomputed · trace consistent", fixedSeed: "Scenario seed",
+    currentStage: "Executed stage", staticNote: "Every click invokes the checked-in C++17 scheduler compiled to WebAssembly; no result table or JavaScript approximation is used.",
+    resource: "Resource", shareSize: "Share size", unmet: "Unmet", active: "active", inactive: "off",
+    engineLoading: "Loading C++ WebAssembly…", engineReady: "C++ WebAssembly ready", stale: "Configuration changed · run again",
+    running: "Running the real C++ scheduler…", runPassed: "Live run validated", runError: "Run failed",
+    customInput: "Use custom .in file", clearCustom: "Use preset", runReal: "Run real C++ scheduler",
+    executionNote: "The input stays in this browser. FPTR and BeamFirst execute under the same selected budget.",
+    presetInput: "Preset input", customInputLabel: "Custom local input", rawOutput: "Raw output",
+    solverStdout: "Scheduler stdout", solverTrace: "Scheduler trace", executionMode: "Execution mode",
+    runIdentity: "Live run", browserWall: "Browser wall time", liveExecution: "Live C++17 WebAssembly in this browser",
+    inputName: "Input source"
   },
   zh: {
     eyebrow: "交互式调度器导览", title: "直观看见联合波束与资源调度如何成形。",
-    intro: "选择工作负载、截止时间与 FPTR 停止阶段。每个视图都来自仓库真实 C++17 调度器生成并经独立验证的快照。",
-    realSnapshots: "真实 C++ 快照", audit: "独立验证器", freeStatic: "免费 Static Space",
-    configure: "配置调度快照", configureHint: "修改立即生效，无需排队或访问后端服务器。",
+    intro: "选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中直接执行仓库真实的 C++17 调度器。",
+    realSnapshots: "实时 C++17 WebAssembly", audit: "独立验证器", freeStatic: "在本地浏览器运行",
+    configure: "配置真实运行", configureHint: "选择输入，然后启动一次受截止时间约束的真实运行。",
     scenario: "流量场景", deadline: "截止时间预算", deadlineHint: "所有对比方法使用相同的时间截止条件。",
     stopStage: "FPTR 停止阶段", stageHint: "后续阶段只能提交完整且可行的改进。",
-    inspect: "检查当前最优解", download: "下载快照", transactional: "事务式细化",
+    inspect: "检查真实运行结果", download: "下载运行记录", transactional: "事务式细化",
     pipelineTitle: "累计最优解得分", pipelineNote: "候选方案通过完整可行性契约后，阶段结果才会被接受。",
     readChart: "图表说明", whyTransactional: "为何称为“事务式”？", propose: "提出", proposeText: "修改波束或资源分配",
     validate: "验证", validateText: "检查预算、共享与子带约束", commit: "提交", commitText: "仅保留完整有效的得分提升",
@@ -46,17 +54,25 @@ const COPY = {
     demandTitle: "已传输与未满足需求", maskDesign: "掩码设计", beamTitle: "各子带激活波束",
     verify: "核验详细结果", verifyHint: "追踪每个接受阶段以及每位用户的服务流量。",
     auditTrail: "阶段审计", userDetail: "用户明细", provenance: "结果来源",
-    footerText: "合成公开场景 · 经验证的 C++17 输出 · 纯浏览器可视化", viewSource: "查看源码 ↗",
-    ready: "验证快照已就绪", loadError: "无法加载快照", transmitted: "已传输", demandServed: "需求满足率",
+    footerText: "真实 C++17 执行 · 浏览器独立验证 · 输入不上传服务器", viewSource: "查看源码 ↗",
+    ready: "C++ WebAssembly 已就绪", loadError: "无法加载 WebAssembly 演示", transmitted: "已传输", demandServed: "需求满足率",
     versus: "相对 BeamFirst", algorithmTime: "算法时间", beamBudget: "波束预算", ofDemand: "总需求", sameBudget: "相同实例与预算",
     throughAudit: "截至最终审计", globalSlots: "全局掩码槽位", users: "用户", resources: "资源", beams: "波束",
     subbands: "子带", groups: "兼容组", dual: "双子带归属", stage: "阶段", score: "得分", gain: "增益",
     elapsed: "用时", cutoff: "截止", decision: "判定", reference: "外部基线", validated: "已独立验证",
     improved: "最优解提升", retained: "保留原最优解", cutoffReached: "达到截止", user: "用户", requested: "需求",
     delivered: "已传输", served: "满足率", assigned: "分配资源", instanceHash: "实例 SHA-256", sourceCommit: "调度器源码提交",
-    snapshotContract: "快照契约", validContract: "验证器通过 · 得分重算一致 · 分配可行", fixedSeed: "确定性种子",
-    currentStage: "当前停止阶段", staticNote: "浏览器展示真实调度器预计算输出，并未使用 JavaScript 近似 FPTR。",
-    resource: "资源", shareSize: "共享人数", unmet: "未满足", active: "激活", inactive: "关闭"
+    snapshotContract: "真实运行契约", validContract: "输入解析通过 · 输出可行 · 得分独立重算 · trace 一致", fixedSeed: "场景种子",
+    currentStage: "已执行阶段", staticNote: "每次点击都会调用由仓库 C++17 源码编译的 WebAssembly；不读取结果表，也不使用 JavaScript 近似算法。",
+    resource: "资源", shareSize: "共享人数", unmet: "未满足", active: "激活", inactive: "关闭",
+    engineLoading: "正在加载 C++ WebAssembly…", engineReady: "C++ WebAssembly 已就绪", stale: "配置已修改 · 请重新运行",
+    running: "正在运行真实 C++ 调度器…", runPassed: "真实运行与验证通过", runError: "运行失败",
+    customInput: "使用自定义 .in 文件", clearCustom: "恢复预设", runReal: "运行真实 C++ 调度器",
+    executionNote: "输入只留在当前浏览器。FPTR 与 BeamFirst 使用相同的时间预算。",
+    presetInput: "预设输入", customInputLabel: "本地自定义输入", rawOutput: "原始输出",
+    solverStdout: "调度器 stdout", solverTrace: "调度器 trace", executionMode: "执行方式",
+    runIdentity: "实时运行", browserWall: "浏览器总耗时", liveExecution: "当前浏览器内实时执行 C++17 WebAssembly",
+    inputName: "输入来源"
   }
 };
 
@@ -65,7 +81,13 @@ const TRACE_LABELS = {
   cg: ["CG", "兼容组"], remask: ["Remask", "重掩码"], pair: ["Full · Pair", "完整 · 配对"], final: ["Final audit", "最终审计"]
 };
 
-const state = { data: null, language: "en", scenarioId: "medium-tight", budgetIndex: 2, stageId: "full", result: null };
+const state = {
+  data: null, module: null, language: "en", scenarioId: "medium-tight", budgetIndex: 2,
+  stageId: "full", customText: null, customName: null, result: null, currentMeta: null,
+  currentInput: null, currentHash: null, runSerial: 0,
+  status: { kind: "loading", key: "engineLoading", detail: "" }
+};
+const presetCache = new Map();
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const fmt = new Intl.NumberFormat("en-US");
@@ -77,16 +99,40 @@ function scenario() { return state.data.scenarios.find((item) => item.id === sta
 function stageMeta() { return state.data.stages.find((item) => item.id === state.stageId); }
 function budget() { return state.data.budgets[state.budgetIndex]; }
 
+function setStatus(kind, key, detail = "") {
+  state.status = { kind, key, detail };
+  const node = $("#dataStatus");
+  node.className = `status-pill ${kind}`;
+  node.textContent = `${t(key)}${detail ? ` · ${detail}` : ""}`;
+}
+
+function updateInputSource() {
+  const selected = scenario();
+  $("#inputSourceLabel").textContent = state.customText ? t("customInputLabel") : t("presetInput");
+  $("#inputSourceDetail").textContent = state.customText
+    ? `${state.customName} · ${(new Blob([state.customText]).size / 1024).toFixed(1)} KiB · ${t("executionNote")}`
+    : `${labelFor(selected)} · ${selected.path}`;
+  $("#scenarioSelect").disabled = Boolean(state.customText) || !state.module;
+  $("#clearCustomButton").hidden = !state.customText;
+}
+
+function markStale() {
+  if (state.result) setStatus("stale", "stale");
+  updateInputSource();
+  $("#budgetValue").textContent = `${budget()} ms`;
+  $("#downloadButton").disabled = true;
+}
+
 function applyLanguage() {
   document.documentElement.lang = state.language === "zh" ? "zh-CN" : "en";
   $$('[data-i18n]').forEach((node) => { node.textContent = t(node.dataset.i18n); });
   $("#languageToggle").textContent = state.language === "zh" ? "EN" : "中文";
-  if ($("#dataStatus").classList.contains("ready")) $("#dataStatus").textContent = t("ready");
-  if ($("#dataStatus").classList.contains("error")) $("#dataStatus").textContent = t("loadError");
+  setStatus(state.status.kind, state.status.key, state.status.detail);
   if (state.data) {
     populateScenarioOptions();
     populateStageButtons();
-    render();
+    updateInputSource();
+    if (state.result) render();
   }
 }
 
@@ -102,7 +148,7 @@ function populateStageButtons() {
   container.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
     state.stageId = button.dataset.stage;
     populateStageButtons();
-    render();
+    markStale();
   }));
 }
 
@@ -113,9 +159,11 @@ function initializeControls() {
   slider.max = String(state.data.budgets.length - 1);
   slider.value = String(state.budgetIndex);
   $("#budgetTicks").innerHTML = state.data.budgets.map((item) => `<span>${item}</span>`).join("");
-  $("#scenarioSelect").disabled = false;
+  $("#scenarioSelect").disabled = !state.module;
   slider.disabled = false;
-  $("#downloadButton").disabled = false;
+  $("#runButton").disabled = !state.module;
+  $("#downloadButton").disabled = true;
+  updateInputSource();
 }
 
 function updateKpis(item, current) {
@@ -254,22 +302,96 @@ function renderTables(item,current){
   $("#usersBody").innerHTML=item.instance.requested.map((requested,i)=>{const delivered=current.delivered[i],served=100*delivered/requested,resources=current.userResources[i].map((r)=>`R${r}`).join(", ")||"—";return `<tr><td><b>U${i+1}</b></td><td>${fmt.format(requested)}</td><td>${fmt.format(delivered)}</td><td>${served.toFixed(1)}%</td><td>${escapeHtml(resources)}</td></tr>`;}).join("");
 }
 
-function renderProvenance(item){
-  $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("fixedSeed")}</span><b>${item.seed}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(labelFor(stageMeta()))} · ${budget()} ms</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>Static Space</span><b>${t("staticNote")}</b></article>`;
+function renderProvenance(item, current){
+  const executedStage=state.data.stages.find((entry)=>entry.id===item.stageId);
+  const stageLabel=executedStage?labelFor(executedStage):item.stageId;
+  const seed=item.seed===null||item.seed===undefined?"—":item.seed;
+  $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("inputName")}</span><b>${escapeHtml(item.inputName)}</b></article><article><span>${t("fixedSeed")}</span><b>${escapeHtml(seed)}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(stageLabel)} · ${item.budgetMs} ms</b></article><article><span>${t("runIdentity")}</span><b>#${item.runSerial} · ${t("browserWall")} ${current.totalWallMs.toFixed(2)} ms</b></article><article><span>${t("executionMode")}</span><b>${t("liveExecution")}</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>Static Space</span><b>${t("staticNote")}</b></article>`;
 }
 
 function render(){
-  if(!state.data)return;
-  const item=scenario(),current=item.results[String(budget())][state.stageId];state.result=current;
-  $("#budgetValue").textContent=`${budget()} ms`;
+  if(!state.result||!state.currentMeta)return;
+  const item=state.currentMeta,current=state.result;
   $("#scenarioNote").textContent=state.language==="zh"?item.noteZh:item.note;
   $("#instanceSummary").textContent=`${labelFor(item)} · ${item.instance.users} ${t("users")} · ${item.instance.resources} ${t("resources")} · ${item.instance.beams} ${t("beams")} · ${item.instance.subbands} ${t("subbands")} · ${item.instance.groups} ${t("groups")} · ${item.instance.dualMemberships} ${t("dual")}`;
-  updateKpis(item,current);renderStageChart(current);renderAllocation(item,current);renderDemand(item,current);renderBeams(item,current);renderTables(item,current);renderProvenance(item);
+  updateKpis(item,current);renderStageChart(current);renderAllocation(item,current);renderDemand(item,current);renderBeams(item,current);renderTables(item,current);renderProvenance(item,current);
+  $("#rawOutput").textContent=current.output;
+  $("#rawTrace").textContent=current.traceText;
+}
+
+async function sha256(text){
+  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(text));
+  return [...new Uint8Array(bytes)].map((value)=>value.toString(16).padStart(2,"0")).join("");
+}
+
+async function presetInput(item){
+  if(presetCache.has(item.id))return presetCache.get(item.id);
+  const response=await fetch(item.path,{cache:"no-cache"});
+  if(!response.ok)throw new Error(`Could not load ${item.path}: HTTP ${response.status}`);
+  const text=await response.text();presetCache.set(item.id,text);return text;
+}
+
+function executeOne(input,stage,budgetMs){
+  const started=performance.now();
+  const raw=state.module.ccall("fptr_run","string",["string","string","number"],[input,stage,budgetMs]);
+  const wallMs=performance.now()-started;
+  let payload;
+  try{payload=JSON.parse(raw);}catch(error){throw new Error(`WebAssembly bridge returned invalid JSON: ${error.message}`);}
+  if(!payload.ok)throw new Error(payload.error||"C++ scheduler failed");
+  return FPTRRuntime.validateRun(state.activeCase,payload.output,payload.trace,budgetMs,wallMs);
+}
+
+function controlsBusy(busy){
+  $("#runButton").disabled=busy||!state.module;
+  $("#budgetSlider").disabled=busy||!state.module;
+  $("#scenarioSelect").disabled=busy||Boolean(state.customText)||!state.module;
+  $("#customInput").disabled=busy||!state.module;
+  $("#clearCustomButton").disabled=busy;
+  $$("#stageButtons button").forEach((button)=>{button.disabled=busy;});
+}
+
+async function runDemo(){
+  if(!state.module||!state.data)return;
+  controlsBusy(true);$("#downloadButton").disabled=true;setStatus("running","running");
+  await new Promise((resolve)=>requestAnimationFrame(()=>resolve()));
+  try{
+    const preset=scenario();
+    const input=state.customText===null?await presetInput(preset):state.customText;
+    const inputName=state.customText===null?preset.path:state.customName;
+    const caseData=FPTRRuntime.parseCaseText(input,inputName);
+    const digest=await sha256(input);
+    if(state.customText===null&&digest!==preset.sha256)throw new Error(`Preset SHA-256 mismatch for ${preset.id}`);
+    state.activeCase=caseData;
+    const selected=executeOne(input,state.stageId,budget());
+    const baseline=state.stageId==="beamfirst"?selected:executeOne(input,"beamfirst",budget());
+    selected.baselineScore=baseline.score;
+    selected.deltaVsBaseline=selected.score-baseline.score;
+    selected.totalWallMs=selected.wallMs+(baseline===selected?0:baseline.wallMs);
+    selected.baseline={score:baseline.score,algorithmMs:baseline.algorithmMs,wallMs:baseline.wallMs,output:baseline.output,traceText:baseline.traceText};
+    state.runSerial+=1;
+    const custom=state.customText!==null;
+    const customNote=`${caseData.N} ${t("users")} · ${caseData.K} ${t("resources")} · ${caseData.P} ${t("beams")}`;
+    state.currentMeta={
+      id:custom?"custom":preset.id,label:custom?state.customName:preset.label,labelZh:custom?state.customName:preset.labelZh,
+      note:custom?`Custom local input · ${customNote}`:preset.note,noteZh:custom?`本地自定义输入 · ${customNote}`:preset.noteZh,
+      seed:custom?null:preset.seed,inputName,sha256:digest,stageId:state.stageId,budgetMs:budget(),runSerial:state.runSerial,
+      instance:FPTRRuntime.instanceView(caseData)
+    };
+    state.currentInput=input;state.currentHash=digest;state.result=selected;
+    render();$("#downloadButton").disabled=false;
+    setStatus("ready","runPassed",`#${state.runSerial} · ${fmt.format(selected.score)}`);
+  }catch(error){
+    console.error(error);$("#rawTrace").textContent=error.stack||String(error);
+    setStatus("error","runError",String(error.message||error).slice(0,120));
+  }finally{controlsBusy(false);updateInputSource();}
 }
 
 function downloadSnapshot(){
-  const item=scenario();const payload={schemaVersion:state.data.schemaVersion,scenario:item.id,scenarioLabel:labelFor(item),seed:item.seed,budgetMs:budget(),stage:state.stageId,instance:item.instance,instanceSha256:item.sha256,schedulerSourceCommit:state.data.schedulerSourceCommit,result:state.result};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const anchor=document.createElement("a");anchor.href=url;anchor.download=`fptr-${item.id}-${budget()}ms-${state.stageId}.json`;anchor.click();URL.revokeObjectURL(url);
+  if(!state.result||!state.currentMeta)return;
+  const item=state.currentMeta;
+  const payload={schemaVersion:2,execution:"live-cpp17-webassembly",runId:item.runSerial,input:{name:item.inputName,sha256:item.sha256,text:state.currentInput},stage:item.stageId,budgetMs:item.budgetMs,schedulerSourceCommit:state.data.schedulerSourceCommit,instance:item.instance,result:state.result};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const anchor=document.createElement("a");anchor.href=url;
+  const safeName=item.id.replace(/[^a-z0-9_-]+/gi,"-");anchor.download=`fptr-live-${safeName}-${item.budgetMs}ms-${item.stageId}.json`;anchor.click();URL.revokeObjectURL(url);
 }
 
 function setupTabs(){
@@ -279,14 +401,27 @@ function setupTabs(){
 async function start(){
   setupTabs();
   $("#languageToggle").addEventListener("click",()=>{state.language=state.language==="en"?"zh":"en";applyLanguage();});
-  $("#scenarioSelect").addEventListener("change",(event)=>{state.scenarioId=event.target.value;render();});
-  $("#budgetSlider").addEventListener("input",(event)=>{state.budgetIndex=Number(event.target.value);render();});
+  $("#scenarioSelect").addEventListener("change",(event)=>{state.scenarioId=event.target.value;markStale();});
+  $("#budgetSlider").addEventListener("input",(event)=>{state.budgetIndex=Number(event.target.value);markStale();});
+  $("#runButton").addEventListener("click",runDemo);
+  $("#customInput").addEventListener("change",async(event)=>{
+    const file=event.target.files&&event.target.files[0];if(!file)return;
+    try{
+      if(file.size>2*1024*1024)throw new Error("Custom input must be 2 MiB or smaller");
+      const text=await file.text();FPTRRuntime.parseCaseText(text,file.name);
+      state.customText=text;state.customName=file.name;markStale();
+    }catch(error){event.target.value="";console.error(error);setStatus("error","runError",String(error.message||error).slice(0,120));}
+  });
+  $("#clearCustomButton").addEventListener("click",()=>{state.customText=null;state.customName=null;$("#customInput").value="";markStale();});
   $("#downloadButton").addEventListener("click",downloadSnapshot);
   let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(render,120);});
   try{
-    const response=await fetch("data/results.json",{cache:"no-cache"});if(!response.ok)throw new Error(`HTTP ${response.status}`);state.data=await response.json();
-    initializeControls();$("#dataStatus").className="status-pill ready";$("#dataStatus").textContent=t("ready");applyLanguage();
-  }catch(error){console.error(error);$("#dataStatus").className="status-pill error";$("#dataStatus").textContent=t("loadError");}
+    if(typeof createFPTRModule!=="function")throw new Error("WebAssembly module factory is unavailable");
+    const [response,module]=await Promise.all([fetch("data/manifest.json",{cache:"no-cache"}),createFPTRModule()]);
+    if(!response.ok)throw new Error(`Manifest HTTP ${response.status}`);
+    state.data=await response.json();state.module=module;
+    initializeControls();setStatus("ready","engineReady");applyLanguage();await runDemo();
+  }catch(error){console.error(error);setStatus("error","loadError",String(error.message||error).slice(0,120));}
 }
 
 start();

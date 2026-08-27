@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Interactive visual walkthrough of the FPTR joint beam and resource scheduler."
+      content="Run and inspect the real FPTR C++17 joint beam and resource scheduler in your browser."
     />
     <title>FPTR Scheduler · Interactive Demo</title>
     <link rel="icon" href="assets/logo.png" />
@@ -33,13 +33,13 @@
           <span class="eyebrow" data-i18n="eyebrow">INTERACTIVE SCHEDULER WALKTHROUGH</span>
           <h1 data-i18n="title">See joint beam and resource scheduling take shape.</h1>
           <p data-i18n="intro">
-            Pick a workload, deadline, and FPTR stopping stage. Every view is backed by a
-            validated snapshot produced by the repository's real C++17 scheduler.
+            Pick a workload, deadline, and FPTR stopping stage, then run the repository's
+            real C++17 scheduler directly in your browser.
           </p>
           <div class="hero-badges" aria-label="Demo properties">
-            <span><i class="dot green"></i><span data-i18n="realSnapshots">Real C++ snapshots</span></span>
+            <span><i class="dot green"></i><span data-i18n="realSnapshots">Live C++17 WebAssembly</span></span>
             <span><i class="dot blue"></i><span data-i18n="audit">Independent validator</span></span>
-            <span><i class="dot violet"></i><span data-i18n="freeStatic">Free static Space</span></span>
+            <span><i class="dot violet"></i><span data-i18n="freeStatic">Runs locally in your browser</span></span>
           </div>
         </div>
         <div class="hero-visual" aria-hidden="true">
@@ -58,11 +58,11 @@
           <div>
             <span class="step-number">01</span>
             <div>
-              <h2 id="controlsTitle" data-i18n="configure">Configure the snapshot</h2>
-              <p data-i18n="configureHint">Changes apply instantly—no queue and no server round-trip.</p>
+              <h2 id="controlsTitle" data-i18n="configure">Configure a live run</h2>
+              <p data-i18n="configureHint">Choose an input, then launch a real deadline-bounded run.</p>
             </div>
           </div>
-          <span id="dataStatus" class="status-pill loading">Loading validated data…</span>
+          <span id="dataStatus" class="status-pill loading">Loading C++ WebAssembly…</span>
         </div>
 
         <div class="controls-grid">
@@ -85,6 +85,24 @@
             <small data-i18n="stageHint">Later stages may only commit complete, feasible improvements.</small>
           </fieldset>
         </div>
+
+        <div class="execution-bar">
+          <div class="input-source">
+            <span class="live-mark" aria-hidden="true"></span>
+            <div><b id="inputSourceLabel">Preset input</b><small id="inputSourceDetail">—</small></div>
+          </div>
+          <label class="file-button">
+            <span data-i18n="customInput">Use custom .in file</span>
+            <input id="customInput" type="file" accept=".in,.txt,text/plain" />
+          </label>
+          <button id="clearCustomButton" class="secondary-button" type="button" hidden data-i18n="clearCustom">Use preset</button>
+          <button id="runButton" class="run-button" type="button" disabled>
+            <span class="run-icon">▶</span><span data-i18n="runReal">Run real C++ scheduler</span>
+          </button>
+        </div>
+        <p id="executionNote" class="execution-note" data-i18n="executionNote">
+          The input stays in this browser. FPTR and BeamFirst execute under the same selected budget.
+        </p>
       </section>
 
       <section id="results" class="results-section" aria-labelledby="resultTitle">
@@ -97,7 +115,7 @@
             </div>
           </div>
           <button id="downloadButton" class="primary-button" type="button" disabled>
-            <span data-i18n="download">Download snapshot</span> ↓
+            <span data-i18n="download">Download run record</span> ↓
           </button>
         </div>
 
@@ -185,6 +203,7 @@
         <div class="tabs" role="tablist" aria-label="Detailed result views">
           <button class="tab active" data-tab="audit" role="tab" aria-selected="true" data-i18n="auditTrail">Stage audit</button>
           <button class="tab" data-tab="users" role="tab" aria-selected="false" data-i18n="userDetail">User detail</button>
+          <button class="tab" data-tab="raw" role="tab" aria-selected="false" data-i18n="rawOutput">Raw output</button>
           <button class="tab" data-tab="provenance" role="tab" aria-selected="false" data-i18n="provenance">Provenance</button>
         </div>
         <div id="auditTab" class="tab-panel active" role="tabpanel">
@@ -193,6 +212,12 @@
         <div id="usersTab" class="tab-panel" role="tabpanel">
           <div class="table-scroll"><table><thead id="usersHead"></thead><tbody id="usersBody"></tbody></table></div>
         </div>
+        <div id="rawTab" class="tab-panel" role="tabpanel">
+          <div class="raw-grid">
+            <article><h3 data-i18n="solverStdout">Scheduler stdout</h3><pre id="rawOutput"></pre></article>
+            <article><h3 data-i18n="solverTrace">Scheduler trace</h3><pre id="rawTrace"></pre></article>
+          </div>
+        </div>
         <div id="provenanceTab" class="tab-panel" role="tabpanel">
           <div id="provenanceCard" class="provenance-card"></div>
         </div>
@@ -200,10 +225,12 @@
     </main>
 
     <footer>
-      <div><b>FPTR Scheduler</b><span data-i18n="footerText">Synthetic public scenarios · validated C++17 outputs · browser-only visualization</span></div>
+      <div><b>FPTR Scheduler</b><span data-i18n="footerText">Real C++17 execution · independent browser validation · no server upload</span></div>
       <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" data-i18n="viewSource">View source ↗</a>
     </footer>
 
+    <script src="runtime.js" defer></script>
+    <script src="wasm/fptr_solver.js" defer></script>
     <script src="app.js" defer></script>
   </body>
 </html>
