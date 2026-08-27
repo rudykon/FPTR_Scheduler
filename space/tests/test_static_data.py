@@ -49,6 +49,7 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertIn("space_sdk: static", workflow)
         self.assertIn("space/build_wasm.sh", workflow)
         self.assertIn("space/tests/smoke_wasm.js", workflow)
+        self.assertIn('PYTHONDONTWRITEBYTECODE: "1"', workflow)
         self.assertNotIn(
             "wasm/fptr_solver.js", (ROOT / ".gitignore").read_text(encoding="utf-8")
         )
