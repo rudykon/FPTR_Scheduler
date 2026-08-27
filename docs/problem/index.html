@@ -54,6 +54,42 @@
 
         <section class="problem-section detail-section">
           <div class="section-wrap">
+            <div class="model-overview">
+              <div class="model-copy">
+                <p class="section-kicker" data-i18n="systemModelKicker">系统模型</p>
+                <h2 data-i18n="systemModelTitle">一次调度，同时决定波束掩码与每个资源上的用户集合。</h2>
+                <p data-i18n="systemModelBody">论文用 U、R、T、P 表示用户、资源、子带与波束。每个用户具有有限缓存 Bᵤ、基础链路质量 γᵤ 和波束能力 cᵤ,ₚ；每个资源显式属于一至两个子带，两个成员可以不相邻。</p>
+                <div class="model-sets" aria-label="System model sets">
+                  <span><b>U</b><small data-i18n="modelUsers">用户</small></span>
+                  <span><b>R</b><small data-i18n="modelResources">资源</small></span>
+                  <span><b>T</b><small data-i18n="modelSubbands">子带</small></span>
+                  <span><b>P</b><small data-i18n="modelBeams">波束</small></span>
+                </div>
+              </div>
+
+              <aside class="objective-card">
+                <span data-i18n="objectiveLabel">目标：最大化受缓存上限约束的传输量</span>
+                <div class="objective-formula" aria-label="FPTR traffic objective">
+                  F(α,G) = Σ<sub>u∈U</sub> min { B<sub>u</sub>, Σ<sub>r:u∈Gᵣ</sub> q(z<sub>u,r</sub>) }
+                </div>
+                <p data-i18n="objectiveBody">α 表示子带—波束激活，Gᵣ 表示资源 r 上的合法用户集合。只有在外部截止时间 D 前通过全部约束并完成序列化，输出才获得正效用。</p>
+              </aside>
+            </div>
+
+            <div class="traffic-map">
+              <div class="traffic-map-copy">
+                <span data-i18n="trafficMapLabel">确定性链路映射</span>
+                <h2 data-i18n="trafficMapTitle">有效链路值先经过阶梯函数，再计入传输量。</h2>
+                <p data-i18n="trafficMapBody">这个 q(z) 是单快照的确定性流量抽象，不是连续物理层速率定律。</p>
+              </div>
+              <div class="traffic-table-wrap">
+                <table class="traffic-table">
+                  <thead><tr><th>z</th><th>≤ −10</th><th>(−10, 0]</th><th>(0, 3]</th><th>(3, 10]</th><th>(10, 15]</th><th>(15, 20]</th><th>&gt; 20</th></tr></thead>
+                  <tbody><tr><th>q(z)</th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+
             <div class="constraint-strip">
               <div class="constraint-item"><b aria-hidden="true">⌁</b><span data-i18n="constraintBeam">全局波束预算</span></div>
               <div class="constraint-item"><b aria-hidden="true">▤</b><span data-i18n="constraintMask">子带波束掩码</span></div>

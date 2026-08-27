@@ -95,6 +95,35 @@
           </figure>
         </section>
 
+        <section class="paper-snapshot">
+          <div class="section-wrap">
+            <div class="snapshot-heading">
+              <p class="section-kicker" data-i18n="paperKicker">论文速览</p>
+              <p class="paper-name">FPTR: Feasibility-Preserving Transactional Refinement for Deadline-Constrained Joint Beam and Resource Allocation</p>
+              <h2 data-i18n="paperSnapshotTitle">问题、机制、结果，一屏读懂。</h2>
+              <p data-i18n="paperSnapshotBody">论文关注的不是搜索能跑多深，而是调度器能否在每个控制周期结束前，交付一个完整、合法且经过验证的结果。</p>
+            </div>
+
+            <div class="snapshot-grid">
+              <article class="snapshot-card snapshot-deadline">
+                <div><span>100 ms</span><b aria-hidden="true">◷</b></div>
+                <h3 data-i18n="snapshotProblemTitle">先保证按时交付</h3>
+                <p data-i18n="snapshotProblemBody">每个控制周期都必须完成波束与资源联合分配；迟到或违反任一约束的输出，在当前周期中的效用为零。</p>
+              </article>
+              <article class="snapshot-card snapshot-gate">
+                <div><span>4 checks</span><b aria-hidden="true">◇</b></div>
+                <h3 data-i18n="snapshotMethodTitle">候选只能整体提交</h3>
+                <p data-i18n="snapshotMethodBody">候选在隔离状态中构造，只有完整、及时、可行且严格更优时才替换 incumbent；否则直接丢弃。</p>
+              </article>
+              <article class="snapshot-card snapshot-result">
+                <div><span>+3.83%</span><b aria-hidden="true">↗</b></div>
+                <h3 data-i18n="snapshotResultTitle">把剩余时间换成增益</h3>
+                <p data-i18n="snapshotResultBody">在 150 个固定实例上，Full 相对 BeamFirst 平均提升 3.83%，750 次 Full 启动全部合法且均未超过 100 ms。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <section class="overview-section" id="explore">
           <div class="section-wrap">
             <div class="overview-heading">

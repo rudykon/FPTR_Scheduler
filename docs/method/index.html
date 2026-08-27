@@ -72,6 +72,25 @@
               </div>
             </div>
 
+            <div class="theory-grid">
+              <article class="theory-card theory-gate">
+                <span>EQ. 9</span>
+                <h2 data-i18n="commitRuleTitle">共同提交门</h2>
+                <code>I ← C ⇔ complete(C) ∧ τ<sub>done</sub>(C) &lt; t<sub>j</sub> ∧ V(C)=1 ∧ F(C)&gt;F(I)</code>
+                <p data-i18n="commitRuleBody">候选完成构造还不够：独立验证也必须在阶段截止点之前结束。四项检查排除部分、过期、非法和不增益的候选。</p>
+              </article>
+              <article class="theory-card theory-top-s">
+                <span>PROP. 1</span>
+                <h2 data-i18n="topSTitle">固定基数 CG 的精确原语</h2>
+                <p data-i18n="topSBody">当波束掩码、资源、保留容量和共享人数 s 固定时，共享惩罚只由 s 决定；因此选择边际增益最大的 s 个用户，就是该局部查询的精确解。</p>
+              </article>
+              <article class="theory-card theory-invariant">
+                <span>LEMMA 1</span>
+                <h2 data-i18n="invariantTitle">可行 incumbent 不变量</h2>
+                <p data-i18n="invariantBody">只要空回退 I₀ 可行且验证器可靠，拒绝候选不会改变 incumbent，接受候选又要求 V(C)=1；因此每次提交后和序列化前，I 始终可行。</p>
+              </article>
+            </div>
+
             <div class="stage-panel">
               <div class="stage-intro">
                 <div class="stage-icon" aria-hidden="true">◷</div>
@@ -84,6 +103,11 @@
                 <article class="stage-card stage-orange"><div class="stage-top"><span>04</span><time>78 ms</time></div><h3>Remask</h3><p data-i18n="stageRemask">根据剩余需求修复掩码与单资源分配</p><i aria-hidden="true"></i></article>
                 <article class="stage-card stage-violet"><div class="stage-top"><span>05</span><time>84 ms</time></div><h3>Pair</h3><p data-i18n="stagePair">双资源 ruin-and-refill，完成 Full 阶段</p><i aria-hidden="true"></i></article>
                 <div class="final-marker"><strong>87 ms</strong><span data-i18n="deadline">最终输出</span></div>
+              </div>
+              <div class="budget-rule">
+                <div><span>3 ms</span><b data-i18n="tailReserve">为最终验证与序列化预留</b></div>
+                <code>t<sub>j</sub> = (B − τ<sub>tail</sub>)ρ<sub>j</sub> / 84,&nbsp; ρ = (45, 60, 70, 78, 84)</code>
+                <p data-i18n="budgetRuleBody">计时器从输入解析前启动。阶段入口检查阻止迟到任务启动，提交门中的验证后时间检查阻止过期候选被接受。</p>
               </div>
               <p class="reference-note"><span aria-hidden="true">⌁</span><span data-i18n="reference">BeamFirst 是独立参考方法，不进入这条累积链。</span></p>
             </div>
