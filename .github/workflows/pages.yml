@@ -7,6 +7,10 @@ on:
     paths:
       - "docs/**"
       - "space/**"
+      - "tools/build_pages.py"
+      - "tools/build_web_figure_fallbacks.py"
+      - "experiments/plot_paper_results.py"
+      - "tests/test_pages.py"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -32,8 +36,12 @@ jobs:
 
       - name: Validate demo inputs and browser runtime
         run: |
+          node --check docs/assets/site.js
           node --check space/app.js
           node --check space/runtime.js
+          python3 -m py_compile tools/build_pages.py experiments/plot_paper_results.py
+          python3 tools/build_web_figure_fallbacks.py --check
+          python3 -m unittest discover -s tests -p 'test_pages.py' -v
           python3 -m unittest discover -s space/tests -p 'test_*.py'
           node space/tests/test_runtime.js
 
@@ -52,6 +60,7 @@ jobs:
         run: |
           mkdir -p _site/demo/wasm _site/demo/data
           cp -a docs/. _site/
+          python3 tools/build_pages.py --source docs --output _site
           cp space/app.js space/runtime.js _site/demo/
           cp -a space/wasm/. _site/demo/wasm/
           cp -a space/data/. _site/demo/data/

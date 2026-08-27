@@ -1,0 +1,206 @@
+from __future__ import annotations
+
+import html
+import json
+import re
+import shutil
+import subprocess
+import tempfile
+import unittest
+from html.parser import HTMLParser
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DOCS = ROOT / "docs"
+
+
+class I18nParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.stack: list[str | None] = []
+        self.values: dict[str, list[str]] = {}
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        key = dict(attrs).get("data-i18n")
+        self.stack.append(key)
+        if key:
+            self.values.setdefault(key, [])
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        return
+
+    def handle_endtag(self, tag: str) -> None:
+        if self.stack:
+            self.stack.pop()
+
+    def handle_data(self, data: str) -> None:
+        for key in reversed(self.stack):
+            if key:
+                self.values[key].append(data)
+                break
+
+    def flattened(self) -> dict[str, str]:
+        return {key: " ".join("".join(parts).split()) for key, parts in self.values.items()}
+
+
+class PagesContractTests(unittest.TestCase):
+    def test_reproduction_shell_blocks_are_syntax_valid(self) -> None:
+        source = (DOCS / "reproduce/index.html").read_text(encoding="utf-8")
+        self.assertNotRegex(source, r"\s\+\s")
+        blocks = re.findall(
+            r"<pre\b[^>]*data-shell[^>]*>\s*<code\b[^>]*>(.*?)</code>\s*</pre>",
+            source,
+            flags=re.DOTALL,
+        )
+        self.assertGreaterEqual(len(blocks), 4)
+        for block in blocks:
+            command = html.unescape(block)
+            result = subprocess.run(
+                ["bash", "-n"],
+                input=command,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+        for required in (
+            "src/scheduler.cpp src/core.cpp",
+            "space/data/cases/small-balanced.in",
+            "--stage full",
+            "--budget-ms 87",
+            "--samples /tmp/fptr-samples",
+            "--output-dir /tmp/fptr-output",
+        ):
+            self.assertIn(required, source)
+
+    def test_native_sample_closes_compile_run_validate_loop(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            scheduler = tmp_path / "scheduler"
+            samples = tmp_path / "samples"
+            outputs = tmp_path / "outputs"
+            samples.mkdir()
+            outputs.mkdir()
+            subprocess.run(
+                [
+                    "g++", "-std=c++17", "-O2",
+                    str(ROOT / "src/scheduler.cpp"),
+                    str(ROOT / "src/core.cpp"),
+                    "-o", str(scheduler),
+                ],
+                check=True,
+                timeout=60,
+            )
+            sample = samples / "small-balanced.in"
+            shutil.copy2(ROOT / "space/data/cases/small-balanced.in", sample)
+            with sample.open("rb") as stdin, (outputs / "small-balanced.out").open("wb") as stdout:
+                subprocess.run(
+                    [str(scheduler), "--stage", "full", "--budget-ms", "87", "--trace"],
+                    stdin=stdin,
+                    stdout=stdout,
+                    stderr=subprocess.PIPE,
+                    check=True,
+                    timeout=20,
+                )
+            subprocess.run(
+                [
+                    "python3", str(ROOT / "tools/scheduler_validator.py"),
+                    "--samples", str(samples),
+                    "--output-dir", str(outputs),
+                ],
+                check=True,
+                timeout=20,
+            )
+
+    def test_static_bilingual_build_has_matching_content(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp)
+            subprocess.run(
+                [
+                    "python3", str(ROOT / "tools/build_pages.py"),
+                    "--source", str(DOCS),
+                    "--output", str(output),
+                ],
+                check=True,
+            )
+            for locale in ("zh", "en"):
+                for page in ("index.html", "problem/index.html", "method/index.html", "evidence/index.html", "reproduce/index.html", "demo/index.html"):
+                    self.assertTrue((output / locale / page).is_file(), f"missing {locale}/{page}")
+            root_html = (output / "index.html").read_text(encoding="utf-8")
+            zh_html = (output / "zh/index.html").read_text(encoding="utf-8")
+            en_html = (output / "en/index.html").read_text(encoding="utf-8")
+            root_parser, zh_parser, en_parser = I18nParser(), I18nParser(), I18nParser()
+            root_parser.feed(root_html)
+            zh_parser.feed(zh_html)
+            en_parser.feed(en_html)
+            self.assertEqual(root_parser.flattened()["paperTitle"], zh_parser.flattened()["paperTitle"])
+            self.assertNotEqual(zh_parser.flattened()["paperTitle"], en_parser.flattened()["paperTitle"])
+            self.assertIn('href="../../assets/site.css"', (output / "en/method/index.html").read_text(encoding="utf-8"))
+            demo_en = (output / "en/demo/index.html").read_text(encoding="utf-8")
+            self.assertIn('src="../../demo/app.js"', demo_en)
+            self.assertIn("See joint beam and resource scheduling take shape.", demo_en)
+            self.assertNotIn("applyLocale", (DOCS / "assets/site.js").read_text(encoding="utf-8"))
+
+    def test_information_hierarchy_and_research_questions(self) -> None:
+        home = (DOCS / "index.html").read_text(encoding="utf-8")
+        for forbidden in (
+            "论文伴读站",
+            "结果按研究问题展开，而不是堆成一张图表墙",
+            "按你的问题进入，不必把一个长页面拉到底",
+            "一份能被检查的研究代码，而不是黑盒演示",
+        ):
+            self.assertNotIn(forbidden, home)
+        self.assertEqual(home.count('class="summary-card '), 3)
+        self.assertEqual(home.count('class="reading-grid"'), 1)
+
+        evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
+        for rq in ("RQ1", "RQ2", "RQ3", "RQ4", "RQ5"):
+            self.assertIn(rq, evidence)
+        for anchor in ("quality", "deadline", "cg-stress", "baselines", "exact", "limits"):
+            self.assertIn(f'id="{anchor}"', evidence)
+        exact = re.search(r'<div class="exact-metrics">(.*?)</div>', evidence, re.DOTALL)
+        self.assertIsNotNone(exact)
+        for value in ("8 / 12", "0%", "3.19%", "25%"):
+            self.assertIn(value, exact.group(1))
+
+        method = (DOCS / "method/index.html").read_text(encoding="utf-8")
+        timeline = re.search(r'<div class="method-timeline">(.*?)</div>', method, re.DOTALL)
+        self.assertIsNotNone(timeline)
+        self.assertEqual(timeline.group(1).count('class="stage'), 6)
+        self.assertIn("B = 87 ms", method)
+        self.assertIn("D = 100 ms", method)
+
+    def test_mobile_and_demo_css_contract(self) -> None:
+        site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")
+        demo_css = (DOCS / "demo/demo.css").read_text(encoding="utf-8")
+        compact_demo = re.sub(r"\s+", " ", demo_css)
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", compact_demo)
+        self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr))", compact_demo)
+        self.assertIn("min-width: 760px", compact_demo)
+        self.assertRegex(
+            compact_demo,
+            r"main, \.demo-app, \.demo-workspace, \.control-panel, \.results-section, \.comparison-panel, \.advanced-results, \.advanced-detail \{ min-width: 0; max-width: 100%; \}",
+        )
+        self.assertNotRegex(site_css + demo_css, r"body\s*\{[^}]*overflow(?:-x)?\s*:\s*hidden")
+        self.assertIn("--demo-body: 1rem", demo_css)
+        self.assertIn("--demo-meta: .875rem", demo_css)
+        self.assertIn("padding: 2.25rem 0 2rem", site_css)
+        self.assertIn("clamp(2.4rem, 4.3vw, 3.75rem)", site_css)
+
+    def test_web_figure_manifest_is_current(self) -> None:
+        subprocess.run(
+            ["python3", str(ROOT / "tools/build_web_figure_fallbacks.py"), "--check"],
+            cwd=ROOT,
+            check=True,
+        )
+        payload = json.loads((DOCS / "evidence/figure-manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(payload["figures"]), 6)
+        for name in payload["figures"]:
+            self.assertTrue((DOCS / "images" / f"{name}.svg").is_file())
+            self.assertTrue((DOCS / "images" / f"{name}.png").is_file())
+
+
+if __name__ == "__main__":
+    unittest.main()
+

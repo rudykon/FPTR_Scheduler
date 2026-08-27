@@ -107,12 +107,20 @@ GAIN = "#347A4A"
 WIDE_CASE = "#B86A08"
 
 
-def configure_style() -> None:
+def configure_style(profile: str = "paper") -> None:
+    global FIGURE_WIDTH_IN, BODY_FONT_PT, SMALL_FONT_PT, TITLE_FONT_PT, PANEL_FONT_PT
+    if profile == "web":
+        FIGURE_WIDTH_IN = 8.0
+        BODY_FONT_PT = 10.5
+        SMALL_FONT_PT = 10.0
+        TITLE_FONT_PT = 12.0
+        PANEL_FONT_PT = 12.0
     mpl.rcParams.update(
         {
             "font.size": BODY_FONT_PT,
-            "font.family": "serif",
+            "font.family": "sans-serif" if profile == "web" else "serif",
             "font.serif": ["Times New Roman", "Liberation Serif", "Nimbus Roman", "DejaVu Serif", "Arial"],
+            "font.sans-serif": ["Inter", "Noto Sans", "DejaVu Sans", "Arial"],
             "axes.labelsize": BODY_FONT_PT,
             "axes.titlesize": TITLE_FONT_PT,
             "axes.titleweight": "normal",
@@ -1899,6 +1907,75 @@ def write_qa(output: Path, payload: Mapping[str, object]) -> None:
     )
 
 
+def build_web_figures(
+    *,
+    output_dir: Path,
+    manifest_path: Path,
+    trace_rows: Sequence[Mapping[str, str]],
+    trace_analysis: Mapping[str, object],
+    paired_analysis: Mapping[str, object],
+    budget_rows: Sequence[Mapping[str, str]],
+    budget_run_rows: Sequence[Mapping[str, str]],
+    main_run_rows: Sequence[Mapping[str, str]],
+    stress_rows: Sequence[Mapping[str, str]],
+    stress_run_rows: Sequence[Mapping[str, str]],
+    exact_rows: Sequence[Mapping[str, str]],
+    source_data: Mapping[str, object],
+    bootstrap_samples: int,
+    bootstrap_seed: int,
+) -> None:
+    """Emit one responsive SVG/PNG per web claim without manuscript panel labels."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    jobs = (
+        ("web_stage_gain", lambda ax: draw_trace_ablation(
+            ax, trace_rows, trace_analysis,
+            bootstrap_samples=bootstrap_samples,
+            bootstrap_seed=bootstrap_seed,
+        )),
+        ("web_scenario_gain", lambda ax: draw_scenario_gain(ax, paired_analysis)),
+        ("web_budget_quality", lambda ax: draw_budget_tradeoff(
+            ax, budget_rows, budget_run_rows,
+            bootstrap_samples=bootstrap_samples,
+            bootstrap_seed=bootstrap_seed,
+        )),
+        ("web_runtime_ecdf", lambda ax: draw_runtime_ecdf(ax, main_run_rows)),
+        ("web_cg_stress", lambda ax: draw_cg_stress(
+            ax, stress_rows, stress_run_rows,
+            bootstrap_samples=bootstrap_samples,
+            bootstrap_seed=bootstrap_seed,
+        )),
+        ("web_optimality_gap", lambda ax: draw_exact_gap(ax, exact_rows)),
+    )
+    outputs: dict[str, object] = {}
+    for name, draw in jobs:
+        fig, ax = plt.subplots(figsize=(8.0, 4.8), constrained_layout=True)
+        panel_data, _annotations = draw(ax)
+        stem = output_dir / name
+        fig.savefig(stem.with_suffix(".svg"), metadata={"Creator": "FPTR web profile"})
+        fig.savefig(stem.with_suffix(".png"), dpi=180)
+        plt.close(fig)
+        outputs[name] = {
+            "svg_sha256": file_sha256(stem.with_suffix(".svg")),
+            "png_sha256": file_sha256(stem.with_suffix(".png")),
+            "data": panel_data,
+        }
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "profile": "web",
+                "generator": "experiments/plot_paper_results.py --profile web",
+                "source_data": source_data,
+                "outputs": outputs,
+            },
+            indent=2,
+            ensure_ascii=False,
+        ) + "\n",
+        encoding="utf-8",
+    )
+
+
 def split_main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -1940,6 +2017,14 @@ def split_main() -> None:
     )
     parser.add_argument("--bootstrap-samples", type=int, default=5000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260722)
+    parser.add_argument("--profile", choices=("paper", "web"), default="paper")
+    parser.add_argument(
+        "--web-output-dir", type=Path, default=Path("docs/images"),
+        help="directory for the six standalone web SVG/PNG figures",
+    )
+    parser.add_argument(
+        "--web-manifest", type=Path, default=Path("docs/evidence/figure-manifest.json"),
+    )
     args = parser.parse_args()
     if args.bootstrap_samples < 100:
         raise ValueError("bootstrap-samples must be at least 100")
@@ -1955,7 +2040,7 @@ def split_main() -> None:
         else args.output_dir / "results_stress_optimality"
     )
 
-    configure_style()
+    configure_style(args.profile)
     paths = {
         "trace_rows": args.results_dir / "trace_ablation_results.csv",
         "trace_analysis": args.results_dir / "trace_ablation_analysis.json",
@@ -2014,6 +2099,25 @@ def split_main() -> None:
         "exact_rows": exact_rows,
     }
     source_data = build_source_data(paths, row_objects)
+
+    if args.profile == "web":
+        build_web_figures(
+            output_dir=args.web_output_dir,
+            manifest_path=args.web_manifest,
+            trace_rows=trace_rows,
+            trace_analysis=trace_analysis,
+            paired_analysis=paired_analysis,
+            budget_rows=budget_rows,
+            budget_run_rows=budget_run_rows,
+            main_run_rows=main_run_rows,
+            stress_rows=stress_rows,
+            stress_run_rows=stress_run_rows,
+            exact_rows=exact_rows,
+            source_data=source_data,
+            bootstrap_samples=args.bootstrap_samples,
+            bootstrap_seed=args.bootstrap_seed,
+        )
+        return
 
     quality_fig, quality_axes, quality_legend, quality_notes, quality_panels = (
         build_quality_runtime_figure(
