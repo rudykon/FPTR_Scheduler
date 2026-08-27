@@ -703,7 +703,14 @@ summary { min-height: 52px; padding: .75rem 1rem; cursor: pointer; font-weight: 
   .main-nav a { min-height: 46px; justify-content: flex-start; padding-inline: .75rem; font-size: .9375rem; }
   .home-hero { min-height: 0; padding: 2.2rem 1.1rem; border-radius: 26px; }
   .home-hero h1 { font-size: clamp(2.5rem, 12vw, 3.25rem); }
-  html[lang="en"] .home-hero h1 { font-size: 2.55rem; }
+  html[lang="en"] .home-hero { padding: 1.65rem 1.05rem; }
+  html[lang="en"] .home-hero h1 { font-size: 2.25rem; line-height: 1.02; }
+  html[lang="en"] .home-hero .paper-title-en { font-size: .875rem; line-height: 1.35; }
+  html[lang="en"] .home-hero .paper-thesis { font-size: .975rem; line-height: 1.55; }
+  html[lang="en"] .home-hero .home-budget-note { line-height: 1.45; }
+  html[lang="en"] .home-hero .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: 1rem; }
+  html[lang="en"] .home-hero .hero-actions .button { min-height: 46px; padding: .62rem .7rem; }
+  html[lang="en"] .home-hero .hero-actions .button:last-child { grid-column: 1 / -1; }
   .paper-title-en { font-size: .9375rem; }
   .home-summary, .home-reading { padding-block: 3.5rem; }
   .home-summary-lead { gap: .7rem; }
