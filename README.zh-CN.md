@@ -206,7 +206,7 @@ python3 experiments/plot_paper_results.py \
 | `tools/audit_exact_suite.py` | 针对外部结果工件的独立精确审计流程 |
 | `experiments/` | 确定性实例生成、实验编排、分析与绘图 |
 | `tests/` | 验证器、模型契约和调度器回归测试 |
-| `space/` | Docker Gradio Demo、交互可视化与审计包下载 |
+| `space/` | 免费 Static Space、经验证的 C++ 快照、交互可视化与 JSON 下载 |
 | `docs/images/` | 用于公开 README 的已确认说明图与结果图 |
 | `docs/index.html` | 通过 GitHub Pages 部署的双语静态项目网页 |
 | `.github/workflows/pages.yml` | GitHub Pages 自动部署工作流 |

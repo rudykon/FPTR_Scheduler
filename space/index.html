@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Interactive visual walkthrough of the FPTR joint beam and resource scheduler."
+    />
+    <title>FPTR Scheduler · Interactive Demo</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#results">Skip to results</a>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="FPTR Scheduler demo home">
+        <img src="assets/logo.png" alt="" />
+        <span><b>FPTR</b><small>Scheduler Lab</small></span>
+      </a>
+      <nav aria-label="Project links">
+        <button id="languageToggle" class="text-button" type="button">中文</button>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">
+          GitHub ↗
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow" data-i18n="eyebrow">INTERACTIVE SCHEDULER WALKTHROUGH</span>
+          <h1 data-i18n="title">See joint beam and resource scheduling take shape.</h1>
+          <p data-i18n="intro">
+            Pick a workload, deadline, and FPTR stopping stage. Every view is backed by a
+            validated snapshot produced by the repository's real C++17 scheduler.
+          </p>
+          <div class="hero-badges" aria-label="Demo properties">
+            <span><i class="dot green"></i><span data-i18n="realSnapshots">Real C++ snapshots</span></span>
+            <span><i class="dot blue"></i><span data-i18n="audit">Independent validator</span></span>
+            <span><i class="dot violet"></i><span data-i18n="freeStatic">Free static Space</span></span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="signal signal-one"></div>
+          <div class="signal signal-two"></div>
+          <div class="tower"><span></span></div>
+          <div class="packet packet-a">U1</div>
+          <div class="packet packet-b">U2</div>
+          <div class="packet packet-c">U3</div>
+          <div class="resource-line"></div>
+        </div>
+      </section>
+
+      <section class="control-panel" aria-labelledby="controlsTitle">
+        <div class="section-heading compact">
+          <div>
+            <span class="step-number">01</span>
+            <div>
+              <h2 id="controlsTitle" data-i18n="configure">Configure the snapshot</h2>
+              <p data-i18n="configureHint">Changes apply instantly—no queue and no server round-trip.</p>
+            </div>
+          </div>
+          <span id="dataStatus" class="status-pill loading">Loading validated data…</span>
+        </div>
+
+        <div class="controls-grid">
+          <label class="control-field">
+            <span data-i18n="scenario">Traffic scenario</span>
+            <select id="scenarioSelect" disabled></select>
+            <small id="scenarioNote"></small>
+          </label>
+
+          <div class="control-field">
+            <span><span data-i18n="deadline">Deadline budget</span> <b id="budgetValue">87 ms</b></span>
+            <input id="budgetSlider" type="range" min="0" max="4" step="1" value="2" disabled />
+            <div id="budgetTicks" class="range-ticks" aria-hidden="true"></div>
+            <small data-i18n="deadlineHint">The same cutoff controls every compared method.</small>
+          </div>
+
+          <fieldset class="control-field stage-field">
+            <legend data-i18n="stopStage">FPTR stopping stage</legend>
+            <div id="stageButtons" class="stage-buttons"></div>
+            <small data-i18n="stageHint">Later stages may only commit complete, feasible improvements.</small>
+          </fieldset>
+        </div>
+      </section>
+
+      <section id="results" class="results-section" aria-labelledby="resultTitle">
+        <div class="section-heading">
+          <div>
+            <span class="step-number">02</span>
+            <div>
+              <h2 id="resultTitle" data-i18n="inspect">Inspect the incumbent</h2>
+              <p id="instanceSummary">—</p>
+            </div>
+          </div>
+          <button id="downloadButton" class="primary-button" type="button" disabled>
+            <span data-i18n="download">Download snapshot</span> ↓
+          </button>
+        </div>
+
+        <div id="kpiGrid" class="kpi-grid" aria-live="polite"></div>
+
+        <div class="dashboard-grid">
+          <article class="panel panel-wide">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker" data-i18n="transactional">TRANSACTIONAL REFINEMENT</span>
+                <h3 data-i18n="pipelineTitle">Cumulative incumbent score</h3>
+              </div>
+              <div class="legend-inline">
+                <span><i class="legend-line blue-line"></i>FPTR</span>
+                <span><i class="legend-line orange-line"></i>BeamFirst</span>
+              </div>
+            </div>
+            <div id="stageChart" class="stage-chart chart-empty"></div>
+            <p class="chart-note" data-i18n="pipelineNote">
+              A stage is accepted only after the candidate passes the full feasibility contract.
+            </p>
+          </article>
+
+          <article class="panel explainer-panel">
+            <span class="panel-kicker" data-i18n="readChart">HOW TO READ THIS</span>
+            <h3 data-i18n="whyTransactional">Why “transactional”?</h3>
+            <ol class="explain-list">
+              <li><b data-i18n="propose">Propose</b><span data-i18n="proposeText">change beams or assignments</span></li>
+              <li><b data-i18n="validate">Validate</b><span data-i18n="validateText">check budget, sharing, and subbands</span></li>
+              <li><b data-i18n="commit">Commit</b><span data-i18n="commitText">keep only a complete score gain</span></li>
+            </ol>
+            <div class="audit-callout">
+              <span>✓</span>
+              <div><b data-i18n="auditPass">Audit passed</b><small data-i18n="auditPassText">score, deadline, and feasibility agree</small></div>
+            </div>
+          </article>
+
+          <article class="panel panel-wide allocation-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker" data-i18n="jointAllocation">JOINT ALLOCATION</span>
+                <h3 data-i18n="allocationTitle">Who uses each resource block?</h3>
+              </div>
+              <div class="share-legend">
+                <span data-i18n="none">None</span><i></i><i></i><i></i><i></i><span data-i18n="shared">Shared</span>
+              </div>
+            </div>
+            <div class="canvas-scroll"><canvas id="allocationCanvas" aria-label="User by resource allocation heatmap"></canvas></div>
+            <div id="allocationTooltip" class="chart-tooltip" role="status"></div>
+          </article>
+
+          <article class="panel demand-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker" data-i18n="trafficCoverage">TRAFFIC COVERAGE</span>
+                <h3 data-i18n="demandTitle">Delivered versus unmet demand</h3>
+              </div>
+            </div>
+            <div class="canvas-scroll"><canvas id="demandCanvas" aria-label="Per-user delivered and unmet demand chart"></canvas></div>
+            <div id="demandTooltip" class="chart-tooltip" role="status"></div>
+          </article>
+
+          <article class="panel beam-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker" data-i18n="maskDesign">MASK DESIGN</span>
+                <h3 data-i18n="beamTitle">Active beams by subband</h3>
+              </div>
+            </div>
+            <div id="beamGrid" class="beam-grid"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="detail-section" aria-labelledby="detailTitle">
+        <div class="section-heading">
+          <div>
+            <span class="step-number">03</span>
+            <div>
+              <h2 id="detailTitle" data-i18n="verify">Verify the details</h2>
+              <p data-i18n="verifyHint">Trace every accepted stage and every user's served traffic.</p>
+            </div>
+          </div>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Detailed result views">
+          <button class="tab active" data-tab="audit" role="tab" aria-selected="true" data-i18n="auditTrail">Stage audit</button>
+          <button class="tab" data-tab="users" role="tab" aria-selected="false" data-i18n="userDetail">User detail</button>
+          <button class="tab" data-tab="provenance" role="tab" aria-selected="false" data-i18n="provenance">Provenance</button>
+        </div>
+        <div id="auditTab" class="tab-panel active" role="tabpanel">
+          <div class="table-scroll"><table><thead id="auditHead"></thead><tbody id="auditBody"></tbody></table></div>
+        </div>
+        <div id="usersTab" class="tab-panel" role="tabpanel">
+          <div class="table-scroll"><table><thead id="usersHead"></thead><tbody id="usersBody"></tbody></table></div>
+        </div>
+        <div id="provenanceTab" class="tab-panel" role="tabpanel">
+          <div id="provenanceCard" class="provenance-card"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><b>FPTR Scheduler</b><span data-i18n="footerText">Synthetic public scenarios · validated C++17 outputs · browser-only visualization</span></div>
+      <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" data-i18n="viewSource">View source ↗</a>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
