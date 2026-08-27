@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/brand-mark.svg" width="520" alt="FPTR Scheduler 品牌标识">
+  <img src="docs/FPTR Scheduler.png" width="520" alt="FPTR Scheduler 品牌标识">
 </p>
 
 <h1 align="center">FPTR 联合波束与资源调度器</h1>

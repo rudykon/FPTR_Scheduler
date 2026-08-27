@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/brand-mark.svg" width="520" alt="FPTR Scheduler brand mark">
+  <img src="docs/FPTR Scheduler.png" width="520" alt="FPTR Scheduler brand mark">
 </p>
 
 <h1 align="center">FPTR Joint Beam and Resource Scheduler</h1>
