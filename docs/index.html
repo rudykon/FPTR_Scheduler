@@ -32,8 +32,8 @@
         </nav>
         <div class="header-actions">
           <div class="language-switch" aria-label="Language">
-            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
-            <button type="button" data-locale="en" aria-pressed="false">EN</button>
+            <a href="./zh/" data-locale="zh" class="active" aria-current="page">中</a>
+            <a href="./en/" data-locale="en" lang="en">EN</a>
           </div>
           <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
@@ -41,11 +41,12 @@
 
       <main id="main">
         <section class="home-hero section-wrap">
-          <div>
-            <span class="paper-badge" data-i18n="paperBadge">论文伴读站 · FPTR Scheduler</span>
+          <div class="home-hero-copy">
+            <span class="paper-badge" data-i18n="paperBadge">DEADLINE-AWARE SCHEDULING</span>
             <h1 data-i18n="paperTitle">FPTR：截止时间约束下的联合波束与资源调度</h1>
             <p class="paper-title-en">Feasibility-Preserving Transactional Refinement for Deadline-Constrained Joint Beam and Resource Allocation</p>
-            <p class="paper-thesis" data-i18n="paperThesis">始终保留一个可发布的可行解，把剩余计算时间用于隔离细化，并只提交完整、及时、合法且严格更优的候选。</p>
+            <p class="paper-thesis" data-i18n="paperThesis">FPTR 始终保留一个可发布的可行解，在隔离状态中细化候选，并且只提交完整、及时、合法且严格更优的结果。</p>
+            <p class="home-budget-note" data-i18n="homeBudgetNote">内部搜索与收尾预算 B=87 ms；外部端到端计分截止 D=100 ms。</p>
             <div class="hero-actions">
               <a class="button button-primary" href="./method/"><span data-i18n="readMethod">理解核心方法</span><span aria-hidden="true">→</span></a>
               <a class="button button-secondary" href="./evidence/"><span data-i18n="viewResults">查看实验结果</span><span aria-hidden="true">→</span></a>
@@ -58,73 +59,49 @@
           </figure>
         </section>
 
-        <section class="clock-section">
+        <section class="home-summary">
           <div class="section-wrap">
-            <div class="clock-intro">
-              <h2 data-i18n="clockTitle">四个数字，共用一只时钟。</h2>
-              <p data-i18n="clockBody">内部搜索预算 B 为 87 ms；最后一个细化阶段在 84 ms 截止，随后预留 3 ms 完成最终验证与序列化。外部端到端计分截止 D 为 100 ms。</p>
+            <div class="home-summary-lead">
+              <p class="section-kicker" data-i18n="thirtyTitle">30 秒读懂 FPTR</p>
+              <h2 data-i18n="paperSnapshotBody">波束、资源、共享关系和有限缓存必须联合决策；任何迟到或违反约束的输出在当前周期中的效用都为零。</h2>
             </div>
-            <div class="clock-track" aria-label="FPTR 100 millisecond scheduling timeline" data-i18n-aria="clockAria">
-              <div><time>0–45</time><b>Base</b><small data-i18n="stageBaseShort">首个可行解</small></div>
-              <div><time>45–60</time><b>Global</b><small data-i18n="stageGlobalShort">全局重定价</small></div>
-              <div><time>60–70</time><b>CG</b><small data-i18n="stageCgShort">兼容组共享</small></div>
-              <div><time>70–78</time><b>Remask</b><small data-i18n="stageRemaskShort">掩码修复</small></div>
-              <div><time>78–84</time><b>Full</b><small data-i18n="stageFullShort">Pair refinement</small></div>
-              <div><time>84–87</time><b>Finalize</b><small data-i18n="stageFinalizeShort">验证与序列化</small></div>
-              <div><time>87–100</time><b>External margin</b><small data-i18n="stageExternalShort">进程与收集余量</small></div>
-            </div>
-            <p class="clock-legend">
-              <span><b>B = 87 ms</b> <span data-i18n="internalBudget">算法内部预算</span></span>
-              <span><b>84 + 3 ms</b> <span data-i18n="tailFormula">细化截止 + 尾部预留</span></span>
-              <span><b>D = 100 ms</b> <span data-i18n="externalDeadline">外部计分截止</span></span>
-            </p>
-          </div>
-        </section>
-
-        <section class="story-section">
-          <div class="section-wrap">
-            <div class="story-lead">
-              <h2 data-i18n="thirtyTitle">30 秒读懂 FPTR</h2>
-              <div>
-                <p data-i18n="paperSnapshotBody">论文关注的不是搜索能跑多深，而是调度器能否在每个控制周期结束前，交付一个完整、合法且经过验证的结果。</p>
-                <p data-i18n="thirtyBody">波束、资源、共享关系和有限缓存彼此耦合；直接修改当前解会让超时留下半成品。FPTR 因而把每次细化当作一次事务。</p>
-              </div>
-            </div>
-            <div class="contribution-grid">
-              <article class="contribution"><span>01 · PROBLEM</span><h3 data-i18n="snapshotProblemTitle">先保证按时交付</h3><p data-i18n="snapshotProblemBody">每个控制周期都必须完成波束与资源联合分配；迟到或违反任一约束的输出，在当前周期中的效用为零。</p></article>
-              <article class="contribution"><span>02 · METHOD</span><h3 data-i18n="snapshotMethodTitle">候选只能整体提交</h3><p data-i18n="snapshotMethodBody">候选在隔离状态中构造，只有完整、及时、可行且严格更优时才替换 incumbent；否则直接丢弃。</p></article>
-              <article class="contribution"><span>03 · EVIDENCE</span><h3 data-i18n="snapshotResultTitle">把剩余时间换成增益</h3><p data-i18n="snapshotResultBody">在 150 个固定实例上，Full 相对 BeamFirst 平均提升 3.83%，750 次 Full 启动全部合法且均未超过 100 ms。</p></article>
+            <div class="summary-grid">
+              <article class="summary-card problem-card">
+                <span>01 · PROBLEM</span><strong>6</strong>
+                <h3 data-i18n="snapshotProblemTitle">先保证按时交付</h3>
+                <p data-i18n="snapshotProblemBody">每个控制周期都必须完成波束与资源联合分配；迟到或违反任一约束的输出，在当前周期中的效用为零。</p>
+              </article>
+              <article class="summary-card method-card">
+                <span>02 · METHOD</span><strong>4</strong>
+                <h3 data-i18n="snapshotMethodTitle">候选只能整体提交</h3>
+                <p data-i18n="snapshotMethodBody">候选在隔离状态中构造，只有完整、及时、可行且严格更优时才替换 incumbent；否则直接丢弃。</p>
+              </article>
+              <article class="summary-card evidence-card">
+                <span>03 · EVIDENCE</span><strong>+3.83%</strong>
+                <h3 data-i18n="snapshotResultTitle">把剩余时间换成增益</h3>
+                <p data-i18n="snapshotResultBody">在 150 个固定实例上，Full 相对 BeamFirst 平均提升 3.83%，750 次 Full 启动全部合法且均未超过 100 ms。</p>
+              </article>
             </div>
           </div>
         </section>
 
-        <section class="result-band">
+        <section class="home-reading">
           <div class="section-wrap">
             <div class="section-heading">
-              <p class="section-kicker" data-i18n="resultSnapshotKicker">关键结果</p>
-              <h2 data-i18n="resultSnapshotTitle">质量、时限与可行性一起报告。</h2>
+              <p class="section-kicker" data-i18n="readingKicker">深入阅读</p>
+              <h2 data-i18n="readingTitle">从模型、方法与证据进入论文核心。</h2>
             </div>
-            <div class="metric-line">
-              <article><strong>+3.83%</strong><b data-i18n="metricBeamTitle">相对 BeamFirst</b><p data-i18n="metricBeamBody">95% CI：3.09–4.67%；实例中位数 W/T/L 为 127/23/0。</p></article>
-              <article><strong>60.28 / 87.29 ms</strong><b data-i18n="metricRuntimeTitle">Full 的 p50 / p95</b><p data-i18n="metricRuntimeBody">观测最坏墙钟时间为 92.14 ms。</p></article>
-              <article><strong>750 / 750</strong><b data-i18n="metricValidTitle">Full 输出全部合法</b><p data-i18n="metricValidBody">独立验证全部通过，且没有一次超过 100 ms。</p></article>
+            <div class="reading-grid">
+              <a href="./problem/"><span>01</span><h3 data-i18n="navProblem">问题建模</h3><p data-i18n="overviewProblemBody">理解波束、掩码、缓存、共享与硬截止时间为何必须一起处理。</p><b aria-hidden="true">→</b></a>
+              <a href="./method/"><span>02</span><h3 data-i18n="navMethod">FPTR 方法</h3><p data-i18n="overviewMethodBody">查看隔离候选、四项提交检查与五阶段累积细化链。</p><b aria-hidden="true">→</b></a>
+              <a href="./evidence/"><span>03</span><h3 data-i18n="navEvidence">实验结果</h3><p data-i18n="overviewEvidenceBody">检查阶段增益、预算曲线、运行时间、压力测试与精确校准。</p><b aria-hidden="true">→</b></a>
             </div>
-          </div>
-        </section>
-
-        <section class="reading-path">
-          <div class="section-wrap">
-            <div class="section-heading">
-              <p class="section-kicker" data-i18n="readingKicker">阅读路径</p>
-              <h2 data-i18n="readingTitle">按你的问题进入，不必把一个长页面拉到底。</h2>
+            <div class="secondary-links">
+              <span data-i18n="secondaryLinks">交互运行与复现</span>
+              <a href="./demo/"><span data-i18n="runDemo">运行 Demo</span><b aria-hidden="true">↗</b></a>
+              <a href="./reproduce/"><span data-i18n="navReproduce">代码与复现</span><b aria-hidden="true">↗</b></a>
+              <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub<b aria-hidden="true">↗</b></a>
             </div>
-            <ol class="path-list">
-              <li><a href="./problem/"><span>01</span><h3 data-i18n="navProblem">问题建模</h3><p data-i18n="overviewProblemBody">理解波束、掩码、缓存、共享与硬截止时间为何必须一起处理。</p><b aria-hidden="true">→</b></a></li>
-              <li><a href="./method/"><span>02</span><h3 data-i18n="navMethod">FPTR 方法</h3><p data-i18n="overviewMethodBody">查看隔离候选、四项提交检查与五阶段累积细化链。</p><b aria-hidden="true">→</b></a></li>
-              <li><a href="./evidence/"><span>03</span><h3 data-i18n="navEvidence">实验结果</h3><p data-i18n="overviewEvidenceBody">检查阶段增益、预算曲线、运行时间、压力测试与精确校准。</p><b aria-hidden="true">→</b></a></li>
-              <li><a href="./demo/"><span>04</span><h3>Demo</h3><p data-i18n="demoPathBody">在同一输入和预算下实时运行 FPTR、BeamFirst 与六种搜索基线。</p><b aria-hidden="true">→</b></a></li>
-              <li><a href="./reproduce/"><span>05</span><h3 data-i18n="navReproduce">代码与复现</h3><p data-i18n="overviewReproduceBody">从 C++17 编译到独立验证和快速实验，按步骤复现公开结果。</p><b aria-hidden="true">→</b></a></li>
-            </ol>
             <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。所有性能主张应由重新生成的工件或单独提供的证据复核。</span></p></div>
           </div>
         </section>

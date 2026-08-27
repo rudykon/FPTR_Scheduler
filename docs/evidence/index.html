@@ -31,7 +31,7 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><button type="button" data-locale="zh" class="active" aria-pressed="true">中</button><button type="button" data-locale="en" aria-pressed="false">EN</button></div>
+          <div class="language-switch" aria-label="Language"><a href="../zh/evidence/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/evidence/" data-locale="en" lang="en">EN</a></div>
           <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>
@@ -41,8 +41,8 @@
           <div class="section-wrap">
             <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="evidenceKicker">03 · 公开证据</p>
-            <h1 data-i18n="evidenceTitle">结果按研究问题展开，而不是堆成一张图表墙。</h1>
-            <p data-i18n="evidenceBody">下面依次回答质量是否提升、能否守住时限、压力下是否稳健，以及距离精确最优还有多远。每个结论先给答案，再给图与实验边界。</p>
+            <h1 data-i18n="evidenceTitle">质量提升、截止时间与最优性校准</h1>
+            <p data-i18n="evidenceBody">五个研究问题分别检验质量、截止时间、兼容组压力、匹配外部基线与精确最优性校准。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
@@ -57,7 +57,16 @@
               <span><b>p50 / p95</b> <span data-i18n="termPercentile">墙钟时间的中位数 / 第 95 百分位</span></span>
             </div>
 
-            <section class="rq">
+            <nav class="rq-nav" aria-label="Evidence sections">
+              <a href="#quality" data-i18n="rqNavQuality">质量</a>
+              <a href="#deadline" data-i18n="rqNavDeadline">截止时间</a>
+              <a href="#cg-stress" data-i18n="rqNavCg">CG 压力</a>
+              <a href="#baselines" data-i18n="rqNavBaselines">外部基线</a>
+              <a href="#exact" data-i18n="rqNavExact">精确校准</a>
+              <a href="#limits" data-i18n="rqNavLimits">结论边界</a>
+            </nav>
+
+            <section class="rq" id="quality">
               <div class="rq-summary">
                 <span class="rq-label">RQ1 · QUALITY</span>
                 <h2 data-i18n="rq1Title">累计细化是否真的提升质量？</h2>
@@ -65,19 +74,18 @@
                 <p data-i18n="rq1Body">是。Full 相对 BeamFirst 的平均增益为 3.83%（95% CI 3.09–4.67%），W/T/L 为 127/23/0；相对 Base 的平均增益为 1.79%。</p>
               </div>
               <div>
-                <div class="figure-legend"><span class="legend-chip">BeamFirst / Base</span><span class="legend-chip green">Global / CG</span><span class="legend-chip orange">Remask</span><span class="legend-chip violet">Full</span></div>
                 <figure class="web-figure">
-                  <a href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_stage_gain.png" alt="FPTR ordered cumulative stage gain" /></a>
+                  <a href="../images/web_stage_gain.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_stage_gain.svg" type="image/svg+xml" /><img src="../images/web_stage_gain.png" alt="FPTR ordered cumulative stage gain" /></picture></a>
                   <figcaption data-i18n="stageGainCaption">固定顺序下的条件增量：Global +0.44、CG +0.49、Remask +0.59、Full · Pair +0.25 个百分点。它们不是独立模块效应。</figcaption>
                 </figure>
                 <figure class="web-figure">
-                  <a href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_scenario_gain.png" alt="Scenario-wise FPTR Full gain" /></a>
+                  <a href="../images/web_scenario_gain.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_scenario_gain.svg" type="image/svg+xml" /><img src="../images/web_scenario_gain.png" alt="Scenario-wise FPTR Full gain" /></picture></a>
                   <figcaption data-i18n="scenarioGainCaption">Full 在五种规模与压力场景中的平均增益均为正；点击图件可按原尺寸查看。</figcaption>
                 </figure>
               </div>
             </section>
 
-            <section class="rq">
+            <section class="rq" id="deadline">
               <div class="rq-summary">
                 <span class="rq-label">RQ2 · DEADLINE</span>
                 <h2 data-i18n="rq2Title">质量提升是否以错过截止时间为代价？</h2>
@@ -85,31 +93,40 @@
                 <p data-i18n="rq2Body">没有。Full 的 750 次运行全部通过独立验证且均未超过 100 ms；墙钟时间 p50 / p95 为 60.28 / 87.29 ms，观测最坏值为 92.14 ms。</p>
               </div>
               <div>
-                <div class="figure-legend"><span class="legend-chip">累计 FPTR 配置</span><span class="legend-chip orange">100 ms 外部截止</span></div>
                 <figure class="web-figure">
-                  <a href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><img src="../images/web_runtime_ecdf.png" alt="Runtime ECDF under the 87 millisecond internal budget" /></a>
+                  <a href="../images/web_runtime_ecdf.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_runtime_ecdf.svg" type="image/svg+xml" /><img src="../images/web_runtime_ecdf.png" alt="Runtime ECDF under the 87 millisecond internal budget" /></picture></a>
                   <figcaption data-i18n="runtimeCaption">87 ms 内部预算下的求解器墙钟时间 ECDF；100 ms 虚线表示外部计分截止。</figcaption>
                 </figure>
                 <figure class="web-figure">
-                  <a href="../images/web_budget_quality.png" target="_blank" rel="noreferrer"><img src="../images/web_budget_quality.png" alt="FPTR budget and quality trade-off" /></a>
+                  <a href="../images/web_budget_quality.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_budget_quality.svg" type="image/svg+xml" /><img src="../images/web_budget_quality.png" alt="FPTR budget and quality trade-off" /></picture></a>
                   <figcaption data-i18n="budgetCaption">预算从 60 ms 增至 87 ms 时，平均增益从 1.60% 增至 1.65%，显示边际收益已开始趋平。</figcaption>
                 </figure>
               </div>
             </section>
 
-            <section class="rq">
+            <section class="rq" id="cg-stress">
               <div class="rq-summary">
-                <span class="rq-label">RQ3 · ROBUSTNESS</span>
-                <h2 data-i18n="rq3Title">共享规模增大、换成外部搜索基线后，优势还在吗？</h2>
-                <span class="rq-metric">+6.58–8.40%</span>
-                <p data-i18n="rq3Body">在匹配的 87 ms 预算与 100 ms 计分规则下，Full 相对六种独立搜索实现的平均增益位于 6.58% 到 8.40%。CG 压力测试中优势保持为正，但方差会随规模变化。</p>
+                <span class="rq-label">RQ3 · CG STRESS</span>
+                <h2 data-i18n="rq3Title">兼容组规模增大时，质量与运行时间是否稳定？</h2>
+                <span class="rq-metric">CG 2 → 20</span>
+                <p data-i18n="rq3Body">CG 压力套件让兼容组大小与覆盖率共同变化。Full 的优势保持为正，同时报告 p95 墙钟时间，避免只看质量不看时限。</p>
               </div>
               <div>
-                <div class="figure-legend"><span class="legend-chip green">CG</span><span class="legend-chip violet">Full</span></div>
                 <figure class="web-figure">
-                  <a href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><img src="../images/web_cg_stress.png" alt="Compatibility group size stress test" /></a>
+                  <a href="../images/web_cg_stress.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_cg_stress.svg" type="image/svg+xml" /><img src="../images/web_cg_stress.png" alt="Compatibility group size stress test" /></picture></a>
                   <figcaption data-i18n="cgStressCaption">兼容组大小与覆盖率共同变化；图中同时标出 Full 的 p95 墙钟时间。</figcaption>
                 </figure>
+              </div>
+            </section>
+
+            <section class="rq" id="baselines">
+              <div class="rq-summary">
+                <span class="rq-label">RQ4 · MATCHED BASELINES</span>
+                <h2 data-i18n="rq4Title">在匹配预算与计分规则下，外部搜索基线表现如何？</h2>
+                <span class="rq-metric">+6.58–8.40%</span>
+                <p data-i18n="rq4Body">在统一的 87 ms 内部预算和 100 ms 外部计分规则下，Full 相对六种独立搜索实现的平均增益为 6.58%–8.40%。</p>
+              </div>
+              <div>
                 <details>
                   <summary data-i18n="baselineDetails">展开六种匹配外部基线的完整结果</summary>
                   <div class="details-body">
@@ -132,23 +149,27 @@
               </div>
             </section>
 
-            <section class="rq">
+            <section class="rq" id="exact">
               <div class="rq-summary">
-                <span class="rq-label">RQ4 · OPTIMALITY</span>
-                <h2 data-i18n="rq4Title">在能精确求解的小案例上，FPTR 距离最优多远？</h2>
-                <span class="rq-metric">8 / 12</span>
-                <p data-i18n="rq4Body">Full 在 12 个独立动态规划校准案例中有 8 个达到全局最优；最优差距中位数为 0%、均值 3.19%、最大 25%。</p>
+                <span class="rq-label">RQ5 · EXACT CALIBRATION</span>
+                <h2 data-i18n="rq5Title">在可精确求解的小案例上，FPTR 距离最优多远？</h2>
+                <p data-i18n="rq5Body">Full 在 12 个独立动态规划校准案例中有 8 个达到全局最优；最优差距中位数为 0%、均值 3.19%、最大 25%。</p>
               </div>
               <div>
-                <div class="figure-legend"><span class="legend-chip">核心案例</span><span class="legend-chip orange">更宽案例</span><span class="legend-chip violet">均值</span></div>
+                <div class="exact-metrics">
+                  <article><strong>8 / 12</strong><span data-i18n="exactReached">达到全局最优</span></article>
+                  <article><strong>0%</strong><span data-i18n="exactMedian">中位差距</span></article>
+                  <article><strong>3.19%</strong><span data-i18n="exactMean">平均差距</span></article>
+                  <article><strong>25%</strong><span data-i18n="exactMax">最大差距</span></article>
+                </div>
                 <figure class="web-figure">
-                  <a href="../images/web_optimality_gap.png" target="_blank" rel="noreferrer"><img src="../images/web_optimality_gap.png" alt="Exact optimality gaps on twelve small cases" /></a>
+                  <a href="../images/web_optimality_gap.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_optimality_gap.svg" type="image/svg+xml" /><img src="../images/web_optimality_gap.png" alt="Exact optimality gaps on twelve small cases" /></picture></a>
                   <figcaption data-i18n="optimalityCaption">事务门保证可行与严格改进，但不保证接近全局最优；较宽案例揭示了这一边界。</figcaption>
                 </figure>
               </div>
             </section>
 
-            <section class="limitations">
+            <section class="limitations" id="limits">
               <h2 data-i18n="limitsTitle">这是受控静态快照研究，不是硬实时部署证明。</h2>
               <p data-i18n="limitsBody">实验使用合成静态实例、单台未绑核主机和较小精确套件；尚未覆盖动态队列、公平性、移动性、复杂干扰、连续预编码和真实部署轨迹。</p>
             </section>

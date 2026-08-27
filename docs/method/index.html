@@ -31,7 +31,7 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><button type="button" data-locale="zh" class="active" aria-pressed="true">中</button><button type="button" data-locale="en" aria-pressed="false">EN</button></div>
+          <div class="language-switch" aria-label="Language"><a href="../zh/method/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/method/" data-locale="en" lang="en">EN</a></div>
           <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>
@@ -41,7 +41,7 @@
           <div class="section-wrap">
             <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="methodKicker">02 · 核心方法</p>
-            <h1 data-i18n="methodTitle">像事务一样细化：候选只能整体提交或整体丢弃。</h1>
+            <h1 data-i18n="methodTitle">可行性保持的事务式细化</h1>
             <p data-i18n="methodBody">I 是始终可发布的 incumbent，C 是隔离构造的候选。四项检查全部通过才执行 I ← C；任一检查失败，I 保持不变。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
@@ -49,36 +49,35 @@
 
         <section class="detail-section">
           <div class="section-wrap">
-            <section class="editorial-section">
-              <div class="section-heading">
-                <p class="section-kicker" data-i18n="methodIntuitionKicker">先看直觉</p>
-                <h2 data-i18n="methodIntuitionTitle">把“探索”与“可发布状态”彻底分开。</h2>
-                <p data-i18n="methodIntuitionBody">任何时刻都能返回 I。更激进的搜索只发生在 C 中，共同提交门 gate 决定候选是否有资格替换 I。</p>
-              </div>
-              <div class="intuition-row">
-                <article class="intuition-node"><span>I</span><h3 data-i18n="incumbentTitle">Incumbent</h3><p data-i18n="incumbentBody">已经完整验证、随时可以序列化的当前最好可行解。</p></article>
-                <span class="intuition-arrow" aria-hidden="true">→</span>
-                <article class="intuition-node"><span>C</span><h3 data-i18n="candidateTitle">Candidate</h3><p data-i18n="candidateBody">在私有状态中构造的完整候选，失败不会污染 I。</p></article>
-                <span class="intuition-arrow" aria-hidden="true">→</span>
-                <article class="intuition-node"><span>gate</span><h3 data-i18n="gateTitle">Commit gate</h3><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
-              </div>
-            </section>
-
-            <section class="editorial-section">
+            <section class="editorial-section" id="transaction">
               <div class="section-heading">
                 <p class="section-kicker" data-i18n="commitRuleTitle">共同提交门</p>
-                <h2 data-i18n="commitHeading">候选完成构造，还不等于可以提交。</h2>
-                <p data-i18n="commitRuleBody">独立验证也必须在阶段截止点之前结束。四项检查排除部分、过期、非法和不增益的候选。</p>
+                <h2 data-i18n="methodStateTitle">一条可发布通道，一条隔离探索通道。</h2>
+                <p data-i18n="methodStateBody">I 始终保持完整可行；每次尝试先复制到 C，再在私有状态中细化。成功候选整体提交，失败候选整体丢弃。</p>
               </div>
-              <div class="gate">
-                <div class="gate-source"><b>C</b><small data-i18n="candidateIsolation">隔离构造候选</small></div>
+              <div class="transaction-diagram" aria-label="FPTR incumbent and candidate channels">
+                <div class="transaction-lane incumbent-lane">
+                  <span class="lane-label" data-i18n="incumbentTitle">Incumbent</span>
+                  <article><strong>I</strong><p data-i18n="incumbentBody">已经完整验证、随时可以序列化的当前最好可行解。</p></article>
+                  <i aria-hidden="true" data-i18n="incumbentPersist">保持可发布 →</i>
+                  <article><strong>I</strong><p data-i18n="publishableBody">探索期间不被原地修改；截止时可立即返回。</p></article>
+                </div>
+                <div class="transaction-lane candidate-lane">
+                  <span class="lane-label" data-i18n="candidateTitle">Candidate</span>
+                  <article><strong>I → C</strong><p data-i18n="candidateIsolation">复制后隔离构造候选</p></article>
+                  <i aria-hidden="true" data-i18n="refineArrow">细化 →</i>
+                  <article><strong>gate(C)</strong><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
+                </div>
                 <div class="gate-checks">
                   <div><code>complete(C)</code><p data-i18n="checkComplete">候选解完整</p></div>
                   <div><code>t<sub>done</sub>(C) &lt; t<sub>j</sub></code><p data-i18n="checkTime">阶段截止前完成</p></div>
                   <div><code>V(C) = 1</code><p data-i18n="checkValid">结构验证通过</p></div>
                   <div><code>F(C) &gt; F(I)</code><p data-i18n="checkImprove">传输量严格提升</p></div>
                 </div>
-                <div class="gate-outcome"><strong data-i18n="commit">COMMIT · 更新 I ← C</strong><small data-i18n="pass">全部通过</small><em data-i18n="discard">否则 DISCARD · 保留 I</em></div>
+                <div class="gate-branches">
+                  <strong><span data-i18n="pass">全部通过</span> → <span data-i18n="commit">COMMIT · 更新 I ← C</span></strong>
+                  <em><span data-i18n="fail">任一失败</span> → <span data-i18n="discard">DISCARD · 保留 I</span></em>
+                </div>
               </div>
               <div class="formula-block">I ← C ⇔ complete(C) ∧ t<sub>done</sub>(C) &lt; t<sub>j</sub> ∧ V(C)=1 ∧ F(C)&gt;F(I)</div>
             </section>
@@ -86,19 +85,22 @@
             <section class="editorial-section">
               <div class="section-heading">
                 <p class="section-kicker" data-i18n="timelineKicker">累计细化链</p>
-                <h2 data-i18n="timelineTitle">有界、累积、按绝对截止点推进</h2>
-                <p data-i18n="timelineBody">每个阶段继承前一阶段的最好可行解，并拥有独立完成截止点。最后预留时间用于最终验证与序列化。</p>
+                <h2 data-i18n="methodMilestoneTitle">六个等宽里程碑使用绝对截止点。</h2>
+                <p data-i18n="methodMilestoneBody">Base ≤45 → Global ≤60 → CG ≤70 → Remask ≤78 → Pair ≤84 → 验证与序列化 ≤87 ms。</p>
               </div>
               <div class="method-timeline">
-                <article class="stage"><time>45 ms</time><h3>Base</h3><p data-i18n="stageBase">多样化掩码构造首个可行解</p></article>
-                <article class="stage"><time>60 ms</time><h3>Global</h3><p data-i18n="stageGlobal">按缓存感知的边际收益全局重定价</p></article>
-                <article class="stage"><time>70 ms</time><h3>CG</h3><p data-i18n="stageCg">在兼容组内进行合法多用户共享</p></article>
-                <article class="stage"><time>78 ms</time><h3>Remask</h3><p data-i18n="stageRemask">根据剩余需求修复掩码与单资源分配</p></article>
-                <article class="stage"><time>84 ms</time><h3>Full · Pair refinement</h3><p data-i18n="stagePair">双资源 ruin-and-refill，完成 Full 配置</p></article>
+                <article class="stage"><time>≤ 45 ms</time><h3>Base</h3><p data-i18n="stageBase">多样化掩码构造首个可行解</p></article>
+                <article class="stage"><time>≤ 60 ms</time><h3>Global</h3><p data-i18n="stageGlobal">按缓存感知的边际收益全局重定价</p></article>
+                <article class="stage"><time>≤ 70 ms</time><h3>CG</h3><p data-i18n="stageCg">在兼容组内进行合法多用户共享</p></article>
+                <article class="stage"><time>≤ 78 ms</time><h3>Remask</h3><p data-i18n="stageRemask">根据剩余需求修复掩码与单资源分配</p></article>
+                <article class="stage"><time>≤ 84 ms</time><h3>Pair</h3><p data-i18n="stagePair">双资源 ruin-and-refill，完成 Full 配置</p></article>
+                <article class="stage finalize-stage"><time>≤ 87 ms</time><h3>Validate</h3><p data-i18n="stageFinalizeShort">验证与序列化</p></article>
               </div>
-              <div class="evidence-note" style="margin-top: 2rem">
-                <strong data-i18n="clockClarificationTitle">84 ms 不是最终输出时间。</strong>
-                <p data-i18n="clockClarificationBody">Pair refinement 在 84 ms 截止，84–87 ms 专用于最终验证与序列化；87 ms 是内部预算，100 ms 是外部端到端计分截止。</p>
+              <div class="deadline-contract">
+                <div><strong>B = 87 ms</strong><span data-i18n="internalBudget">算法内部预算</span></div>
+                <i aria-hidden="true">→</i>
+                <div><strong>D = 100 ms</strong><span data-i18n="externalDeadline">外部计分截止</span></div>
+                <p data-i18n="externalClockBody">内部预算 B=87 ms；外部截止 D=100 ms 还包含进程启动、输入输出与结果收集。</p>
               </div>
               <p><span data-i18n="reference">BeamFirst 是独立参考方法，不进入这条累积链。</span></p>
             </section>

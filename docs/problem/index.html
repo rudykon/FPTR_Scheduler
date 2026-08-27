@@ -31,7 +31,7 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><button type="button" data-locale="zh" class="active" aria-pressed="true">中</button><button type="button" data-locale="en" aria-pressed="false">EN</button></div>
+          <div class="language-switch" aria-label="Language"><a href="../zh/problem/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/problem/" data-locale="en" lang="en">EN</a></div>
           <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>
@@ -41,7 +41,7 @@
           <div class="section-wrap">
             <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="problemKicker">01 · 为什么难</p>
-            <h1 data-i18n="problemTitle">六类约束不是排队出现，而是同时咬合。</h1>
+            <h1 data-i18n="problemTitle">联合波束与资源调度的模型与约束</h1>
             <p data-i18n="problemBody">波束选择会改变可用速率，资源成员关系会影响共享，缓存上限又会改变每一步的真实收益。任何局部修改，都可能让原本合法的分配越界。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
@@ -54,17 +54,32 @@
                 <p class="section-kicker" data-i18n="systemModelKicker">系统模型</p>
                 <h2 data-i18n="systemModelTitle">一次调度，同时决定波束掩码与每个资源上的用户集合。</h2>
                 <p data-i18n="systemModelBody">论文用 U、R、T、P 表示用户、资源、子带与波束。每个用户具有有限缓存 Bᵤ、基础链路质量 γᵤ 和波束能力 cᵤ,ₚ；每个资源显式属于一至两个子带，两个成员可以不相邻。</p>
-                <div class="symbol-row" aria-label="System model symbols">
-                  <span><b>U</b><span data-i18n="modelUsers">用户</span></span>
-                  <span><b>R</b><span data-i18n="modelResources">资源</span></span>
-                  <span><b>T</b><span data-i18n="modelSubbands">子带</span></span>
-                  <span><b>P</b><span data-i18n="modelBeams">波束</span></span>
-                </div>
               </div>
               <aside class="callout">
                 <h3 data-i18n="scenarioQuestionTitle">调度器每个周期回答什么？</h3>
                 <p data-i18n="scenarioQuestionBody">激活哪些子带—波束组合，并把哪些用户放到每个资源上；结果必须在截止时间前完整序列化且通过全部约束。</p>
               </aside>
+              <div class="symbol-table-wrap" style="grid-column: 1 / -1">
+                <h3 data-i18n="symbolTitle">符号与角色</h3>
+                <div class="table-wrap">
+                  <table class="symbol-table">
+                    <thead><tr><th data-i18n="symbolLabel">符号</th><th data-i18n="meaningLabel">含义</th><th data-i18n="roleLabel">在模型中的角色</th></tr></thead>
+                    <tbody>
+                      <tr><th><i>U</i></th><td data-i18n="modelUsers">用户集合</td><td data-i18n="symbolUsersRole">被服务的有限缓存业务实体</td></tr>
+                      <tr><th><i>R</i></th><td data-i18n="modelResources">资源集合</td><td data-i18n="symbolResourcesRole">承载用户集合 Gᵣ 的离散资源块</td></tr>
+                      <tr><th><i>T</i></th><td data-i18n="modelSubbands">子带集合</td><td data-i18n="symbolSubbandsRole">资源显式属于一至两个子带</td></tr>
+                      <tr><th><i>P</i></th><td data-i18n="modelBeams">波束集合</td><td data-i18n="symbolBeamsRole">受全局预算与子带掩码共同约束</td></tr>
+                      <tr><th><i>B<sub>u</sub></i></th><td data-i18n="symbolBufferMeaning">用户 u 的缓存</td><td data-i18n="symbolBufferRole">限制该用户可计入目标的最大传输量</td></tr>
+                      <tr><th><i>γ<sub>u</sub></i></th><td data-i18n="symbolGammaMeaning">用户 u 的基础链路质量</td><td data-i18n="symbolGammaRole">与波束能力共同形成有效链路值</td></tr>
+                      <tr><th><i>c<sub>u,p</sub></i></th><td data-i18n="symbolCapabilityMeaning">用户—波束能力</td><td data-i18n="symbolCapabilityRole">描述用户 u 在波束 p 下的适配度</td></tr>
+                      <tr><th><i>α</i></th><td data-i18n="symbolActivationMeaning">子带—波束激活</td><td data-i18n="symbolActivationRole">决定每个子带可使用的波束掩码</td></tr>
+                      <tr><th><i>G<sub>r</sub></i></th><td data-i18n="symbolGroupMeaning">资源 r 的用户集合</td><td data-i18n="symbolGroupRole">必须满足兼容组与共享人数约束</td></tr>
+                      <tr><th><i>q(z)</i></th><td data-i18n="symbolTrafficMeaning">确定性流量映射</td><td data-i18n="symbolTrafficRole">把有效链路值映射为离散可交付流量</td></tr>
+                      <tr><th><i>D</i></th><td data-i18n="symbolDeadlineMeaning">外部截止时间</td><td data-i18n="symbolDeadlineRole">迟到、非法或失败输出均计零效用</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </section>
 
             <section class="editorial-section editorial-grid">
@@ -78,12 +93,15 @@
                 <h3 data-i18n="trafficMapTitle">有效链路值先经过阶梯函数，再计入传输量。</h3>
                 <p data-i18n="trafficMapBody">这个 q(z) 是单快照的确定性流量抽象，不是连续物理层速率定律。</p>
               </aside>
-              <div class="traffic-table-wrap" style="grid-column: 1 / -1">
-                <table>
-                  <thead><tr><th>z</th><th>≤ −10</th><th>(−10, 0]</th><th>(0, 3]</th><th>(3, 10]</th><th>(10, 15]</th><th>(15, 20]</th><th>&gt; 20</th></tr></thead>
-                  <tbody><tr><th>q(z)</th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
-                </table>
-              </div>
+              <details class="traffic-details" style="grid-column: 1 / -1">
+                <summary data-i18n="trafficDetails">展开确定性阶梯映射 q(z)</summary>
+                <div class="traffic-table-wrap">
+                  <table>
+                    <thead><tr><th>z</th><th>≤ −10</th><th>(−10, 0]</th><th>(0, 3]</th><th>(3, 10]</th><th>(10, 15]</th><th>(15, 20]</th><th>&gt; 20</th></tr></thead>
+                    <tbody><tr><th>q(z)</th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
+                  </table>
+                </div>
+              </details>
             </section>
 
             <section class="editorial-section">
@@ -106,9 +124,10 @@
                   <ul><li data-i18n="constraintBuffer">有限用户缓存</li><li data-i18n="constraintDeadline">硬截止时间</li></ul>
                 </article>
               </div>
-              <figure class="figure-wide">
-                <a href="../images/scenario_constraint_coupling.png" target="_blank" rel="noreferrer"><img src="../images/scenario_constraint_coupling.png" alt="调度快照与资源—子带耦合" data-i18n-alt="figureProblemAlt" /></a>
-                <figcaption data-i18n="figureProblem">调度快照与资源—子带耦合。点击可查看原尺寸图件。</figcaption>
+              <figure class="scenario-split">
+                <a class="scenario-crop scenario-left" href="../images/scenario_constraint_coupling.png" target="_blank" rel="noreferrer"><img src="../images/scenario_constraint_coupling.png" alt="联合调度快照" data-i18n-alt="figureScenarioAlt" /></a>
+                <a class="scenario-crop scenario-right" href="../images/scenario_constraint_coupling.png" target="_blank" rel="noreferrer"><img src="../images/scenario_constraint_coupling.png" alt="资源与子带耦合" data-i18n-alt="figureCouplingAlt" /></a>
+                <figcaption><span data-i18n="figureScenario">(a) 联合波束与资源调度快照</span><span data-i18n="figureCoupling">(b) 资源到一至两个子带的显式耦合</span></figcaption>
               </figure>
             </section>
 
