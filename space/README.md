@@ -6,7 +6,7 @@ colorTo: purple
 sdk: static
 app_file: index.html
 pinned: false
-short_description: Interactive deadline-aware joint beam and resource scheduling
+short_description: Visual FPTR joint beam and resource scheduler
 ---
 
 # FPTR Joint Beam and Resource Scheduler

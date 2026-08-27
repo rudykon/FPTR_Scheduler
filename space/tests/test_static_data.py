@@ -29,6 +29,12 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertIn('fetch("data/results.json"', script)
         self.assertEqual(card.count("sdk: static"), 1)
         self.assertNotIn("sdk: docker", card)
+        short_description = next(
+            line.split(":", 1)[1].strip()
+            for line in card.splitlines()
+            if line.startswith("short_description:")
+        )
+        self.assertLessEqual(len(short_description), 60)
         self.assertIn("space_sdk: static", workflow)
 
     def test_generated_snapshots_are_self_consistent(self) -> None:
