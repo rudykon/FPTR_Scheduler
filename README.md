@@ -15,6 +15,7 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/"><img src="https://img.shields.io/badge/Project_Website-Open_FPTR-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Open the FPTR project website"></a>
+  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo"><img src="https://img.shields.io/badge/Hugging_Face-Live_Demo-FFD21E?style=for-the-badge&logo=huggingface&logoColor=111111" alt="Open the interactive FPTR demo"></a>
 </p>
 
 <p align="center">
@@ -26,6 +27,7 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/">Website</a> ·
+  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo">Live Demo</a> ·
   <a href="#overview">Overview</a> ·
   <a href="#method">Method</a> ·
   <a href="#visual-summary">Figures</a> ·
@@ -204,8 +206,8 @@ They summarize execution accounting, external-baseline comparisons, exact calibr
 | `tools/audit_exact_suite.py` | Independent exact-audit workflow for externally supplied result artifacts |
 | `experiments/` | Deterministic instance generation, experiment orchestration, analysis, and plotting |
 | `tests/` | Validator, model-contract, scheduler, and release-helper regression tests |
+| `space/` | Docker-based Gradio demo, interactive visualizations, and audit downloads |
 | `docs/images/` | Approved explanatory and result figures for the public README |
 | `docs/index.html` | Bilingual static project website deployed through GitHub Pages |
 | `.github/workflows/pages.yml` | Automatic GitHub Pages deployment workflow |
 | `PROJECT_OVERVIEW.md` | Compact model, algorithm, and component overview |
-

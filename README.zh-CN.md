@@ -15,6 +15,7 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/"><img src="https://img.shields.io/badge/项目主页-打开_FPTR-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="打开 FPTR 项目主页"></a>
+  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo"><img src="https://img.shields.io/badge/Hugging_Face-交互_Demo-FFD21E?style=for-the-badge&logo=huggingface&logoColor=111111" alt="打开 FPTR 交互 Demo"></a>
 </p>
 
 <p align="center">
@@ -26,6 +27,7 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/">项目主页</a> ·
+  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo">交互 Demo</a> ·
   <a href="#overview">项目概览</a> ·
   <a href="#method">方法</a> ·
   <a href="#visual-summary">图示</a> ·
@@ -204,8 +206,8 @@ python3 experiments/plot_paper_results.py \
 | `tools/audit_exact_suite.py` | 针对外部结果工件的独立精确审计流程 |
 | `experiments/` | 确定性实例生成、实验编排、分析与绘图 |
 | `tests/` | 验证器、模型契约和调度器回归测试 |
+| `space/` | Docker Gradio Demo、交互可视化与审计包下载 |
 | `docs/images/` | 用于公开 README 的已确认说明图与结果图 |
 | `docs/index.html` | 通过 GitHub Pages 部署的双语静态项目网页 |
 | `.github/workflows/pages.yml` | GitHub Pages 自动部署工作流 |
 | `PROJECT_OVERVIEW.md` | 模型、算法和组件概览 |
-
