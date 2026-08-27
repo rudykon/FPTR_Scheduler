@@ -39,7 +39,8 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertIn('src="wasm/fptr_solver.js"', html)
         self.assertIn('src="app.js"', html)
         self.assertIn('src="./wasm/fptr_baselines.js"', github_demo)
-        self.assertIn('fetch("data/manifest.json"', script)
+        self.assertIn('fetch(demoAssetUrl("data/manifest.json")', script)
+        self.assertIn('const DEMO_BASE_URL', script)
         self.assertIn('ccall("fptr_run"', script)
         self.assertIn('"fptr_baseline_run"', script)
         self.assertNotIn("data/results.json", script)
@@ -151,14 +152,16 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertIn("Feasibility-Preserving Transactional Refinement", home)
         for route in ("problem", "method", "evidence", "reproduce", "demo"):
             self.assertIn(f'href="./{route}/"', home)
-        for cutoff in ("84–87", "87–100", "B = 87 ms", "D = 100 ms"):
+        for cutoff in ("B=87 ms", "D=100 ms"):
             self.assertIn(cutoff, home)
 
-        self.assertIn("Full · Pair refinement", method)
+        for cutoff in ("≤ 45 ms", "≤ 84 ms", "≤ 87 ms", "B = 87 ms", "D = 100 ms"):
+            self.assertIn(cutoff, method)
+        self.assertIn("<h3>Pair</h3>", method)
         self.assertNotIn(
             '<img src="../images/Deadline_Aware_FPTR_Scheduler.png"', method
         )
-        for rq in ("RQ1", "RQ2", "RQ3", "RQ4"):
+        for rq in ("RQ1", "RQ2", "RQ3", "RQ4", "RQ5"):
             self.assertIn(rq, evidence)
         for panel in (
             "web_stage_gain.png",
@@ -170,6 +173,9 @@ class StaticSpaceTests(unittest.TestCase):
         ):
             self.assertIn(panel, evidence)
             self.assertTrue((docs / "images" / panel).is_file(), panel)
+            svg = panel.replace(".png", ".svg")
+            self.assertIn(svg, evidence)
+            self.assertTrue((docs / "images" / svg).is_file(), svg)
 
         self.assertIn('class="advanced-controls"', demo)
         self.assertIn('class="advanced-results"', demo)
@@ -179,7 +185,7 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertEqual(demo.count('id="customInput"'), 1)
         self.assertEqual(demo.count('id="stageButtons"'), 1)
 
-        self.assertIn("--text-body: 1.0625rem", css)
+        self.assertIn("--text-body: 1rem", css)
         self.assertIn("min-height: 44px", css)
         self.assertIn(
             "https://rudykon.github.io/FPTR_Scheduler/demo/",

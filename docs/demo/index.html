@@ -48,8 +48,8 @@
 
         <div class="header-actions">
           <div class="language-switch" aria-label="Language">
-            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
-            <button type="button" data-locale="en" aria-pressed="false">EN</button>
+            <a href="../zh/demo/" data-locale="zh" class="active" aria-current="page">中</a>
+            <a href="../en/demo/" data-locale="en" lang="en">EN</a>
           </div>
           <a
             class="icon-link github-icon"
@@ -65,9 +65,9 @@
         <section class="demo-hero section-wrap">
           <div class="demo-hero-copy">
             <p class="demo-eyebrow" data-i18n="eyebrow">交互式调度器导览</p>
-            <h1 data-i18n="title">直观看见联合波束与资源调度如何成形。</h1>
+            <h1 data-i18n="demoHeroTitle">直观看见联合波束与资源调度如何成形。</h1>
             <p class="demo-intro" data-i18n="intro">
-              选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中实时对比仓库的 C++17 调度器与六种独立搜索基线。
+              实时运行 FPTR 与 7 个参考方法：BeamFirst，以及 ALNS、Tabu、GA、SA、ILS、GRASP 六种匹配搜索基线。
             </p>
             <div class="hero-badges" aria-label="Demo properties">
               <span><i class="dot green"></i><span data-i18n="realSnapshots">实时 C++17 WebAssembly</span></span>
@@ -99,7 +99,7 @@
                   <p data-i18n="configureHint">选择输入，然后启动一次受截止时间约束的真实运行。</p>
                 </div>
               </div>
-              <span id="dataStatus" class="status-pill loading">正在加载 C++ WebAssembly…</span>
+              <span id="dataStatus" class="status-pill loading" data-i18n="engineLoading">正在加载 C++ WebAssembly…</span>
             </div>
 
             <div class="controls-grid">
@@ -139,7 +139,7 @@
             <div class="execution-bar">
               <div class="input-source">
                 <span class="live-mark" aria-hidden="true"></span>
-                <div><b id="inputSourceLabel">预设输入</b><small id="inputSourceDetail">—</small></div>
+                <div><b id="inputSourceLabel" data-i18n="presetInput">预设输入</b><small id="inputSourceDetail">—</small></div>
               </div>
               <button id="runButton" class="run-button" type="button" disabled>
                 <span class="run-icon">▶</span><span data-i18n="runReal">运行实时对比</span>
@@ -170,29 +170,36 @@
               <div class="panel-heading comparison-heading">
                 <div>
                   <span class="panel-kicker" data-i18n="liveComparison">实时算法对比</span>
-                  <h3 id="comparisonTitle" data-i18n="comparisonTitle">同一实例、同一预算，现场运行七种参考算法。</h3>
-                  <p data-i18n="comparisonHint">所有输出都由同一个独立验证器重新计算得分并检查约束。</p>
+                  <h3 id="comparisonTitle" data-i18n="comparisonTitle">FPTR 与 7 个参考方法在同一实例和预算下实时运行。</h3>
+                  <p data-i18n="comparisonHint">BeamFirst 与六种匹配搜索基线的输出均由同一独立验证器重算得分并检查约束。</p>
                 </div>
                 <span id="comparisonStatus" class="comparison-status">8 C++ / WASM</span>
               </div>
               <div id="comparisonBars" class="comparison-bars chart-empty" aria-label="Live algorithm score comparison"></div>
-              <div class="table-scroll comparison-table-wrap">
-                <table class="comparison-table">
-                  <thead>
-                    <tr>
-                      <th data-i18n="method">算法</th>
-                      <th data-i18n="score">得分</th>
-                      <th data-i18n="demandServed">需求满足率</th>
-                      <th data-i18n="versusFptr">相对 FPTR</th>
-                      <th data-i18n="algorithmTime">算法时间</th>
-                      <th data-i18n="searchWork">搜索工作量</th>
-                      <th data-i18n="validation">验证</th>
-                    </tr>
-                  </thead>
-                  <tbody id="comparisonBody"></tbody>
-                </table>
-              </div>
+              <details class="comparison-table-details">
+                <summary data-i18n="comparisonTableDetails">展开完整算法比较表</summary>
+                <div class="table-scroll comparison-table-wrap">
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th data-i18n="method">算法</th>
+                        <th data-i18n="score">得分</th>
+                        <th data-i18n="demandServed">需求满足率</th>
+                        <th data-i18n="versusFptr">相对 FPTR</th>
+                        <th data-i18n="algorithmTime">算法时间</th>
+                        <th data-i18n="searchWork">搜索工作量</th>
+                        <th data-i18n="validation">验证</th>
+                      </tr>
+                    </thead>
+                    <tbody id="comparisonBody"></tbody>
+                  </table>
+                </div>
+              </details>
               <p class="comparison-note" data-i18n="comparisonNote">随机搜索方法使用固定种子；计时与得分来自本次浏览器运行，不读取预计算结果。</p>
+              <aside class="demo-boundary">
+                <strong data-i18n="demoBoundaryTitle">Demo 与论文计时的边界</strong>
+                <p data-i18n="demoBoundary">浏览器 Demo 解释单个实例的算法行为；论文的时延分布与统计结论来自原生 C++ 独立进程实验，不能由一次 WebAssembly 计时替代。</p>
+              </aside>
             </article>
 
             <details class="advanced-results">
@@ -221,7 +228,7 @@
                 <ol class="explain-list">
                   <li><b data-i18n="propose">提出</b><span data-i18n="proposeText">修改波束或资源分配</span></li>
                   <li><b data-i18n="validate">验证</b><span data-i18n="validateText">检查预算、共享与子带约束</span></li>
-                  <li><b data-i18n="commit">提交</b><span data-i18n="commitText">仅保留完整有效的得分提升</span></li>
+                  <li><b data-i18n="demoCommit">提交</b><span data-i18n="commitText">仅保留完整有效的得分提升</span></li>
                 </ol>
                 <div class="audit-callout">
                   <span>✓</span>

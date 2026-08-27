@@ -31,7 +31,7 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><button type="button" data-locale="zh" class="active" aria-pressed="true">中</button><button type="button" data-locale="en" aria-pressed="false">EN</button></div>
+          <div class="language-switch" aria-label="Language"><a href="../zh/reproduce/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/reproduce/" data-locale="en" lang="en">EN</a></div>
           <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>
@@ -41,8 +41,8 @@
           <div class="section-wrap">
             <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="reproduceKicker">04 · 复现路径</p>
-            <h1 data-i18n="reproduceTitle">从编译到独立验证，只需要三步。</h1>
-            <p data-i18n="reproduceBody">先给出最短可运行路径；实验口径、启动账本和仓库审计随后按需展开。</p>
+            <h1 data-i18n="reproduceTitle">运行、验证与重现实验</h1>
+            <p data-i18n="reproduceBody">下面的命令从公开样例开始，完整覆盖编译、运行与独立验证。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
@@ -52,19 +52,35 @@
             <section class="editorial-section">
               <div class="section-heading">
                 <p class="section-kicker" data-i18n="quickStartKicker">快速开始</p>
-                <h2 data-i18n="quickStartTitle">克隆、运行、验证。</h2>
+                <h2 data-i18n="quickStartTitle">克隆、编译、运行、验证。</h2>
                 <p data-i18n="quickStartBody">调度结果写入标准输出，可选阶段轨迹只写入标准错误，因此诊断不会污染分配格式。</p>
               </div>
               <div class="quick-steps">
-                <article class="quick-step"><h3 data-i18n="runLabel">编译并运行 Full</h3><pre><code>git clone https://github.com/rudykon/FPTR_Scheduler.git
+                <article class="quick-step"><h3 data-i18n="buildLabel">克隆并编译</h3><pre data-shell><code class="language-bash">git clone https://github.com/rudykon/FPTR_Scheduler.git
 cd FPTR_Scheduler
-g++ -std=c++17 -O2 +  src/scheduler.cpp src/core.cpp +  -o scheduler
-./scheduler --stage full +  --budget-ms 87 --trace +  &lt; instance.in &gt; allocation.out</code></pre></article>
-                <article class="quick-step"><h3 data-i18n="validateLabel">独立验证</h3><pre><code>python3 +  tools/scheduler_validator.py +  --help
 
-python3 -m unittest +  discover -s tests -v</code></pre></article>
-                <article class="quick-step"><h3 data-i18n="experimentLabel">快速实验</h3><pre><code>python3 +  experiments/paper_experiments.py +  --quick +  --out +  /tmp/fptr-quick-results</code></pre></article>
+g++ -std=c++17 -O2 \
+  src/scheduler.cpp src/core.cpp \
+  -o scheduler</code></pre></article>
+                <article class="quick-step"><h3 data-i18n="runLabel">运行公开样例</h3><pre data-shell><code class="language-bash">mkdir -p /tmp/fptr-samples /tmp/fptr-output
+cp space/data/cases/small-balanced.in \
+  /tmp/fptr-samples/small-balanced.in
+./scheduler \
+  --stage full \
+  --budget-ms 87 \
+  --trace \
+  &lt; /tmp/fptr-samples/small-balanced.in \
+  &gt; /tmp/fptr-output/small-balanced.out</code></pre></article>
+                <article class="quick-step"><h3 data-i18n="validateLabel">独立验证</h3><pre data-shell><code class="language-bash">python3 tools/scheduler_validator.py \
+  --samples /tmp/fptr-samples \
+  --output-dir /tmp/fptr-output</code></pre></article>
               </div>
+              <details class="experiment-command">
+                <summary data-i18n="experimentLabel">运行快速实验</summary>
+                <div class="details-body"><pre data-shell><code class="language-bash">python3 experiments/paper_experiments.py \
+  --quick \
+  --out /tmp/fptr-quick-results</code></pre></div>
+              </details>
               <div class="repro-actions">
                 <a class="button button-primary" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span data-i18n="source">查看源代码</span><span aria-hidden="true">↗</span></a>
                 <a class="button button-secondary" href="../appendices/Appendix.pdf" target="_blank" rel="noreferrer"><span data-i18n="englishAppendix">英文附录</span></a>
@@ -108,15 +124,15 @@ python3 -m unittest +  discover -s tests -v</code></pre></article>
             <section class="editorial-section repo-map">
               <div class="editorial-copy">
                 <p class="section-kicker" data-i18n="repoKicker">仓库地图</p>
-                <h2 data-i18n="repoTitle">一份能被检查的研究代码，而不是黑盒演示。</h2>
-                <p data-i18n="repoBody">实现、验证器、实验编排和图件生成彼此分离，便于逐层检查模型契约和结论来源。</p>
+                <h2 data-i18n="repoTitle">实现、验证器、实验编排与图件生成各自独立。</h2>
+                <p data-i18n="repoBody">仓库结构把调度器、独立验证、实验协议和网页图件分开，便于逐层检查模型契约与结论来源。</p>
               </div>
               <div class="repo-tree" aria-label="Repository structure">
                 <div><b>src/</b> — <span data-i18n="repoSrc">C++17 调度器、共享模型与阶段入口</span></div>
                 <div><b>tools/</b> — <span data-i18n="repoTools">独立解析、可行性验证与目标值重算</span></div>
                 <div><b>experiments/</b> — <span data-i18n="repoExperiments">确定性实例、实验编排、分析与绘图</span></div>
                 <div><b>tests/</b> — <span data-i18n="repoTests">模型契约与端到端回归测试</span></div>
-                <div><b>docs/</b> — <span data-i18n="repoDocs">GitHub Pages 论文伴读站与浏览器 Demo</span></div>
+                <div><b>docs/</b> — <span data-i18n="repoDocs">GitHub Pages、浏览器 Demo 与静态双语内容</span></div>
               </div>
             </section>
           </div>

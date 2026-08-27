@@ -1,10 +1,16 @@
 "use strict";
 
+const APP_SCRIPT = [...document.scripts].find((script) => /\/app\.js(?:\?|$)/.test(script.src));
+const DEMO_BASE_URL = new URL(".", APP_SCRIPT ? APP_SCRIPT.src : window.location.href);
+const demoAssetUrl = (path) => new URL(path, DEMO_BASE_URL).href;
+
 const COPY = {
   en: {
+    demoHeroTitle: "See joint beam and resource scheduling take shape.",
+    demoCommit: "Commit",
     eyebrow: "INTERACTIVE SCHEDULER WALKTHROUGH",
     title: "See joint beam and resource scheduling take shape.",
-    intro: "Choose a workload, deadline, and FPTR stopping stage, then compare the repository's real C++17 scheduler with six independent search baselines in your browser.",
+    intro: "Run FPTR and seven references live: BeamFirst plus the matched ALNS, Tabu, GA, SA, ILS, and GRASP search baselines.",
     realSnapshots: "Live C++17 WebAssembly", audit: "Independent validator", freeStatic: "Runs locally in your browser",
     configure: "Configure a live run", configureHint: "Choose an input, then launch a real deadline-bounded run.",
     scenario: "Traffic scenario", deadline: "Deadline budget", deadlineHint: "The same cutoff controls every compared method.",
@@ -40,16 +46,20 @@ const COPY = {
     solverStdout: "Scheduler stdout", solverTrace: "Scheduler trace", executionMode: "Execution mode",
     runIdentity: "Live run", browserWall: "Browser wall time", liveExecution: "Live C++17 WebAssembly in this browser",
     inputName: "Input source", liveComparison: "LIVE ALGORITHM COMPARISON",
-    comparisonTitle: "Same instance and budget, seven reference algorithms run on the spot.",
-    comparisonHint: "The same independent validator recomputes every score and checks every constraint.",
+    comparisonTitle: "FPTR and seven references run live on the same instance and budget.",
+    comparisonHint: "BeamFirst and all six matched search baselines are rescored and constraint-checked by the same independent validator.",
     method: "Method", versusFptr: "vs selected FPTR", searchWork: "Search work", validation: "Validation",
     comparisonNote: "Randomized methods use fixed seeds. Timings and scores come from this browser run, not precomputed results.",
     stagesUnit: "stages", iterationsUnit: "iterations", selectedMethod: "Selected FPTR",
-    comparisonCount: "validated C++ / WASM runs"
+    comparisonCount: "validated C++ / WASM runs",
+    comparisonTableDetails: "Open the complete algorithm table",
+    demoBoundaryTitle: "Boundary between the Demo and paper timing",
+    demoBoundary: "The browser Demo explains one instance. The paper's timing distributions and statistics come from native C++ subprocess experiments and cannot be replaced by one WebAssembly timing."
   },
   zh: {
+    demoHeroTitle: "直观看见联合波束与资源调度如何成形。", demoCommit: "提交",
     eyebrow: "交互式调度器导览", title: "直观看见联合波束与资源调度如何成形。",
-    intro: "选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中实时对比仓库的 C++17 调度器与六种独立搜索基线。",
+    intro: "实时运行 FPTR 与 7 个参考方法：BeamFirst，以及 ALNS、Tabu、GA、SA、ILS、GRASP 六种匹配搜索基线。",
     realSnapshots: "实时 C++17 WebAssembly", audit: "独立验证器", freeStatic: "在本地浏览器运行",
     configure: "配置真实运行", configureHint: "选择输入，然后启动一次受截止时间约束的真实运行。",
     scenario: "流量场景", deadline: "截止时间预算", deadlineHint: "所有对比方法使用相同的时间截止条件。",
@@ -85,12 +95,15 @@ const COPY = {
     solverStdout: "调度器 stdout", solverTrace: "调度器 trace", executionMode: "执行方式",
     runIdentity: "实时运行", browserWall: "浏览器总耗时", liveExecution: "当前浏览器内实时执行 C++17 WebAssembly",
     inputName: "输入来源", liveComparison: "实时算法对比",
-    comparisonTitle: "同一实例、同一预算，现场运行七种参考算法。",
-    comparisonHint: "所有输出都由同一个独立验证器重新计算得分并检查约束。",
+    comparisonTitle: "FPTR 与 7 个参考方法在同一实例和预算下实时运行。",
+    comparisonHint: "BeamFirst 与六种匹配搜索基线的输出均由同一独立验证器重算得分并检查约束。",
     method: "算法", versusFptr: "相对所选 FPTR", searchWork: "搜索工作量", validation: "验证",
     comparisonNote: "随机搜索方法使用固定种子；计时与得分来自本次浏览器运行，不读取预计算结果。",
     stagesUnit: "阶段", iterationsUnit: "次迭代", selectedMethod: "所选 FPTR",
-    comparisonCount: "个已验证 C++ / WASM 运行"
+    comparisonCount: "个已验证 C++ / WASM 运行",
+    comparisonTableDetails: "展开完整算法比较表",
+    demoBoundaryTitle: "Demo 与论文计时的边界",
+    demoBoundary: "浏览器 Demo 解释单个实例的算法行为；论文的时延分布与统计结论来自原生 C++ 独立进程实验，不能由一次 WebAssembly 计时替代。"
   }
 };
 
@@ -204,11 +217,9 @@ function updateKpis(item, current) {
   const satisfaction = inst.demand ? 100 * current.score / inst.demand : 0;
   const deltaClass = current.deltaVsBaseline > 0 ? "positive" : "neutral";
   const cards = [
-    [t("transmitted"), fmt.format(current.score), `${t("ofDemand")} ${fmt.format(inst.demand)}`, ""],
-    [t("demandServed"), `${satisfaction.toFixed(1)}%`, `${current.delivered.filter((value, i) => value >= inst.requested[i]).length}/${inst.users} ${t("users")}`, "positive"],
+    [t("transmitted"), fmt.format(current.score), `${satisfaction.toFixed(1)}% ${t("demandServed")}`, ""],
     [t("versus"), `${current.deltaVsBaseline >= 0 ? "+" : ""}${fmt.format(current.deltaVsBaseline)}`, t("sameBudget"), deltaClass],
-    [t("algorithmTime"), `${current.algorithmMs.toFixed(2)} ms`, t("throughAudit"), ""],
-    [t("beamBudget"), `${current.beamUsed}/${inst.beamMax}`, t("globalSlots"), ""]
+    [t("algorithmTime"), `${current.algorithmMs.toFixed(2)} ms`, t("throughAudit"), ""]
   ];
   $("#kpiGrid").innerHTML = cards.map(([label, value, note, klass]) => `<article class="kpi ${klass}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(note)}</small></article>`).join("");
 }
@@ -387,7 +398,7 @@ async function sha256(text){
 
 async function presetInput(item){
   if(presetCache.has(item.id))return presetCache.get(item.id);
-  const response=await fetch(item.path,{cache:"no-cache"});
+  const response=await fetch(demoAssetUrl(item.path),{cache:"no-cache"});
   if(!response.ok)throw new Error(`Could not load ${item.path}: HTTP ${response.status}`);
   const text=await response.text();presetCache.set(item.id,text);return text;
 }
@@ -541,7 +552,7 @@ async function start(){
   try{
     if(typeof createFPTRModule!=="function")throw new Error("WebAssembly module factory is unavailable");
     if(state.comparisonEnabled&&typeof createFPTRBaselineModule!=="function")throw new Error("Baseline WebAssembly module factory is unavailable");
-    const pending=[fetch("data/manifest.json",{cache:"no-cache"}),createFPTRModule()];
+    const pending=[fetch(demoAssetUrl("data/manifest.json"),{cache:"no-cache"}),createFPTRModule()];
     if(state.comparisonEnabled)pending.push(createFPTRBaselineModule());
     const [response,module,baselineModule]=await Promise.all(pending);
     if(!response.ok)throw new Error(`Manifest HTTP ${response.status}`);
