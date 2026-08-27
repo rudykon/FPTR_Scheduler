@@ -206,7 +206,7 @@ They summarize execution accounting, external-baseline comparisons, exact calibr
 | `tools/audit_exact_suite.py` | Independent exact-audit workflow for externally supplied result artifacts |
 | `experiments/` | Deterministic instance generation, experiment orchestration, analysis, and plotting |
 | `tests/` | Validator, model-contract, scheduler, and release-helper regression tests |
-| `space/` | Docker-based Gradio demo, interactive visualizations, and audit downloads |
+| `space/` | Free Static Space, validated C++ snapshots, interactive visualizations, and JSON downloads |
 | `docs/images/` | Approved explanatory and result figures for the public README |
 | `docs/index.html` | Bilingual static project website deployed through GitHub Pages |
 | `.github/workflows/pages.yml` | Automatic GitHub Pages deployment workflow |
