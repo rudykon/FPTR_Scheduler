@@ -205,6 +205,7 @@ Solution runGrasp(const Problem& problem, const Options& options,
 
 }  // namespace external_extra
 
+#ifndef FPTR_EXTERNAL_NO_MAIN
 int main(int argc, char** argv) {
     external_alns::Options options;
     std::string method = "sa";
@@ -269,3 +270,4 @@ int main(int argc, char** argv) {
     external_alns::outputSolution(problem, solution);
     return 0;
 }
+#endif

@@ -6,13 +6,13 @@
     <meta name="theme-color" content="#f6faff" />
     <meta
       name="description"
-      content="在浏览器中直接运行 FPTR 仓库真实的 C++17 联合波束与资源调度器。"
+      content="在浏览器中实时运行 FPTR 与七种参考算法，对比联合波束与资源调度结果。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Demo · FPTR Scheduler" />
     <meta
       property="og:description"
-      content="Run the real FPTR C++17 joint beam and resource scheduler in WebAssembly."
+      content="Run FPTR and seven reference schedulers live in WebAssembly on the same input and budget."
     />
     <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/demo/" />
     <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/Deadline_Aware_FPTR_Scheduler.png" />
@@ -25,6 +25,7 @@
     <script src="../assets/site.js" defer></script>
     <script src="./runtime.js" defer></script>
     <script src="./wasm/fptr_solver.js" defer></script>
+    <script src="./wasm/fptr_baselines.js" defer></script>
     <script src="./app.js" defer></script>
   </head>
   <body data-title-key="demoPageTitle" data-description-key="demoPageDescription">
@@ -66,7 +67,7 @@
             <p class="demo-eyebrow" data-i18n="eyebrow">交互式调度器导览</p>
             <h1 data-i18n="title">直观看见联合波束与资源调度如何成形。</h1>
             <p class="demo-intro" data-i18n="intro">
-              选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中直接执行仓库真实的 C++17 调度器。
+              选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中实时对比仓库的 C++17 调度器与六种独立搜索基线。
             </p>
             <div class="hero-badges" aria-label="Demo properties">
               <span><i class="dot green"></i><span data-i18n="realSnapshots">实时 C++17 WebAssembly</span></span>
@@ -133,11 +134,11 @@
               </label>
               <button id="clearCustomButton" class="secondary-button" type="button" hidden data-i18n="clearCustom">恢复预设</button>
               <button id="runButton" class="run-button" type="button" disabled>
-                <span class="run-icon">▶</span><span data-i18n="runReal">运行真实 C++ 调度器</span>
+                <span class="run-icon">▶</span><span data-i18n="runReal">运行实时对比</span>
               </button>
             </div>
             <p id="executionNote" class="execution-note" data-i18n="executionNote">
-              输入只留在当前浏览器。FPTR 与 BeamFirst 使用相同的时间预算。
+              输入只留在当前浏览器。所有方法使用同一实例与所选时间预算。
             </p>
           </section>
 
@@ -156,6 +157,35 @@
             </div>
 
             <div id="kpiGrid" class="kpi-grid" aria-live="polite"></div>
+
+            <article class="panel comparison-panel" aria-labelledby="comparisonTitle">
+              <div class="panel-heading comparison-heading">
+                <div>
+                  <span class="panel-kicker" data-i18n="liveComparison">实时算法对比</span>
+                  <h3 id="comparisonTitle" data-i18n="comparisonTitle">同一实例、同一预算，现场运行七种参考算法。</h3>
+                  <p data-i18n="comparisonHint">所有输出都由同一个独立验证器重新计算得分并检查约束。</p>
+                </div>
+                <span id="comparisonStatus" class="comparison-status">8 C++ / WASM</span>
+              </div>
+              <div id="comparisonBars" class="comparison-bars chart-empty" aria-label="Live algorithm score comparison"></div>
+              <div class="table-scroll comparison-table-wrap">
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="method">算法</th>
+                      <th data-i18n="score">得分</th>
+                      <th data-i18n="demandServed">需求满足率</th>
+                      <th data-i18n="versusFptr">相对 FPTR</th>
+                      <th data-i18n="algorithmTime">算法时间</th>
+                      <th data-i18n="searchWork">搜索工作量</th>
+                      <th data-i18n="validation">验证</th>
+                    </tr>
+                  </thead>
+                  <tbody id="comparisonBody"></tbody>
+                </table>
+              </div>
+              <p class="comparison-note" data-i18n="comparisonNote">随机搜索方法使用固定种子；计时与得分来自本次浏览器运行，不读取预计算结果。</p>
+            </article>
 
             <div class="dashboard-grid">
               <article class="panel panel-wide">

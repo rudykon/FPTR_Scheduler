@@ -5,6 +5,9 @@
 // randomized destroy/recreate neighborhoods and simulated-annealing
 // acceptance. Final outputs are checked by tools/scheduler_validator.py.
 
+#ifndef FPTR_EXTERNAL_ALNS_BASELINE_IMPLEMENTATION
+#define FPTR_EXTERNAL_ALNS_BASELINE_IMPLEMENTATION
+
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -625,6 +628,7 @@ void outputSolution(const Problem& problem, const Solution& solution) {
 
 }  // namespace external_alns
 
+#ifndef FPTR_EXTERNAL_NO_MAIN
 int main(int argc, char** argv) {
     external_alns::Options options;
     for (int index = 1; index < argc; ++index) {
@@ -673,3 +677,6 @@ int main(int argc, char** argv) {
     external_alns::outputSolution(problem, solution);
     return 0;
 }
+#endif
+
+#endif  // FPTR_EXTERNAL_ALNS_BASELINE_IMPLEMENTATION

@@ -23,4 +23,23 @@ em++ \
 
 test -s "${script_dir}/wasm/fptr_solver.js"
 test -s "${script_dir}/wasm/fptr_solver.wasm"
-echo "Built ${script_dir}/wasm/fptr_solver.js and fptr_solver.wasm"
+
+em++ \
+  -std=c++17 \
+  -O3 \
+  -fexceptions \
+  --no-entry \
+  "${script_dir}/src/external_wasm_api.cpp" \
+  -o "${script_dir}/wasm/fptr_baselines.js" \
+  -sMODULARIZE=1 \
+  -sEXPORT_NAME=createFPTRBaselineModule \
+  -sENVIRONMENT=web,node \
+  -sALLOW_MEMORY_GROWTH=1 \
+  -sFILESYSTEM=0 \
+  -sASSERTIONS=0 \
+  -sEXPORTED_FUNCTIONS='["_fptr_baseline_run","_malloc","_free"]' \
+  -sEXPORTED_RUNTIME_METHODS='["ccall"]'
+
+test -s "${script_dir}/wasm/fptr_baselines.js"
+test -s "${script_dir}/wasm/fptr_baselines.wasm"
+echo "Built FPTR and external-baseline WebAssembly modules in ${script_dir}/wasm"

@@ -27,6 +27,7 @@ try {
     remask: ["base", "global", "cg", "remask", "final"],
     full: ["base", "global", "cg", "remask", "pair", "final"]
   };
+  let fullRun = null;
 
   for (const [stage, traceStages] of Object.entries(expectedTrace)) {
     const run = spawnSync(binary, ["--stage", stage, "--budget-ms", "87", "--trace"], {
@@ -39,7 +40,22 @@ try {
     assert.deepEqual(result.trace.map((entry) => entry.stage), traceStages);
     assert.ok(result.beamUsed <= caseData.beamMax);
     assert.equal(result.delivered.length, caseData.N);
+    if (stage === "full") fullRun = { output: run.stdout, result };
   }
+
+  assert.ok(fullRun);
+  const externalTrace = `TRACE external=alns score=${fullRun.result.score} elapsed_ms=1.25e1 iterations=37 accepted=9\n`;
+  const external = runtime.validateExternalRun(
+    caseData, fullRun.output, externalTrace, 87, 13, "alns"
+  );
+  assert.equal(external.valid, true);
+  assert.equal(external.score, fullRun.result.score);
+  assert.equal(external.iterations, 37);
+  assert.equal(external.accepted, 9);
+  assert.throws(
+    () => runtime.validateExternalRun(caseData, fullRun.output, externalTrace, 87, 13, "ga"),
+    /expected ga/
+  );
 
   const view = runtime.instanceView(caseData);
   assert.equal(view.users, 20);

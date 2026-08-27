@@ -4,7 +4,7 @@ const COPY = {
   en: {
     eyebrow: "INTERACTIVE SCHEDULER WALKTHROUGH",
     title: "See joint beam and resource scheduling take shape.",
-    intro: "Choose a workload, deadline, and FPTR stopping stage, then execute the repository's real C++17 scheduler directly in your browser.",
+    intro: "Choose a workload, deadline, and FPTR stopping stage, then compare the repository's real C++17 scheduler with six independent search baselines in your browser.",
     realSnapshots: "Live C++17 WebAssembly", audit: "Independent validator", freeStatic: "Runs locally in your browser",
     configure: "Configure a live run", configureHint: "Choose an input, then launch a real deadline-bounded run.",
     scenario: "Traffic scenario", deadline: "Deadline budget", deadlineHint: "The same cutoff controls every compared method.",
@@ -27,20 +27,26 @@ const COPY = {
     improved: "Improved incumbent", retained: "Incumbent retained", cutoffReached: "cutoff reached", user: "User", requested: "Requested",
     delivered: "Delivered", served: "Served", assigned: "Assigned resources", instanceHash: "Instance SHA-256", sourceCommit: "Scheduler source commit",
     snapshotContract: "Live-run contract", validContract: "Input parsed · output feasible · score recomputed · trace consistent", fixedSeed: "Scenario seed",
-    currentStage: "Executed stage", staticNote: "Every click invokes the checked-in C++17 scheduler compiled to WebAssembly; no result table or JavaScript approximation is used.",
+    currentStage: "Executed stage", staticNote: "Every row comes from checked-in C++17 code compiled to WebAssembly; no result table or JavaScript approximation is used.",
     resource: "Resource", shareSize: "Share size", unmet: "Unmet", active: "active", inactive: "off",
-    engineLoading: "Loading C++ WebAssembly…", engineReady: "C++ WebAssembly ready", stale: "Configuration changed · run again",
-    running: "Running the real C++ scheduler…", runPassed: "Live run validated", runError: "Run failed",
-    customInput: "Use custom .in file", clearCustom: "Use preset", runReal: "Run real C++ scheduler",
-    executionNote: "The input stays in this browser. FPTR and BeamFirst execute under the same selected budget.",
+    engineLoading: "Loading C++ WebAssembly…", engineReady: "FPTR and baseline WebAssembly ready", stale: "Configuration changed · run again",
+    running: "Running the live comparison…", runningComparison: "Running comparison", runPassed: "All live runs validated", runError: "Run failed",
+    customInput: "Use custom .in file", clearCustom: "Use preset", runReal: "Run live comparison",
+    executionNote: "The input stays in this browser. Every method receives the same instance and selected budget.",
     presetInput: "Preset input", customInputLabel: "Custom local input", rawOutput: "Raw output",
     solverStdout: "Scheduler stdout", solverTrace: "Scheduler trace", executionMode: "Execution mode",
     runIdentity: "Live run", browserWall: "Browser wall time", liveExecution: "Live C++17 WebAssembly in this browser",
-    inputName: "Input source"
+    inputName: "Input source", liveComparison: "LIVE ALGORITHM COMPARISON",
+    comparisonTitle: "Same instance and budget, seven reference algorithms run on the spot.",
+    comparisonHint: "The same independent validator recomputes every score and checks every constraint.",
+    method: "Method", versusFptr: "vs selected FPTR", searchWork: "Search work", validation: "Validation",
+    comparisonNote: "Randomized methods use fixed seeds. Timings and scores come from this browser run, not precomputed results.",
+    stagesUnit: "stages", iterationsUnit: "iterations", selectedMethod: "Selected FPTR",
+    comparisonCount: "validated C++ / WASM runs"
   },
   zh: {
     eyebrow: "交互式调度器导览", title: "直观看见联合波束与资源调度如何成形。",
-    intro: "选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中直接执行仓库真实的 C++17 调度器。",
+    intro: "选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中实时对比仓库的 C++17 调度器与六种独立搜索基线。",
     realSnapshots: "实时 C++17 WebAssembly", audit: "独立验证器", freeStatic: "在本地浏览器运行",
     configure: "配置真实运行", configureHint: "选择输入，然后启动一次受截止时间约束的真实运行。",
     scenario: "流量场景", deadline: "截止时间预算", deadlineHint: "所有对比方法使用相同的时间截止条件。",
@@ -63,16 +69,22 @@ const COPY = {
     improved: "最优解提升", retained: "保留原最优解", cutoffReached: "达到截止", user: "用户", requested: "需求",
     delivered: "已传输", served: "满足率", assigned: "分配资源", instanceHash: "实例 SHA-256", sourceCommit: "调度器源码提交",
     snapshotContract: "真实运行契约", validContract: "输入解析通过 · 输出可行 · 得分独立重算 · trace 一致", fixedSeed: "场景种子",
-    currentStage: "已执行阶段", staticNote: "每次点击都会调用由仓库 C++17 源码编译的 WebAssembly；不读取结果表，也不使用 JavaScript 近似算法。",
+    currentStage: "已执行阶段", staticNote: "表中每一行都来自仓库 C++17 源码编译的 WebAssembly；不读取结果表，也不使用 JavaScript 近似算法。",
     resource: "资源", shareSize: "共享人数", unmet: "未满足", active: "激活", inactive: "关闭",
-    engineLoading: "正在加载 C++ WebAssembly…", engineReady: "C++ WebAssembly 已就绪", stale: "配置已修改 · 请重新运行",
-    running: "正在运行真实 C++ 调度器…", runPassed: "真实运行与验证通过", runError: "运行失败",
-    customInput: "使用自定义 .in 文件", clearCustom: "恢复预设", runReal: "运行真实 C++ 调度器",
-    executionNote: "输入只留在当前浏览器。FPTR 与 BeamFirst 使用相同的时间预算。",
+    engineLoading: "正在加载 C++ WebAssembly…", engineReady: "FPTR 与基线 WebAssembly 已就绪", stale: "配置已修改 · 请重新运行",
+    running: "正在运行实时算法对比…", runningComparison: "正在对比", runPassed: "全部实时运行与验证通过", runError: "运行失败",
+    customInput: "使用自定义 .in 文件", clearCustom: "恢复预设", runReal: "运行实时对比",
+    executionNote: "输入只留在当前浏览器。所有方法使用同一实例与所选时间预算。",
     presetInput: "预设输入", customInputLabel: "本地自定义输入", rawOutput: "原始输出",
     solverStdout: "调度器 stdout", solverTrace: "调度器 trace", executionMode: "执行方式",
     runIdentity: "实时运行", browserWall: "浏览器总耗时", liveExecution: "当前浏览器内实时执行 C++17 WebAssembly",
-    inputName: "输入来源"
+    inputName: "输入来源", liveComparison: "实时算法对比",
+    comparisonTitle: "同一实例、同一预算，现场运行七种参考算法。",
+    comparisonHint: "所有输出都由同一个独立验证器重新计算得分并检查约束。",
+    method: "算法", versusFptr: "相对所选 FPTR", searchWork: "搜索工作量", validation: "验证",
+    comparisonNote: "随机搜索方法使用固定种子；计时与得分来自本次浏览器运行，不读取预计算结果。",
+    stagesUnit: "阶段", iterationsUnit: "次迭代", selectedMethod: "所选 FPTR",
+    comparisonCount: "个已验证 C++ / WASM 运行"
   }
 };
 
@@ -81,8 +93,17 @@ const TRACE_LABELS = {
   cg: ["CG", "兼容组"], remask: ["Remask", "重掩码"], pair: ["Full · Pair", "完整 · 配对"], final: ["Final audit", "最终审计"]
 };
 
+const EXTERNAL_METHODS = [
+  { id: "alns", label: "ALNS" },
+  { id: "tabu", label: "Tabu" },
+  { id: "ga", label: "GA" },
+  { id: "sa", label: "SA" },
+  { id: "ils", label: "ILS" },
+  { id: "grasp", label: "GRASP" }
+];
+
 const state = {
-  data: null, module: null,
+  data: null, module: null, baselineModule: null, comparisonEnabled: false,
   language: document.documentElement.lang.toLowerCase().startsWith("zh") ? "zh" : "en",
   scenarioId: "medium-tight", budgetIndex: 2,
   stageId: "full", customText: null, customName: null, result: null, currentMeta: null,
@@ -100,6 +121,7 @@ const labelFor = (item) => state.language === "zh" ? item.labelZh : item.label;
 function scenario() { return state.data.scenarios.find((item) => item.id === state.scenarioId) || state.data.scenarios[0]; }
 function stageMeta() { return state.data.stages.find((item) => item.id === state.stageId); }
 function budget() { return state.data.budgets[state.budgetIndex]; }
+function enginesReady() { return Boolean(state.module && (!state.comparisonEnabled || state.baselineModule)); }
 
 function setStatus(kind, key, detail = "") {
   state.status = { kind, key, detail };
@@ -114,7 +136,7 @@ function updateInputSource() {
   $("#inputSourceDetail").textContent = state.customText
     ? `${state.customName} · ${(new Blob([state.customText]).size / 1024).toFixed(1)} KiB · ${t("executionNote")}`
     : `${labelFor(selected)} · ${selected.path}`;
-  $("#scenarioSelect").disabled = Boolean(state.customText) || !state.module;
+  $("#scenarioSelect").disabled = Boolean(state.customText) || !enginesReady();
   $("#clearCustomButton").hidden = !state.customText;
 }
 
@@ -148,7 +170,8 @@ function populateScenarioOptions() {
 
 function populateStageButtons() {
   const container = $("#stageButtons");
-  container.innerHTML = state.data.stages.map((item) => `<button type="button" data-stage="${item.id}" class="${item.id === state.stageId ? "active" : ""}">${escapeHtml(labelFor(item))}</button>`).join("");
+  const fptrStages = state.data.stages.filter((item) => item.id !== "beamfirst");
+  container.innerHTML = fptrStages.map((item) => `<button type="button" data-stage="${item.id}" class="${item.id === state.stageId ? "active" : ""}">${escapeHtml(labelFor(item))}</button>`).join("");
   container.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
     state.stageId = button.dataset.stage;
     populateStageButtons();
@@ -163,9 +186,9 @@ function initializeControls() {
   slider.max = String(state.data.budgets.length - 1);
   slider.value = String(state.budgetIndex);
   $("#budgetTicks").innerHTML = state.data.budgets.map((item) => `<span>${item}</span>`).join("");
-  $("#scenarioSelect").disabled = !state.module;
+  $("#scenarioSelect").disabled = !enginesReady();
   slider.disabled = false;
-  $("#runButton").disabled = !state.module;
+  $("#runButton").disabled = !enginesReady();
   $("#downloadButton").disabled = true;
   updateInputSource();
 }
@@ -182,6 +205,33 @@ function updateKpis(item, current) {
     [t("beamBudget"), `${current.beamUsed}/${inst.beamMax}`, t("globalSlots"), ""]
   ];
   $("#kpiGrid").innerHTML = cards.map(([label, value, note, klass]) => `<article class="kpi ${klass}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(note)}</small></article>`).join("");
+}
+
+function renderComparison(item, current) {
+  const chart = $("#comparisonBars"), body = $("#comparisonBody"), status = $("#comparisonStatus");
+  if (!chart || !body || !status) return;
+  const rows = current.comparisons || [];
+  if (!rows.length) return;
+  const maximum = Math.max(...rows.map((row) => row.result.score), 1);
+  chart.classList.remove("chart-empty");
+  chart.innerHTML = rows.map((row) => {
+    const width = Math.max(1, 100 * row.result.score / maximum);
+    return `<div class="comparison-bar ${row.primary ? "primary" : ""}"><span class="comparison-bar-label">${escapeHtml(row.label)}</span><span class="comparison-bar-track"><i class="comparison-bar-fill" style="width:${width.toFixed(2)}%"></i></span><strong class="comparison-bar-value">${escapeHtml(fmt.format(row.result.score))}</strong></div>`;
+  }).join("");
+
+  body.innerHTML = rows.map((row) => {
+    const result = row.result;
+    const served = item.instance.demand ? 100 * result.score / item.instance.demand : 0;
+    const delta = result.score - current.score;
+    const percent = current.score ? 100 * delta / current.score : 0;
+    const deltaClass = delta > 0 ? "positive" : delta < 0 ? "negative" : "";
+    const deltaText = row.primary ? "—" : `${delta >= 0 ? "+" : ""}${fmt.format(delta)} (${percent >= 0 ? "+" : ""}${percent.toFixed(1)}%)`;
+    const work = Number.isFinite(result.iterations)
+      ? `${fmt.format(result.iterations)} ${t("iterationsUnit")}`
+      : `${result.trace.length} ${t("stagesUnit")}`;
+    return `<tr class="${row.primary ? "primary-row" : ""}"><td><span class="method-name"><i></i>${escapeHtml(row.label)}</span></td><td><b>${escapeHtml(fmt.format(result.score))}</b></td><td>${served.toFixed(1)}%</td><td><span class="comparison-delta ${deltaClass}">${escapeHtml(deltaText)}</span></td><td>${result.algorithmMs.toFixed(2)} ms</td><td>${escapeHtml(work)}</td><td><span class="pass-badge">✓ ${escapeHtml(t("validated"))}</span></td></tr>`;
+  }).join("");
+  status.textContent = `${rows.length} ${t("comparisonCount")}`;
 }
 
 function renderStageChart(current) {
@@ -319,7 +369,7 @@ function render(){
   const item=state.currentMeta,current=state.result;
   $("#scenarioNote").textContent=state.language==="zh"?item.noteZh:item.note;
   $("#instanceSummary").textContent=`${labelFor(item)} · ${item.instance.users} ${t("users")} · ${item.instance.resources} ${t("resources")} · ${item.instance.beams} ${t("beams")} · ${item.instance.subbands} ${t("subbands")} · ${item.instance.groups} ${t("groups")} · ${item.instance.dualMemberships} ${t("dual")}`;
-  updateKpis(item,current);renderStageChart(current);renderAllocation(item,current);renderDemand(item,current);renderBeams(item,current);renderTables(item,current);renderProvenance(item,current);
+  updateKpis(item,current);renderComparison(item,current);renderStageChart(current);renderAllocation(item,current);renderDemand(item,current);renderBeams(item,current);renderTables(item,current);renderProvenance(item,current);
   $("#rawOutput").textContent=current.output;
   $("#rawTrace").textContent=current.traceText;
 }
@@ -346,17 +396,42 @@ function executeOne(input,stage,budgetMs){
   return FPTRRuntime.validateRun(state.activeCase,payload.output,payload.trace,budgetMs,wallMs);
 }
 
+function executeExternal(input,method,budgetMs,seed){
+  const started=performance.now();
+  const raw=state.baselineModule.ccall(
+    "fptr_baseline_run","string",["string","string","number","number"],
+    [input,method,budgetMs,seed]
+  );
+  const wallMs=performance.now()-started;
+  let payload;
+  try{payload=JSON.parse(raw);}catch(error){throw new Error(`Baseline WebAssembly bridge returned invalid JSON: ${error.message}`);}
+  if(!payload.ok)throw new Error(payload.error||`${method} baseline failed`);
+  return FPTRRuntime.validateExternalRun(
+    state.activeCase,payload.output,payload.trace,budgetMs,wallMs,method
+  );
+}
+
 function controlsBusy(busy){
-  $("#runButton").disabled=busy||!state.module;
-  $("#budgetSlider").disabled=busy||!state.module;
-  $("#scenarioSelect").disabled=busy||Boolean(state.customText)||!state.module;
-  $("#customInput").disabled=busy||!state.module;
+  $("#runButton").disabled=busy||!enginesReady();
+  $("#budgetSlider").disabled=busy||!enginesReady();
+  $("#scenarioSelect").disabled=busy||Boolean(state.customText)||!enginesReady();
+  $("#customInput").disabled=busy||!enginesReady();
   $("#clearCustomButton").disabled=busy;
   $$("#stageButtons button").forEach((button)=>{button.disabled=busy;});
 }
 
+function comparisonResult(result){
+  return {
+    score:result.score,algorithmMs:result.algorithmMs,wallMs:result.wallMs,
+    beamUsed:result.beamUsed,resourcesUsed:result.resourcesUsed,
+    sharedResources:result.sharedResources,valid:result.valid,
+    deadlineHit:result.deadlineHit,iterations:Number.isFinite(result.iterations)?result.iterations:null,
+    trace:result.trace.map((entry)=>({...entry}))
+  };
+}
+
 async function runDemo(){
-  if(!state.module||!state.data)return;
+  if(!enginesReady()||!state.data)return;
   controlsBusy(true);$("#downloadButton").disabled=true;setStatus("running","running");
   await new Promise((resolve)=>requestAnimationFrame(()=>resolve()));
   try{
@@ -367,19 +442,47 @@ async function runDemo(){
     const digest=await sha256(input);
     if(state.customText===null&&digest!==preset.sha256)throw new Error(`Preset SHA-256 mismatch for ${preset.id}`);
     state.activeCase=caseData;
-    const selected=executeOne(input,state.stageId,budget());
-    const baseline=state.stageId==="beamfirst"?selected:executeOne(input,"beamfirst",budget());
+    const budgetMs=budget();
+    const totalRuns=2+(state.comparisonEnabled?EXTERNAL_METHODS.length:0);
+    const progress=$("#comparisonStatus");
+    const announce=async(index,label)=>{
+      setStatus("running","runningComparison",`${index}/${totalRuns} · ${label}`);
+      if(progress)progress.textContent=`${index}/${totalRuns} · ${label}`;
+      await new Promise((resolve)=>requestAnimationFrame(()=>resolve()));
+    };
+    const selectedStage=stageMeta();
+    const selectedLabel=`FPTR · ${labelFor(selectedStage)}`;
+    await announce(1,selectedLabel);
+    const selected=executeOne(input,state.stageId,budgetMs);
+    await announce(2,"BeamFirst");
+    const baseline=executeOne(input,"beamfirst",budgetMs);
+    const comparisons=[
+      {id:"fptr",label:selectedLabel,primary:true,result:comparisonResult(selected)},
+      {id:"beamfirst",label:"BeamFirst",primary:false,result:comparisonResult(baseline)}
+    ];
+    let totalWallMs=selected.wallMs+baseline.wallMs;
+    const externalSeed=(state.customText===null?preset.seed:Number.parseInt(digest.slice(0,8),16))>>>0;
+    if(state.comparisonEnabled){
+      for(let index=0;index<EXTERNAL_METHODS.length;index+=1){
+        const method=EXTERNAL_METHODS[index];
+        await announce(index+3,method.label);
+        const result=executeExternal(input,method.id,budgetMs,externalSeed);
+        totalWallMs+=result.wallMs;
+        comparisons.push({id:method.id,label:method.label,primary:false,seed:externalSeed,result:comparisonResult(result)});
+      }
+    }
     selected.baselineScore=baseline.score;
     selected.deltaVsBaseline=selected.score-baseline.score;
-    selected.totalWallMs=selected.wallMs+(baseline===selected?0:baseline.wallMs);
+    selected.totalWallMs=totalWallMs;
     selected.baseline={score:baseline.score,algorithmMs:baseline.algorithmMs,wallMs:baseline.wallMs,output:baseline.output,traceText:baseline.traceText};
+    selected.comparisons=comparisons;
     state.runSerial+=1;
     const custom=state.customText!==null;
     const customNote=`${caseData.N} ${t("users")} · ${caseData.K} ${t("resources")} · ${caseData.P} ${t("beams")}`;
     state.currentMeta={
       id:custom?"custom":preset.id,label:custom?state.customName:preset.label,labelZh:custom?state.customName:preset.labelZh,
       note:custom?`Custom local input · ${customNote}`:preset.note,noteZh:custom?`本地自定义输入 · ${customNote}`:preset.noteZh,
-      seed:custom?null:preset.seed,inputName,sha256:digest,stageId:state.stageId,budgetMs:budget(),runSerial:state.runSerial,
+      seed:externalSeed,inputName,sha256:digest,stageId:state.stageId,budgetMs,runSerial:state.runSerial,
       instance:FPTRRuntime.instanceView(caseData)
     };
     state.currentInput=input;state.currentHash=digest;state.result=selected;
@@ -405,6 +508,7 @@ function setupTabs(){
 
 async function start(){
   setupTabs();
+  state.comparisonEnabled=Boolean($("#comparisonBody"));
   const languageToggle = $("#languageToggle");
   if (languageToggle) {
     languageToggle.addEventListener("click",()=>{state.language=state.language==="en"?"zh":"en";applyLanguage();});
@@ -430,9 +534,12 @@ async function start(){
   let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(render,120);});
   try{
     if(typeof createFPTRModule!=="function")throw new Error("WebAssembly module factory is unavailable");
-    const [response,module]=await Promise.all([fetch("data/manifest.json",{cache:"no-cache"}),createFPTRModule()]);
+    if(state.comparisonEnabled&&typeof createFPTRBaselineModule!=="function")throw new Error("Baseline WebAssembly module factory is unavailable");
+    const pending=[fetch("data/manifest.json",{cache:"no-cache"}),createFPTRModule()];
+    if(state.comparisonEnabled)pending.push(createFPTRBaselineModule());
+    const [response,module,baselineModule]=await Promise.all(pending);
     if(!response.ok)throw new Error(`Manifest HTTP ${response.status}`);
-    state.data=await response.json();state.module=module;
+    state.data=await response.json();state.module=module;state.baselineModule=baselineModule||null;
     initializeControls();setStatus("ready","engineReady");applyLanguage();await runDemo();
   }catch(error){console.error(error);setStatus("error","loadError",String(error.message||error).slice(0,120));}
 }

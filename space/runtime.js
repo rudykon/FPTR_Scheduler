@@ -7,6 +7,7 @@
 
   const INTEGER_RE = /^-?[0-9]+$/;
   const TRACE_RE = /^TRACE stage=([a-z_]+) score=(-?[0-9]+) elapsed_ms=([0-9]+(?:\.[0-9]+)?) deadline_hit=([01])$/;
+  const EXTERNAL_TRACE_RE = /^TRACE external=([a-z]+) score=(-?[0-9]+) elapsed_ms=([0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?) iterations=([0-9]+) accepted=([0-9]+)$/;
 
   function fail(message) { throw new Error(message); }
 
@@ -220,6 +221,44 @@
     };
   }
 
+  function parseExternalTrace(stderr, budgetMs) {
+    let trace = null;
+    stderr.split(/\r?\n/).forEach((line) => {
+      const match = EXTERNAL_TRACE_RE.exec(line.trim());
+      if (!match) return;
+      trace = {
+        stage: match[1], score: Number(match[2]), elapsedMs: Number(match[3]),
+        cutoffMs: budgetMs, deadlineHit: Number(match[3]) > budgetMs,
+        iterations: Number(match[4]), accepted: Number(match[5])
+      };
+    });
+    if (!trace) fail("external baseline emitted no trace");
+    return trace;
+  }
+
+  function validateExternalRun(caseData, output, stderr, budgetMs, wallMs, expectedMethod) {
+    const solution = parseSolution(caseData, output);
+    const delivered = perUserTraffic(caseData, solution);
+    const score = delivered.reduce((sum, value) => sum + value, 0);
+    const trace = parseExternalTrace(stderr, budgetMs);
+    if (expectedMethod && trace.stage !== expectedMethod) {
+      fail(`external trace method ${trace.stage} != expected ${expectedMethod}`);
+    }
+    if (trace.score !== score) {
+      fail(`external trace score ${trace.score} != independently recomputed ${score}`);
+    }
+    return {
+      score, beamUsed: solution.beamUsed,
+      resourcesUsed: solution.resourceUsers.filter((users) => users.length).length,
+      sharedResources: solution.resourceUsers.filter((users) => users.length > 1).length,
+      algorithmMs: trace.elapsedMs, wallMs,
+      deadlineHit: trace.deadlineHit, valid: true, trace: [trace],
+      iterations: trace.iterations, accepted: trace.accepted,
+      beams: solution.beams, resourceUsers: solution.resourceUsers,
+      userResources: solution.userResources, delivered, output, traceText: stderr
+    };
+  }
+
   function instanceView(caseData) {
     return {
       users: caseData.N, resources: caseData.K, beams: caseData.P, subbands: caseData.T,
@@ -231,5 +270,8 @@
     };
   }
 
-  return { parseCaseText, parseSolution, parseTrace, validateRun, instanceView, capOf, cutoffMs };
+  return {
+    parseCaseText, parseSolution, parseTrace, parseExternalTrace,
+    validateRun, validateExternalRun, instanceView, capOf, cutoffMs
+  };
 });

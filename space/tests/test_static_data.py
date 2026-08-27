@@ -26,6 +26,9 @@ class StaticSpaceTests(unittest.TestCase):
 
     def test_frontend_executes_the_real_wasm_scheduler(self) -> None:
         html = (ROOT / "index.html").read_text(encoding="utf-8")
+        github_demo = (REPOSITORY / "docs" / "demo" / "index.html").read_text(
+            encoding="utf-8"
+        )
         script = (ROOT / "app.js").read_text(encoding="utf-8")
         card = (ROOT / "README.md").read_text(encoding="utf-8")
         workflow = (
@@ -35,8 +38,10 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertIn('src="runtime.js"', html)
         self.assertIn('src="wasm/fptr_solver.js"', html)
         self.assertIn('src="app.js"', html)
+        self.assertIn('src="./wasm/fptr_baselines.js"', github_demo)
         self.assertIn('fetch("data/manifest.json"', script)
         self.assertIn('ccall("fptr_run"', script)
+        self.assertIn('"fptr_baseline_run"', script)
         self.assertNotIn("data/results.json", script)
         self.assertEqual(card.count("sdk: static"), 1)
         self.assertNotIn("sdk: docker", card)
@@ -62,6 +67,20 @@ class StaticSpaceTests(unittest.TestCase):
         )
         self.assertIn(
             "space/wasm/fptr_solver.wasm",
+            (REPOSITORY / ".gitignore").read_text(encoding="utf-8"),
+        )
+        self.assertNotIn(
+            "wasm/fptr_baselines.js", (ROOT / ".gitignore").read_text(encoding="utf-8")
+        )
+        self.assertNotIn(
+            "wasm/fptr_baselines.wasm", (ROOT / ".gitignore").read_text(encoding="utf-8")
+        )
+        self.assertIn(
+            "space/wasm/fptr_baselines.js",
+            (REPOSITORY / ".gitignore").read_text(encoding="utf-8"),
+        )
+        self.assertIn(
+            "space/wasm/fptr_baselines.wasm",
             (REPOSITORY / ".gitignore").read_text(encoding="utf-8"),
         )
 
@@ -95,12 +114,22 @@ class StaticSpaceTests(unittest.TestCase):
     def test_wasm_build_is_bound_to_checked_in_cpp_core(self) -> None:
         build = (ROOT / "build_wasm.sh").read_text(encoding="utf-8")
         bridge = (ROOT / "src" / "wasm_api.cpp").read_text(encoding="utf-8")
+        baseline_bridge = (ROOT / "src" / "external_wasm_api.cpp").read_text(
+            encoding="utf-8"
+        )
         self.assertIn('src/core.cpp', build)
         self.assertIn('src/wasm_api.cpp', build)
         self.assertIn("MODULARIZE=1", build)
         self.assertNotIn("SINGLE_FILE=1", build)
         self.assertIn("-fexceptions", build)
         self.assertIn('fptr_run', bridge)
+        self.assertIn('src/external_wasm_api.cpp', build)
+        self.assertIn('createFPTRBaselineModule', build)
+        self.assertIn('fptr_baselines.js', build)
+        self.assertIn('external_alns_baseline.cpp', baseline_bridge)
+        self.assertIn('external_tabu_ga_baseline.cpp', baseline_bridge)
+        self.assertIn('external_sa_ils_grasp.cpp', baseline_bridge)
+        self.assertIn('fptr_baseline_run', baseline_bridge)
         self.assertEqual(
             (ROOT / "src" / "core.cpp").read_bytes(),
             (REPOSITORY / "src" / "core.cpp").read_bytes(),
