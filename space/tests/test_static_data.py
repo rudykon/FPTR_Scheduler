@@ -52,8 +52,15 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertNotIn(
             "wasm/fptr_solver.js", (ROOT / ".gitignore").read_text(encoding="utf-8")
         )
+        self.assertNotIn(
+            "wasm/fptr_solver.wasm", (ROOT / ".gitignore").read_text(encoding="utf-8")
+        )
         self.assertIn(
             "space/wasm/fptr_solver.js",
+            (REPOSITORY / ".gitignore").read_text(encoding="utf-8"),
+        )
+        self.assertIn(
+            "space/wasm/fptr_solver.wasm",
             (REPOSITORY / ".gitignore").read_text(encoding="utf-8"),
         )
 
@@ -90,7 +97,7 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertIn('src/core.cpp', build)
         self.assertIn('src/wasm_api.cpp', build)
         self.assertIn("MODULARIZE=1", build)
-        self.assertIn("SINGLE_FILE=1", build)
+        self.assertNotIn("SINGLE_FILE=1", build)
         self.assertIn("-fexceptions", build)
         self.assertIn('fptr_run', bridge)
         self.assertEqual(

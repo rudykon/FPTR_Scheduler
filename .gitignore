@@ -12,6 +12,7 @@ build/
 artifacts/
 paper/
 space/wasm/fptr_solver.js
+space/wasm/fptr_solver.wasm
 
 # LaTeX and editor intermediates.
 *.aux
