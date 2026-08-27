@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Create deterministic SVG fallbacks and a version manifest for web figures."""
+"""Audit web figures and describe the checked-in PNG fallback honestly."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import re
 import struct
 from pathlib import Path
 
@@ -30,42 +31,47 @@ def png_size(path: Path) -> tuple[int, int]:
     return struct.unpack(">II", payload[16:24])
 
 
-def svg_text(name: str, title: str, width: int, height: int) -> str:
-    return (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-        f'viewBox="0 0 {width} {height}" role="img" aria-labelledby="{name}-title">\n'
-        f'  <title id="{name}-title">{title}</title>\n'
-        f'  <image width="{width}" height="{height}" href="{name}.png" xlink:href="{name}.png" />\n'
-        '</svg>\n'
-    )
+def validate_native_svg(path: Path) -> None:
+    source = path.read_text(encoding="utf-8")
+    if re.search(r"<(?:[\w-]+:)?image\b", source, re.IGNORECASE):
+        raise ValueError(f"{path} embeds a raster image")
+    if not re.search(r"<(?:[\w-]+:)?(?:path|line|circle|text)\b", source, re.IGNORECASE):
+        raise ValueError(f"{path} contains no native vector drawing elements")
 
 
-def expected(images_dir: Path) -> tuple[dict[Path, str], dict[str, object]]:
-    files: dict[Path, str] = {}
+def fallback_manifest(images_dir: Path) -> dict[str, object]:
     records: dict[str, object] = {}
-    for name, title in FIGURES:
+    for name, _title in FIGURES:
         png = images_dir / f"{name}.png"
         width, height = png_size(png)
-        svg = images_dir / f"{name}.svg"
-        content = svg_text(name, title, width, height)
-        files[svg] = content
         records[name] = {
             "png": f"../images/{png.name}",
             "png_sha256": sha256(png),
-            "svg": f"../images/{svg.name}",
             "width": width,
             "height": height,
         }
-    manifest = {
-        "schema_version": 1,
-        "profile": "web-fallback",
+    return {
+        "schema_version": 2,
+        "profile": "audited-png-fallback",
         "native_generator": "python3 experiments/plot_paper_results.py --profile web",
-        "fallback_generator": "python3 tools/build_web_figure_fallbacks.py",
-        "note": "The code-only release keeps audited PNG exports and deterministic SVG wrappers. Native web-profile plots are regenerated when the sealed result bundle is supplied.",
+        "fallback_auditor": "python3 tools/build_web_figure_fallbacks.py",
+        "note": "The code-only release currently publishes audited PNG exports. No SVG is advertised until the formal result bundle can regenerate native vector paths and editable text.",
         "figures": records,
     }
-    return files, manifest
+
+
+def check_native_bundle(images_dir: Path, manifest_path: Path) -> None:
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("profile") != "web":
+        raise ValueError("native SVG figures require the formal web-profile manifest")
+    outputs = manifest.get("outputs", {})
+    for name, _title in FIGURES:
+        svg = images_dir / f"{name}.svg"
+        png = images_dir / f"{name}.png"
+        validate_native_svg(svg)
+        record = outputs.get(name, {})
+        if record.get("svg_sha256") != sha256(svg) or record.get("png_sha256") != sha256(png):
+            raise ValueError(f"manifest hashes do not match {name}")
 
 
 def main() -> None:
@@ -74,21 +80,26 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, default=Path("docs/evidence/figure-manifest.json"))
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    files, manifest = expected(args.images_dir)
-    manifest_text = json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
-    if args.check:
-        mismatches = [
-            str(path)
-            for path, content in files.items()
-            if not path.exists() or path.read_text(encoding="utf-8") != content
-        ]
-        if not args.manifest.exists() or args.manifest.read_text(encoding="utf-8") != manifest_text:
-            mismatches.append(str(args.manifest))
-        if mismatches:
-            raise SystemExit("stale web figure artifacts: " + ", ".join(mismatches))
+    svg_paths = [args.images_dir / f"{name}.svg" for name, _title in FIGURES]
+    native_count = sum(path.is_file() for path in svg_paths)
+    if native_count not in (0, len(svg_paths)):
+        raise SystemExit("web figures mix PNG-only and SVG states")
+    if native_count:
+        try:
+            check_native_bundle(args.images_dir, args.manifest)
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            raise SystemExit(str(error)) from error
         return
-    for path, content in files.items():
-        path.write_text(content, encoding="utf-8")
+
+    manifest = fallback_manifest(args.images_dir)
+    manifest_text = json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
+    if args.check and (
+        not args.manifest.exists()
+        or args.manifest.read_text(encoding="utf-8") != manifest_text
+    ):
+        raise SystemExit(f"stale web figure manifest: {args.manifest}")
+    if args.check:
+        return
     args.manifest.parent.mkdir(parents=True, exist_ok=True)
     args.manifest.write_text(manifest_text, encoding="utf-8")
 

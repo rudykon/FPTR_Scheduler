@@ -174,8 +174,8 @@ class StaticSpaceTests(unittest.TestCase):
             self.assertIn(panel, evidence)
             self.assertTrue((docs / "images" / panel).is_file(), panel)
             svg = panel.replace(".png", ".svg")
-            self.assertIn(svg, evidence)
-            self.assertTrue((docs / "images" / svg).is_file(), svg)
+            self.assertNotIn(svg, evidence)
+            self.assertFalse((docs / "images" / svg).exists(), svg)
 
         self.assertIn('class="advanced-controls"', demo)
         self.assertIn('class="advanced-results"', demo)

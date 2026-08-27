@@ -11,6 +11,7 @@ on:
       - "tools/build_web_figure_fallbacks.py"
       - "experiments/plot_paper_results.py"
       - "tests/test_pages.py"
+      - "tests/browser_pages.js"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -29,7 +30,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,6 +40,7 @@ jobs:
           node --check docs/assets/site.js
           node --check space/app.js
           node --check space/runtime.js
+          node --check tests/browser_pages.js
           python3 -m py_compile tools/build_pages.py experiments/plot_paper_results.py
           python3 tools/build_web_figure_fallbacks.py --check
           python3 -m unittest discover -s tests -p 'test_pages.py' -v
@@ -64,6 +66,23 @@ jobs:
           cp space/app.js space/runtime.js _site/demo/
           cp -a space/wasm/. _site/demo/wasm/
           cp -a space/data/. _site/demo/data/
+
+      - name: Install browser regression runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Check layouts and run the eight-method browser Demo
+        run: node tests/browser_pages.js _site artifacts/browser
+
+      - name: Upload browser review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-browser-screenshots
+          path: artifacts/browser
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

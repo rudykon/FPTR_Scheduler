@@ -10,6 +10,8 @@ import unittest
 from html.parser import HTMLParser
 from pathlib import Path
 
+from tools.build_web_figure_fallbacks import validate_native_svg
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
@@ -167,6 +169,10 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn(rq, evidence)
         for anchor in ("quality", "deadline", "cg-stress", "baselines", "exact", "limits"):
             self.assertIn(f'id="{anchor}"', evidence)
+        self.assertEqual(evidence.count('class="secondary-figure"'), 2)
+        self.assertEqual(evidence.count('class="figure-size-link"'), 6)
+        self.assertNotIn(".svg", evidence)
+        self.assertNotIn("<picture", evidence)
         exact = re.search(r'<div class="exact-metrics">(.*?)</div>', evidence, re.DOTALL)
         self.assertIsNotNone(exact)
         for value in ("8 / 12", "0%", "3.19%", "25%"):
@@ -220,10 +226,30 @@ class PagesContractTests(unittest.TestCase):
             check=True,
         )
         payload = json.loads((DOCS / "evidence/figure-manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(payload["profile"], "audited-png-fallback")
         self.assertEqual(len(payload["figures"]), 6)
         for name in payload["figures"]:
-            self.assertTrue((DOCS / "images" / f"{name}.svg").is_file())
             self.assertTrue((DOCS / "images" / f"{name}.png").is_file())
+            self.assertFalse((DOCS / "images" / f"{name}.svg").exists())
+
+    def test_svg_integrity_rejects_raster_wrappers(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            svg = Path(tmp) / "figure.svg"
+            svg.write_text('<svg><image href="figure.png" /></svg>', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "embeds a raster image"):
+                validate_native_svg(svg)
+            svg.write_text('<svg><path d="M0 0L1 1" /><text>FPTR</text></svg>', encoding="utf-8")
+            validate_native_svg(svg)
+
+    def test_pages_workflow_runs_browser_regression(self) -> None:
+        workflow = (ROOT / ".github/workflows/pages.yml").read_text(encoding="utf-8")
+        for required in (
+            "playwright@1.55.0",
+            "tests/browser_pages.js _site artifacts/browser",
+            "pages-browser-screenshots",
+            "npx playwright install --with-deps chromium",
+        ):
+            self.assertIn(required, workflow)
 
 
 if __name__ == "__main__":

@@ -79,13 +79,16 @@
               </div>
               <div>
                 <figure class="web-figure">
-                  <a href="../images/web_stage_gain.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_stage_gain.svg" type="image/svg+xml" /><img src="../images/web_stage_gain.png" alt="FPTR ordered cumulative stage gain" /></picture></a>
-                  <figcaption data-i18n="stageGainCaption">固定顺序下的条件增量：Global +0.44、CG +0.49、Remask +0.59、Full · Pair +0.25 个百分点。它们不是独立模块效应。</figcaption>
+                  <a class="figure-image-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_stage_gain.png" alt="FPTR ordered cumulative stage gain" /></a>
+                  <figcaption><span data-i18n="stageGainCaption">固定顺序下的条件增量：Global +0.44、CG +0.49、Remask +0.59、Full · Pair +0.25 个百分点。它们不是独立模块效应。</span><a class="figure-size-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
-                <figure class="web-figure">
-                  <a href="../images/web_scenario_gain.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_scenario_gain.svg" type="image/svg+xml" /><img src="../images/web_scenario_gain.png" alt="Scenario-wise FPTR Full gain" /></picture></a>
-                  <figcaption data-i18n="scenarioGainCaption">Full 在五种规模与压力场景中的平均增益均为正；点击图件可按原尺寸查看。</figcaption>
-                </figure>
+                <details class="secondary-figure">
+                  <summary data-i18n="scenarioFigureDetails">查看五种场景中的增益</summary>
+                  <div class="details-body"><figure class="web-figure">
+                    <a class="figure-image-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_scenario_gain.png" alt="Scenario-wise FPTR Full gain" /></a>
+                    <figcaption><span data-i18n="scenarioGainCaption">Full 在五种规模与压力场景中的平均增益均为正。</span><a class="figure-size-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
+                  </figure></div>
+                </details>
               </div>
             </section>
 
@@ -98,13 +101,16 @@
               </div>
               <div>
                 <figure class="web-figure">
-                  <a href="../images/web_runtime_ecdf.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_runtime_ecdf.svg" type="image/svg+xml" /><img src="../images/web_runtime_ecdf.png" alt="Runtime ECDF under the 87 millisecond internal budget" /></picture></a>
-                  <figcaption data-i18n="runtimeCaption">87 ms 内部预算下的求解器墙钟时间 ECDF；100 ms 虚线表示外部计分截止。</figcaption>
+                  <a class="figure-image-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><img src="../images/web_runtime_ecdf.png" alt="Runtime ECDF under the 87 millisecond internal budget" /></a>
+                  <figcaption><span data-i18n="runtimeCaption">87 ms 内部预算下的求解器墙钟时间 ECDF；100 ms 虚线表示外部计分截止。</span><a class="figure-size-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
-                <figure class="web-figure">
-                  <a href="../images/web_budget_quality.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_budget_quality.svg" type="image/svg+xml" /><img src="../images/web_budget_quality.png" alt="FPTR budget and quality trade-off" /></picture></a>
-                  <figcaption data-i18n="budgetCaption">预算从 60 ms 增至 87 ms 时，平均增益从 1.60% 增至 1.65%，显示边际收益已开始趋平。</figcaption>
-                </figure>
+                <details class="secondary-figure">
+                  <summary data-i18n="budgetFigureDetails">查看预算扫描</summary>
+                  <div class="details-body"><figure class="web-figure">
+                    <a class="figure-image-link" href="../images/web_budget_quality.png" target="_blank" rel="noreferrer"><img src="../images/web_budget_quality.png" alt="FPTR budget and quality trade-off" /></a>
+                    <figcaption><span data-i18n="budgetCaption">预算从 60 ms 增至 87 ms 时，平均增益从 1.60% 增至 1.65%，显示边际收益已开始趋平。</span><a class="figure-size-link" href="../images/web_budget_quality.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
+                  </figure></div>
+                </details>
               </div>
             </section>
 
@@ -117,8 +123,8 @@
               </div>
               <div>
                 <figure class="web-figure">
-                  <a href="../images/web_cg_stress.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_cg_stress.svg" type="image/svg+xml" /><img src="../images/web_cg_stress.png" alt="Compatibility group size stress test" /></picture></a>
-                  <figcaption data-i18n="cgStressCaption">兼容组大小与覆盖率共同变化；图中同时标出 Full 的 p95 墙钟时间。</figcaption>
+                  <a class="figure-image-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><img src="../images/web_cg_stress.png" alt="Compatibility group size stress test" /></a>
+                  <figcaption><span data-i18n="cgStressCaption">兼容组大小与覆盖率共同变化；图中同时标出 Full 的 p95 墙钟时间。</span><a class="figure-size-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
               </div>
             </section>
@@ -167,8 +173,8 @@
                   <article><strong>25%</strong><span data-i18n="exactMax">最大差距</span></article>
                 </div>
                 <figure class="web-figure">
-                  <a href="../images/web_optimality_gap.svg" target="_blank" rel="noreferrer"><picture><source srcset="../images/web_optimality_gap.svg" type="image/svg+xml" /><img src="../images/web_optimality_gap.png" alt="Exact optimality gaps on twelve small cases" /></picture></a>
-                  <figcaption data-i18n="optimalityCaption">事务门保证可行与严格改进，但不保证接近全局最优；较宽案例揭示了这一边界。</figcaption>
+                  <a class="figure-image-link" href="../images/web_optimality_gap.png" target="_blank" rel="noreferrer"><img src="../images/web_optimality_gap.png" alt="Exact optimality gaps on twelve small cases" /></a>
+                  <figcaption><span data-i18n="optimalityCaption">事务门保证可行与严格改进，但不保证接近全局最优；较宽案例揭示了这一边界。</span><a class="figure-size-link" href="../images/web_optimality_gap.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
               </div>
             </section>

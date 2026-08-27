@@ -1,49 +1,43 @@
 {
-  "schema_version": 1,
-  "profile": "web-fallback",
+  "schema_version": 2,
+  "profile": "audited-png-fallback",
   "native_generator": "python3 experiments/plot_paper_results.py --profile web",
-  "fallback_generator": "python3 tools/build_web_figure_fallbacks.py",
-  "note": "The code-only release keeps audited PNG exports and deterministic SVG wrappers. Native web-profile plots are regenerated when the sealed result bundle is supplied.",
+  "fallback_auditor": "python3 tools/build_web_figure_fallbacks.py",
+  "note": "The code-only release currently publishes audited PNG exports. No SVG is advertised until the formal result bundle can regenerate native vector paths and editable text.",
   "figures": {
     "web_stage_gain": {
       "png": "../images/web_stage_gain.png",
       "png_sha256": "e177832f87a8f772518c4eac2dbfa5efaa1e2b3ddf6cc715586f2677f64938e5",
-      "svg": "../images/web_stage_gain.svg",
       "width": 720,
       "height": 423
     },
     "web_scenario_gain": {
       "png": "../images/web_scenario_gain.png",
       "png_sha256": "70cd345f70465a7a84bbbd21eb2bc523092dd980edd23f1635e1f0086c875133",
-      "svg": "../images/web_scenario_gain.svg",
       "width": 720,
       "height": 423
     },
     "web_budget_quality": {
       "png": "../images/web_budget_quality.png",
       "png_sha256": "1c71572f23cedfc4aff9e5f1d1da0e2fd2de6c3ed54abfac131f3c4fdc3e495c",
-      "svg": "../images/web_budget_quality.svg",
       "width": 720,
       "height": 457
     },
     "web_runtime_ecdf": {
       "png": "../images/web_runtime_ecdf.png",
       "png_sha256": "5420ad15f2886cb93beda83fe042ab9f8e4a0a04d7e3fc7d2ab5d4abb58da068",
-      "svg": "../images/web_runtime_ecdf.svg",
       "width": 720,
       "height": 457
     },
     "web_cg_stress": {
       "png": "../images/web_cg_stress.png",
       "png_sha256": "34171fae2254d6caeb6f673573fc0e38e8406970d6cd18ac80a63f87490b327c",
-      "svg": "../images/web_cg_stress.svg",
       "width": 720,
       "height": 511
     },
     "web_optimality_gap": {
       "png": "../images/web_optimality_gap.png",
       "png_sha256": "7c8513907dfe80e1ac5164973508267397f257a2a899a22e94d4ea8cecd473d0",
-      "svg": "../images/web_optimality_gap.svg",
       "width": 720,
       "height": 511
     }
