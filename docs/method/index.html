@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#001b3d" />
+    <meta name="description" content="FPTR 的可行性保持事务式细化、四项提交检查与 87 ms 累积阶段链。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="方法 · FPTR Scheduler" />
+    <meta property="og:description" content="Feasibility-preserving transactional refinement and the cumulative 87 ms stage chain." />
+    <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/method/" />
+    <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/Deadline_Aware_FPTR_Scheduler.png" />
+    <title>方法 · FPTR Scheduler</title>
+    <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/method/" />
+    <link rel="icon" type="image/png" href="../assets/brand/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script src="../assets/site.js" defer></script>
+  </head>
+  <body data-title-key="methodPageTitle" data-description-key="methodPageDescription">
+    <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
+
+    <div class="site-shell" id="top">
+      <header class="site-header">
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
+          <img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" />
+        </a>
+        <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
+          <a href="../" data-i18n="navOverview">概览</a>
+          <a href="../problem/" data-i18n="navProblem">问题</a>
+          <a href="../method/" aria-current="page" data-i18n="navMethod">方法</a>
+          <a href="../evidence/" data-i18n="navEvidence">证据</a>
+          <a href="../reproduce/" data-i18n="navReproduce">复现</a>
+        </nav>
+        <div class="header-actions">
+          <div class="language-switch" aria-label="Language">
+            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
+            <button type="button" data-locale="en" aria-pressed="false">EN</button>
+          </div>
+          <a class="icon-link" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"><span aria-hidden="true">GH</span></a>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="page-hero page-hero-method">
+          <div class="section-wrap">
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
+            <p class="section-kicker" data-i18n="methodKicker">02 · 核心方法</p>
+            <h1 data-i18n="methodTitle">像事务一样细化：候选只能整体提交或整体丢弃。</h1>
+            <p data-i18n="methodBody">I 是始终可发布的 incumbent，C 是隔离构造的候选。四项检查全部通过才执行 I ← C；任一检查失败，I 保持不变。</p>
+          </div>
+        </section>
+
+        <section class="method-section detail-section">
+          <div class="section-wrap">
+            <div class="transaction-board">
+              <div class="candidate-source">
+                <span>C</span>
+                <div><small>PRIVATE STATE</small><strong data-i18n="candidateIsolation">隔离构造候选</strong></div>
+              </div>
+              <span class="board-arrow" aria-hidden="true">→</span>
+              <div class="check-grid">
+                <div class="check-card"><span>01</span><b aria-hidden="true">✓</b><code>complete(C)</code><p data-i18n="checkComplete">候选解完整</p></div>
+                <div class="check-card"><span>02</span><b aria-hidden="true">✓</b><code>t_done(C) &lt; tⱼ</code><p data-i18n="checkTime">阶段截止前完成</p></div>
+                <div class="check-card"><span>03</span><b aria-hidden="true">✓</b><code>V(C) = 1</code><p data-i18n="checkValid">结构验证通过</p></div>
+                <div class="check-card"><span>04</span><b aria-hidden="true">✓</b><code>F(C) &gt; F(I)</code><p data-i18n="checkImprove">传输量严格提升</p></div>
+              </div>
+              <div class="gate-outcomes">
+                <div class="outcome commit-outcome"><small data-i18n="pass">全部通过</small><strong><span aria-hidden="true">✓</span><span data-i18n="commit">COMMIT · 更新 I ← C</span></strong></div>
+                <div class="outcome discard-outcome"><small data-i18n="fail">任一失败</small><strong><span aria-hidden="true">×</span><span data-i18n="discard">DISCARD · 保留 I</span></strong></div>
+              </div>
+            </div>
+
+            <div class="stage-panel">
+              <div class="stage-intro">
+                <div class="stage-icon" aria-hidden="true">◷</div>
+                <div><h2 data-i18n="timelineTitle">有界、累积、按绝对截止点推进</h2><p data-i18n="timelineBody">每个阶段继承前一阶段的最好可行解，并拥有独立完成截止点。最后预留时间用于最终验证与序列化。</p></div>
+              </div>
+              <div class="stage-track">
+                <article class="stage-card stage-blue"><div class="stage-top"><span>01</span><time>45 ms</time></div><h3>Base</h3><p data-i18n="stageBase">多样化掩码构造首个可行解</p><i aria-hidden="true"></i></article>
+                <article class="stage-card stage-green"><div class="stage-top"><span>02</span><time>60 ms</time></div><h3>Global</h3><p data-i18n="stageGlobal">按缓存感知的边际收益全局重定价</p><i aria-hidden="true"></i></article>
+                <article class="stage-card stage-cyan"><div class="stage-top"><span>03</span><time>70 ms</time></div><h3>CG</h3><p data-i18n="stageCg">在兼容组内进行合法多用户共享</p><i aria-hidden="true"></i></article>
+                <article class="stage-card stage-orange"><div class="stage-top"><span>04</span><time>78 ms</time></div><h3>Remask</h3><p data-i18n="stageRemask">根据剩余需求修复掩码与单资源分配</p><i aria-hidden="true"></i></article>
+                <article class="stage-card stage-violet"><div class="stage-top"><span>05</span><time>84 ms</time></div><h3>Pair</h3><p data-i18n="stagePair">双资源 ruin-and-refill，完成 Full 阶段</p><i aria-hidden="true"></i></article>
+                <div class="final-marker"><strong>87 ms</strong><span data-i18n="deadline">最终输出</span></div>
+              </div>
+              <p class="reference-note"><span aria-hidden="true">⌁</span><span data-i18n="reference">BeamFirst 是独立参考方法，不进入这条累积链。</span></p>
+            </div>
+
+            <figure class="figure-card method-figure">
+              <img src="../images/Deadline_Aware_FPTR_Scheduler.png" alt="完整的有界阶段链与通用事务门" data-i18n-alt="methodFigureAlt" />
+              <figcaption><span>FIG. 02</span><b data-i18n="methodFigure">完整的有界阶段链与通用事务门。</b></figcaption>
+            </figure>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div><img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+      </footer>
+    </div>
+  </body>
+</html>

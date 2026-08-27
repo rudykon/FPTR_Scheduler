@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#001b3d" />
+    <meta name="description" content="编译、运行、独立验证 FPTR，并复现实验与检查公开研究代码。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="复现 · FPTR Scheduler" />
+    <meta property="og:description" content="Build, run, validate, and reproduce the public FPTR scheduler release." />
+    <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/reproduce/" />
+    <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/Deadline_Aware_FPTR_Scheduler.png" />
+    <title>复现 · FPTR Scheduler</title>
+    <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/reproduce/" />
+    <link rel="icon" type="image/png" href="../assets/brand/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script src="../assets/site.js" defer></script>
+  </head>
+  <body data-title-key="reproducePageTitle" data-description-key="reproducePageDescription">
+    <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
+
+    <div class="site-shell" id="top">
+      <header class="site-header">
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
+          <img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" />
+        </a>
+        <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
+          <a href="../" data-i18n="navOverview">概览</a>
+          <a href="../problem/" data-i18n="navProblem">问题</a>
+          <a href="../method/" data-i18n="navMethod">方法</a>
+          <a href="../evidence/" data-i18n="navEvidence">证据</a>
+          <a href="../reproduce/" aria-current="page" data-i18n="navReproduce">复现</a>
+        </nav>
+        <div class="header-actions">
+          <div class="language-switch" aria-label="Language">
+            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
+            <button type="button" data-locale="en" aria-pressed="false">EN</button>
+          </div>
+          <a class="icon-link" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"><span aria-hidden="true">GH</span></a>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="page-hero page-hero-reproduce">
+          <div class="section-wrap">
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
+            <p class="section-kicker" data-i18n="reproduceKicker">04 · 复现路径</p>
+            <h1 data-i18n="reproduceTitle">从编译到独立验证，只需要三步。</h1>
+            <p data-i18n="reproduceBody">调度结果写入标准输出；可选阶段轨迹写入标准错误，因此诊断不会污染分配格式。</p>
+          </div>
+        </section>
+
+        <section class="reproduce-section detail-section">
+          <div class="section-wrap">
+            <div class="terminal-grid">
+              <article class="terminal-card terminal-main">
+                <div class="terminal-title"><span aria-hidden="true">›_</span><span>01 · <b data-i18n="runLabel">编译并运行 Full</b></span></div>
+                <pre><code>git clone https://github.com/rudykon/FPTR_Scheduler.git
+cd FPTR_Scheduler
+g++ -std=c++17 -O2 src/scheduler.cpp src/core.cpp -o scheduler
+./scheduler --stage full --budget-ms 87 --trace &lt; instance.in &gt; allocation.out</code></pre>
+              </article>
+              <article class="terminal-card">
+                <div class="terminal-title"><span aria-hidden="true">✓</span><span>02 · <b data-i18n="validateLabel">独立验证</b></span></div>
+                <pre><code>python3 tools/scheduler_validator.py --help
+python3 -m unittest discover -s tests -v</code></pre>
+              </article>
+              <article class="terminal-card">
+                <div class="terminal-title"><span aria-hidden="true">{ }</span><span>03 · <b data-i18n="experimentLabel">快速实验</b></span></div>
+                <pre><code>python3 experiments/paper_experiments.py \
+  --quick \
+  --out /tmp/fptr-quick-results</code></pre>
+              </article>
+            </div>
+
+            <div class="repo-panel">
+              <div class="repo-intro">
+                <span class="repo-mark" aria-hidden="true">{ }</span>
+                <h2 data-i18n="repoTitle">一份能被检查的研究代码，而不是黑盒演示。</h2>
+                <p data-i18n="repoBody">实现、验证器、实验编排和图件生成彼此分离，便于逐层检查模型契约和结论来源。</p>
+                <div class="appendix-links">
+                  <span data-i18n="appendix">证据附录</span>
+                  <a href="../appendices/Appendix.pdf" target="_blank"><span data-i18n="englishAppendix">英文附录</span><span aria-hidden="true">↗</span></a>
+                  <a href="../appendices/Appendix_zh.pdf" target="_blank"><span data-i18n="chineseAppendix">中文附录</span><span aria-hidden="true">↗</span></a>
+                </div>
+              </div>
+              <div class="repo-map">
+                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/src" target="_blank" rel="noreferrer"><code>src/</code><span data-i18n="repoSrc">C++17 调度器、共享模型与阶段入口</span><b aria-hidden="true">›</b></a>
+                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/tools" target="_blank" rel="noreferrer"><code>tools/</code><span data-i18n="repoTools">独立解析、可行性验证与目标值重算</span><b aria-hidden="true">›</b></a>
+                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/experiments" target="_blank" rel="noreferrer"><code>experiments/</code><span data-i18n="repoExperiments">确定性实例、实验编排、分析与绘图</span><b aria-hidden="true">›</b></a>
+                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/tests" target="_blank" rel="noreferrer"><code>tests/</code><span data-i18n="repoTests">模型契约与端到端回归测试</span><b aria-hidden="true">›</b></a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div><img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+      </footer>
+    </div>
+  </body>
+</html>

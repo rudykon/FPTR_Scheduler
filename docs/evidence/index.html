@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#001b3d" />
+    <meta name="description" content="FPTR 的阶段增益、预算—质量权衡、运行时间分布、压力测试与精确校准。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="实验结果 · FPTR Scheduler" />
+    <meta property="og:description" content="Stage gains, runtime distributions, stress tests, and exact calibration for FPTR." />
+    <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/evidence/" />
+    <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/results_quality_runtime.png" />
+    <title>实验结果 · FPTR Scheduler</title>
+    <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/evidence/" />
+    <link rel="icon" type="image/png" href="../assets/brand/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script src="../assets/site.js" defer></script>
+  </head>
+  <body data-title-key="evidencePageTitle" data-description-key="evidencePageDescription">
+    <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
+
+    <div class="site-shell" id="top">
+      <header class="site-header">
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
+          <img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" />
+        </a>
+        <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
+          <a href="../" data-i18n="navOverview">概览</a>
+          <a href="../problem/" data-i18n="navProblem">问题</a>
+          <a href="../method/" data-i18n="navMethod">方法</a>
+          <a href="../evidence/" aria-current="page" data-i18n="navEvidence">证据</a>
+          <a href="../reproduce/" data-i18n="navReproduce">复现</a>
+        </nav>
+        <div class="header-actions">
+          <div class="language-switch" aria-label="Language">
+            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
+            <button type="button" data-locale="en" aria-pressed="false">EN</button>
+          </div>
+          <a class="icon-link" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"><span aria-hidden="true">GH</span></a>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="page-hero page-hero-evidence">
+          <div class="section-wrap">
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
+            <p class="section-kicker" data-i18n="evidenceKicker">03 · 公开证据</p>
+            <h1 data-i18n="evidenceTitle">结果不靠一句“更好”，而靠阶段轨迹、压力测试与精确校准。</h1>
+            <p data-i18n="evidenceBody">公开仓库提供实验协议、独立验证器和绘图脚本。下列图展示累积阶段增益、预算—质量权衡、运行时间分布，以及兼容组压力与小规模精确比较。</p>
+          </div>
+        </section>
+
+        <section class="evidence-section detail-section">
+          <div class="section-wrap">
+            <div class="evidence-grid">
+              <figure class="result-card">
+                <div class="result-header"><span>01</span><h2 data-i18n="resultA">质量与运行时间</h2><b aria-hidden="true">◴</b></div>
+                <img src="../images/results_quality_runtime.png" alt="质量与运行时间实验结果" data-i18n-alt="resultAAlt" />
+                <figcaption data-i18n="resultACaption">150 个配对实例、每个实例 5 次运行的仓库图件：展示有序阶段增益、分场景提升、预算曲线与 87 ms 运行时间 ECDF。</figcaption>
+              </figure>
+              <figure class="result-card">
+                <div class="result-header"><span>02</span><h2 data-i18n="resultB">压力测试与精确校准</h2><b aria-hidden="true">✓</b></div>
+                <img src="../images/results_stress_optimality.png" alt="压力测试与精确校准结果" data-i18n-alt="resultBAlt" />
+                <figcaption data-i18n="resultBCaption">兼容组规模压力测试与 12 个小规模精确案例，用于观察鲁棒性并校准相对最优解的差距。</figcaption>
+              </figure>
+            </div>
+
+            <div class="release-note">
+              <span class="release-icon" aria-hidden="true">◇</span>
+              <p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。历史密封结果与论文正文不在仓库中；所有性能主张应由重新生成的工件或单独提供的证据复核。</span></p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div><img src="../assets/brand/logo-horizontal-whiteplate.webp" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+      </footer>
+    </div>
+  </body>
+</html>

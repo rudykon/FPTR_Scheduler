@@ -5,8 +5,17 @@
     zh: {
       title: "FPTR Scheduler · 联合波束与资源调度",
       description: "FPTR：面向截止时间约束的联合波束与资源调度器，以可行性保持的事务式细化持续提升传输量。",
+      problemPageTitle: "问题 · FPTR Scheduler",
+      problemPageDescription: "FPTR 联合波束与资源调度中的六类耦合约束，以及直接修改当前解带来的超时风险。",
+      methodPageTitle: "方法 · FPTR Scheduler",
+      methodPageDescription: "FPTR 的可行性保持事务式细化、四项提交检查与 87 ms 累积阶段链。",
+      evidencePageTitle: "实验结果 · FPTR Scheduler",
+      evidencePageDescription: "FPTR 的阶段增益、预算—质量权衡、运行时间分布、压力测试与精确校准。",
+      reproducePageTitle: "复现 · FPTR Scheduler",
+      reproducePageDescription: "编译、运行、独立验证 FPTR，并复现实验与检查公开研究代码。",
       skip: "跳到主要内容",
       navAria: "主要导航",
+      navOverview: "概览",
       navProblem: "问题",
       navMethod: "方法",
       navEvidence: "证据",
@@ -19,6 +28,14 @@
       heroArtSignal: "智能协同",
       heroArtFeasible: "保持可行",
       heroArtDeadline: "截止时间感知",
+      overviewKicker: "项目导览",
+      overviewTitle: "从问题到复现，分四步了解 FPTR。",
+      overviewBody: "首页只保留核心判断。选择一个主题，进入独立页面查看完整方法、图件与复现路径。",
+      overviewProblemBody: "理解波束、掩码、缓存、共享与硬截止时间为何必须一起处理。",
+      overviewMethodBody: "查看隔离候选、四项提交检查与五阶段累积细化链。",
+      overviewEvidenceBody: "检查阶段增益、预算曲线、运行时间、压力测试与精确校准。",
+      overviewReproduceBody: "从 C++17 编译到独立验证和快速实验，按步骤复现公开结果。",
+      openPage: "进入页面",
       source: "查看源代码",
       explore: "理解 FPTR",
       statBudget: "默认总预算",
@@ -98,8 +115,17 @@
     en: {
       title: "FPTR Scheduler · Joint Beam & Resource Scheduling",
       description: "FPTR applies feasibility-preserving transactional refinement to deadline-aware joint beam and resource scheduling.",
+      problemPageTitle: "Problem · FPTR Scheduler",
+      problemPageDescription: "The six coupled constraint families in joint beam and resource scheduling, and the timeout risk of mutating the live solution.",
+      methodPageTitle: "Method · FPTR Scheduler",
+      methodPageDescription: "FPTR's feasibility-preserving transactional refinement, four commit checks, and cumulative 87 ms stage chain.",
+      evidencePageTitle: "Results · FPTR Scheduler",
+      evidencePageDescription: "FPTR stage gains, budget–quality trade-offs, runtime distributions, stress tests, and exact calibration.",
+      reproducePageTitle: "Reproduce · FPTR Scheduler",
+      reproducePageDescription: "Build, run, and independently validate FPTR, then reproduce its public experiments.",
       skip: "Skip to main content",
       navAria: "Main navigation",
+      navOverview: "Overview",
       navProblem: "Problem",
       navMethod: "Method",
       navEvidence: "Evidence",
@@ -112,6 +138,14 @@
       heroArtSignal: "Coordinated intelligence",
       heroArtFeasible: "Feasibility preserved",
       heroArtDeadline: "Deadline aware",
+      overviewKicker: "Project guide",
+      overviewTitle: "Understand FPTR in four focused pages.",
+      overviewBody: "The homepage now keeps only the core argument. Choose a topic for the complete method, figures, and reproduction path.",
+      overviewProblemBody: "See why beams, masks, buffers, sharing, and hard deadlines must be handled together.",
+      overviewMethodBody: "Inspect isolated candidates, four commit checks, and the five-stage cumulative chain.",
+      overviewEvidenceBody: "Review stage gains, budget curves, runtime, stress tests, and exact calibration.",
+      overviewReproduceBody: "Follow the path from C++17 compilation to independent validation and quick experiments.",
+      openPage: "Open page",
       source: "View source",
       explore: "Understand FPTR",
       statBudget: "default total budget",
@@ -192,14 +226,23 @@
 
   const localeButtons = Array.from(document.querySelectorAll("[data-locale]"));
   const metaDescription = document.querySelector('meta[name="description"]');
+  const metaOgTitle = document.querySelector('meta[property="og:title"]');
+  const metaOgDescription = document.querySelector('meta[property="og:description"]');
 
   function applyLocale(locale) {
     const normalized = locale === "en" ? "en" : "zh";
     const strings = translations[normalized];
 
     document.documentElement.lang = normalized === "zh" ? "zh-CN" : "en";
-    document.title = strings.title;
-    if (metaDescription) metaDescription.setAttribute("content", strings.description);
+    const titleKey = document.body.getAttribute("data-title-key");
+    const descriptionKey = document.body.getAttribute("data-description-key");
+    const localizedTitle = (titleKey && strings[titleKey]) || strings.title;
+    const localizedDescription = (descriptionKey && strings[descriptionKey]) || strings.description;
+
+    document.title = localizedTitle;
+    if (metaDescription) metaDescription.setAttribute("content", localizedDescription);
+    if (metaOgTitle) metaOgTitle.setAttribute("content", localizedTitle);
+    if (metaOgDescription) metaOgDescription.setAttribute("content", localizedDescription);
 
     document.querySelectorAll("[data-i18n]").forEach((element) => {
       const key = element.getAttribute("data-i18n");
