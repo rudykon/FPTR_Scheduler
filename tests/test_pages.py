@@ -54,6 +54,9 @@ class PagesContractTests(unittest.TestCase):
             flags=re.DOTALL,
         )
         self.assertGreaterEqual(len(blocks), 4)
+        self.assertEqual(source.count('class="copy-code"'), len(blocks))
+        self.assertEqual(source.count('class="code-shell"'), len(blocks))
+        self.assertEqual(source.count('tabindex="0"'), len(blocks))
         for block in blocks:
             command = html.unescape(block)
             result = subprocess.run(
@@ -124,18 +127,23 @@ class PagesContractTests(unittest.TestCase):
                 ],
                 check=True,
             )
-            for locale in ("zh", "en"):
-                for page in ("index.html", "problem/index.html", "method/index.html", "evidence/index.html", "reproduce/index.html", "demo/index.html"):
-                    self.assertTrue((output / locale / page).is_file(), f"missing {locale}/{page}")
+            for page in ("index.html", "problem/index.html", "method/index.html", "evidence/index.html", "reproduce/index.html", "demo/index.html"):
+                self.assertTrue((output / page).is_file(), f"missing root/{page}")
+                self.assertTrue((output / "en" / page).is_file(), f"missing en/{page}")
+            self.assertFalse((output / "zh").exists())
             root_html = (output / "index.html").read_text(encoding="utf-8")
-            zh_html = (output / "zh/index.html").read_text(encoding="utf-8")
             en_html = (output / "en/index.html").read_text(encoding="utf-8")
-            root_parser, zh_parser, en_parser = I18nParser(), I18nParser(), I18nParser()
+            root_parser, en_parser = I18nParser(), I18nParser()
             root_parser.feed(root_html)
-            zh_parser.feed(zh_html)
             en_parser.feed(en_html)
-            self.assertEqual(root_parser.flattened()["paperTitle"], zh_parser.flattened()["paperTitle"])
-            self.assertNotEqual(zh_parser.flattened()["paperTitle"], en_parser.flattened()["paperTitle"])
+            self.assertNotEqual(root_parser.flattened()["paperTitle"], en_parser.flattened()["paperTitle"])
+            self.assertIn('<html lang="zh-CN">', root_html)
+            self.assertIn('<html lang="en">', en_html)
+            self.assertIn('rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/"', root_html)
+            self.assertIn('rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/en/"', en_html)
+            self.assertIn('hreflang="zh-CN" href="https://rudykon.github.io/FPTR_Scheduler/"', root_html)
+            self.assertIn('hreflang="x-default" href="https://rudykon.github.io/FPTR_Scheduler/"', root_html)
+            self.assertIn('href="/FPTR_Scheduler/" data-locale="zh"', en_html)
             self.assertIn('href="../../assets/site.css"', (output / "en/method/index.html").read_text(encoding="utf-8"))
             demo_en = (output / "en/demo/index.html").read_text(encoding="utf-8")
             self.assertIn('src="../../demo/app.js"', demo_en)
@@ -187,6 +195,23 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn("--demo-meta: .875rem", demo_css)
         self.assertIn("padding: 2.25rem 0 2rem", site_css)
         self.assertIn("clamp(2.4rem, 4.3vw, 3.75rem)", site_css)
+        self.assertIn(".main-nav.is-open", site_css)
+        self.assertIn(".rq-nav.is-open", site_css)
+        self.assertIn('html[lang="en"] .home-hero h1', site_css)
+
+        site_js = (DOCS / "assets/site.js").read_text(encoding="utf-8")
+        for behavior in ("nav-toggle", "rq-toggle", "copy-code", "dataset.scrollRegion"):
+            self.assertIn(behavior, site_js)
+
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        for page in pages:
+            source = page.read_text(encoding="utf-8")
+            self.assertIn('class="nav-toggle"', source)
+            self.assertIn('id="mainNav"', source)
+            self.assertNotIn('/zh/', source)
+        evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
+        self.assertIn('class="rq-toggle"', evidence)
+        self.assertIn('id="rqNav"', evidence)
 
     def test_web_figure_manifest_is_current(self) -> None:
         subprocess.run(
@@ -203,4 +228,3 @@ class PagesContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

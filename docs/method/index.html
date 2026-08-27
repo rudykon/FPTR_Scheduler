@@ -22,7 +22,8 @@
     <div class="site-shell" id="top">
       <header class="site-header">
         <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
-        <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
+        <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
           <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
           <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
           <a href="../method/" aria-current="page"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
@@ -31,7 +32,7 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><a href="../zh/method/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/method/" data-locale="en" lang="en">EN</a></div>
+          <div class="language-switch" aria-label="Language"><a href="../method/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/method/" data-locale="en" lang="en">EN</a></div>
           <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>

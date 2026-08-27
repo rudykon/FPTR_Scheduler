@@ -7,6 +7,7 @@ import argparse
 import html
 import json
 import re
+import shutil
 from pathlib import Path
 
 PAGES = (
@@ -26,19 +27,17 @@ def page_slug(relative: Path) -> str:
 
 
 def public_url(relative: Path, locale: str | None) -> str:
-    parts = [SITE_ORIGIN]
-    if locale:
-        parts.append(locale)
+    prefix = "" if locale in (None, "zh") else f"/{locale}"
     slug = page_slug(relative)
-    if slug:
-        parts.append(slug)
-    return "/".join(part.strip("/") for part in parts[:-1]) + "/" + parts[-1].strip("/") + "/" if len(parts) > 1 else SITE_ORIGIN + "/"
+    suffix = f"/{slug}" if slug else ""
+    return f"{SITE_ORIGIN}{prefix}{suffix}/"
 
 
 def route_path(relative: Path, locale: str) -> str:
     slug = page_slug(relative)
     suffix = f"/{slug}/" if slug else "/"
-    return f"{SITE_PATH}/{locale}{suffix}"
+    locale_prefix = "" if locale == "zh" else f"/{locale}"
+    return f"{SITE_PATH}{locale_prefix}{suffix}"
 
 
 def replace_i18n(text: str, strings: dict[str, str]) -> str:
@@ -135,7 +134,7 @@ def render_page(template: str, relative: Path, locale: str, strings: dict[str, s
     output = replace_meta_content(output, r'property="og:url"', url)
 
     alternates = (
-        f'    <link rel="alternate" hreflang="zh-CN" href="{public_url(relative, "zh")}" />\n'
+        f'    <link rel="alternate" hreflang="zh-CN" href="{public_url(relative, None)}" />\n'
         f'    <link rel="alternate" hreflang="en" href="{public_url(relative, "en")}" />\n'
         f'    <link rel="alternate" hreflang="x-default" href="{public_url(relative, None)}" />'
     )
@@ -184,13 +183,14 @@ def build(source_dir: Path, output_dir: Path) -> None:
             render_page(template, relative, "zh", content["zh"], localized=False),
             encoding="utf-8",
         )
-        for locale in ("zh", "en"):
+        for locale in ("en",):
             destination = output_dir / locale / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_text(
                 render_page(template, relative, locale, content[locale], localized=True),
                 encoding="utf-8",
             )
+    shutil.rmtree(output_dir / "zh", ignore_errors=True)
 
 
 def parse_args() -> argparse.Namespace:
@@ -203,4 +203,3 @@ def parse_args() -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_args()
     build(args.source.resolve(), args.output.resolve())
-
