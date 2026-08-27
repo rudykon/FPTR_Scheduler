@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "docs/**"
+      - "space/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -24,10 +25,36 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Validate demo inputs and browser runtime
+        run: |
+          node --check space/app.js
+          node --check space/runtime.js
+          python3 -m unittest discover -s space/tests -p 'test_*.py'
+          node space/tests/test_runtime.js
+
+      - name: Set up Emscripten
+        uses: emscripten-core/setup-emsdk@v15
+        with:
+          version: 5.0.1
+          actions-cache-folder: emsdk-cache
+
+      - name: Build and smoke-test the C++ WebAssembly scheduler
+        run: |
+          bash space/build_wasm.sh
+          node space/tests/smoke_wasm.js
+
+      - name: Stage the Pages artifact
+        run: |
+          mkdir -p _site/demo/wasm _site/demo/data
+          cp -a docs/. _site/
+          cp space/app.js space/runtime.js _site/demo/
+          cp -a space/wasm/. _site/demo/wasm/
+          cp -a space/data/. _site/demo/data/
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -35,7 +62,7 @@ jobs:
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment

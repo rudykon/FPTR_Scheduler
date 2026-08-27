@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6faff" />
+    <meta
+      name="description"
+      content="在浏览器中直接运行 FPTR 仓库真实的 C++17 联合波束与资源调度器。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Demo · FPTR Scheduler" />
+    <meta
+      property="og:description"
+      content="Run the real FPTR C++17 joint beam and resource scheduler in WebAssembly."
+    />
+    <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/demo/" />
+    <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/Deadline_Aware_FPTR_Scheduler.png" />
+    <title>Demo · FPTR Scheduler</title>
+    <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/demo/" />
+    <link rel="icon" type="image/png" href="../assets/brand/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <link rel="stylesheet" href="./demo.css" />
+    <script src="../assets/site.js" defer></script>
+    <script src="./runtime.js" defer></script>
+    <script src="./wasm/fptr_solver.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body data-title-key="demoPageTitle" data-description-key="demoPageDescription">
+    <a class="skip-link" href="#demoControls" data-i18n="skip">跳到主要内容</a>
+
+    <div class="site-shell" id="top">
+      <header class="site-header">
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
+          <img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" />
+        </a>
+
+        <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
+          <a href="../"><i aria-hidden="true">✦</i><span data-i18n="navOverview">概览</span></a>
+          <a href="../problem/"><i aria-hidden="true">⌁</i><span data-i18n="navProblem">问题</span></a>
+          <a href="../method/"><i aria-hidden="true">◇</i><span data-i18n="navMethod">方法</span></a>
+          <a href="../evidence/"><i aria-hidden="true">✓</i><span data-i18n="navEvidence">证据</span></a>
+          <a href="../reproduce/"><i aria-hidden="true">›_</i><span data-i18n="navReproduce">复现</span></a>
+          <a href="../demo/" aria-current="page"><i aria-hidden="true">▶</i><span data-i18n="navDemo">Demo</span></a>
+        </nav>
+
+        <div class="header-actions">
+          <div class="language-switch" aria-label="Language">
+            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
+            <button type="button" data-locale="en" aria-pressed="false">EN</button>
+          </div>
+          <a
+            class="icon-link"
+            href="https://github.com/rudykon/FPTR_Scheduler"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub repository"
+          ><span aria-hidden="true">GH</span></a>
+        </div>
+      </header>
+
+      <main id="main" class="demo-app">
+        <section class="demo-hero section-wrap">
+          <div class="demo-hero-copy">
+            <p class="demo-eyebrow" data-i18n="eyebrow">交互式调度器导览</p>
+            <h1 data-i18n="title">直观看见联合波束与资源调度如何成形。</h1>
+            <p class="demo-intro" data-i18n="intro">
+              选择工作负载、截止时间与 FPTR 停止阶段，然后在浏览器中直接执行仓库真实的 C++17 调度器。
+            </p>
+            <div class="hero-badges" aria-label="Demo properties">
+              <span><i class="dot green"></i><span data-i18n="realSnapshots">实时 C++17 WebAssembly</span></span>
+              <span><i class="dot blue"></i><span data-i18n="audit">独立验证器</span></span>
+              <span><i class="dot violet"></i><span data-i18n="freeStatic">在本地浏览器运行</span></span>
+            </div>
+          </div>
+          <div class="demo-hero-visual" aria-hidden="true">
+            <img src="../assets/brand/hero-light-1280x720.webp" alt="" />
+            <div class="runtime-card">
+              <span>WASM</span>
+              <strong>C++17</strong>
+              <small>Browser runtime</small>
+            </div>
+          </div>
+        </section>
+
+        <div class="demo-workspace section-wrap">
+          <noscript>
+            <p class="demo-noscript">This interactive demo needs JavaScript and WebAssembly enabled.</p>
+          </noscript>
+
+          <section id="demoControls" class="control-panel" aria-labelledby="controlsTitle">
+            <div class="section-heading compact">
+              <div>
+                <span class="step-number">01</span>
+                <div>
+                  <h2 id="controlsTitle" data-i18n="configure">配置真实运行</h2>
+                  <p data-i18n="configureHint">选择输入，然后启动一次受截止时间约束的真实运行。</p>
+                </div>
+              </div>
+              <span id="dataStatus" class="status-pill loading">正在加载 C++ WebAssembly…</span>
+            </div>
+
+            <div class="controls-grid">
+              <label class="control-field">
+                <span data-i18n="scenario">流量场景</span>
+                <select id="scenarioSelect" disabled></select>
+                <small id="scenarioNote"></small>
+              </label>
+
+              <div class="control-field">
+                <span><span data-i18n="deadline">截止时间预算</span> <b id="budgetValue">87 ms</b></span>
+                <input id="budgetSlider" type="range" min="0" max="4" step="1" value="2" disabled />
+                <div id="budgetTicks" class="range-ticks" aria-hidden="true"></div>
+                <small data-i18n="deadlineHint">所有对比方法使用相同的时间截止条件。</small>
+              </div>
+
+              <fieldset class="control-field stage-field">
+                <legend data-i18n="stopStage">FPTR 停止阶段</legend>
+                <div id="stageButtons" class="stage-buttons"></div>
+                <small data-i18n="stageHint">后续阶段只能提交完整且可行的改进。</small>
+              </fieldset>
+            </div>
+
+            <div class="execution-bar">
+              <div class="input-source">
+                <span class="live-mark" aria-hidden="true"></span>
+                <div><b id="inputSourceLabel">预设输入</b><small id="inputSourceDetail">—</small></div>
+              </div>
+              <label class="file-button">
+                <span data-i18n="customInput">使用自定义 .in 文件</span>
+                <input id="customInput" type="file" accept=".in,.txt,text/plain" />
+              </label>
+              <button id="clearCustomButton" class="secondary-button" type="button" hidden data-i18n="clearCustom">恢复预设</button>
+              <button id="runButton" class="run-button" type="button" disabled>
+                <span class="run-icon">▶</span><span data-i18n="runReal">运行真实 C++ 调度器</span>
+              </button>
+            </div>
+            <p id="executionNote" class="execution-note" data-i18n="executionNote">
+              输入只留在当前浏览器。FPTR 与 BeamFirst 使用相同的时间预算。
+            </p>
+          </section>
+
+          <section id="results" class="results-section" aria-labelledby="resultTitle">
+            <div class="section-heading">
+              <div>
+                <span class="step-number">02</span>
+                <div>
+                  <h2 id="resultTitle" data-i18n="inspect">检查真实运行结果</h2>
+                  <p id="instanceSummary">—</p>
+                </div>
+              </div>
+              <button id="downloadButton" class="primary-button" type="button" disabled>
+                <span data-i18n="download">下载运行记录</span> ↓
+              </button>
+            </div>
+
+            <div id="kpiGrid" class="kpi-grid" aria-live="polite"></div>
+
+            <div class="dashboard-grid">
+              <article class="panel panel-wide">
+                <div class="panel-heading">
+                  <div>
+                    <span class="panel-kicker" data-i18n="transactional">事务式细化</span>
+                    <h3 data-i18n="pipelineTitle">累计最优解得分</h3>
+                  </div>
+                  <div class="legend-inline">
+                    <span><i class="legend-line blue-line"></i>FPTR</span>
+                    <span><i class="legend-line orange-line"></i>BeamFirst</span>
+                  </div>
+                </div>
+                <div id="stageChart" class="stage-chart chart-empty"></div>
+                <p class="chart-note" data-i18n="pipelineNote">
+                  候选方案通过完整可行性契约后，阶段结果才会被接受。
+                </p>
+              </article>
+
+              <article class="panel explainer-panel">
+                <span class="panel-kicker" data-i18n="readChart">图表说明</span>
+                <h3 data-i18n="whyTransactional">为何称为“事务式”？</h3>
+                <ol class="explain-list">
+                  <li><b data-i18n="propose">提出</b><span data-i18n="proposeText">修改波束或资源分配</span></li>
+                  <li><b data-i18n="validate">验证</b><span data-i18n="validateText">检查预算、共享与子带约束</span></li>
+                  <li><b data-i18n="commit">提交</b><span data-i18n="commitText">仅保留完整有效的得分提升</span></li>
+                </ol>
+                <div class="audit-callout">
+                  <span>✓</span>
+                  <div><b data-i18n="auditPass">审计通过</b><small data-i18n="auditPassText">得分、截止时间与可行性一致</small></div>
+                </div>
+              </article>
+
+              <article class="panel panel-wide allocation-panel">
+                <div class="panel-heading">
+                  <div>
+                    <span class="panel-kicker" data-i18n="jointAllocation">联合分配</span>
+                    <h3 data-i18n="allocationTitle">每个资源块由谁使用？</h3>
+                  </div>
+                  <div class="share-legend">
+                    <span data-i18n="none">未用</span><i></i><i></i><i></i><i></i><span data-i18n="shared">共享</span>
+                  </div>
+                </div>
+                <div class="canvas-scroll"><canvas id="allocationCanvas" aria-label="User by resource allocation heatmap"></canvas></div>
+                <div id="allocationTooltip" class="chart-tooltip" role="status"></div>
+              </article>
+
+              <article class="panel demand-panel">
+                <div class="panel-heading">
+                  <div>
+                    <span class="panel-kicker" data-i18n="trafficCoverage">流量覆盖</span>
+                    <h3 data-i18n="demandTitle">已传输与未满足需求</h3>
+                  </div>
+                </div>
+                <div class="canvas-scroll"><canvas id="demandCanvas" aria-label="Per-user delivered and unmet demand chart"></canvas></div>
+                <div id="demandTooltip" class="chart-tooltip" role="status"></div>
+              </article>
+
+              <article class="panel beam-panel">
+                <div class="panel-heading">
+                  <div>
+                    <span class="panel-kicker" data-i18n="maskDesign">掩码设计</span>
+                    <h3 data-i18n="beamTitle">各子带激活波束</h3>
+                  </div>
+                </div>
+                <div id="beamGrid" class="beam-grid"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="detail-section" aria-labelledby="detailTitle">
+            <div class="section-heading">
+              <div>
+                <span class="step-number">03</span>
+                <div>
+                  <h2 id="detailTitle" data-i18n="verify">核验详细结果</h2>
+                  <p data-i18n="verifyHint">追踪每个接受阶段以及每位用户的服务流量。</p>
+                </div>
+              </div>
+            </div>
+            <div class="tabs" role="tablist" aria-label="Detailed result views">
+              <button class="tab active" data-tab="audit" role="tab" aria-selected="true" data-i18n="auditTrail">阶段审计</button>
+              <button class="tab" data-tab="users" role="tab" aria-selected="false" data-i18n="userDetail">用户明细</button>
+              <button class="tab" data-tab="raw" role="tab" aria-selected="false" data-i18n="rawOutput">原始输出</button>
+              <button class="tab" data-tab="provenance" role="tab" aria-selected="false" data-i18n="provenance">结果来源</button>
+            </div>
+            <div id="auditTab" class="tab-panel active" role="tabpanel">
+              <div class="table-scroll"><table><thead id="auditHead"></thead><tbody id="auditBody"></tbody></table></div>
+            </div>
+            <div id="usersTab" class="tab-panel" role="tabpanel">
+              <div class="table-scroll"><table><thead id="usersHead"></thead><tbody id="usersBody"></tbody></table></div>
+            </div>
+            <div id="rawTab" class="tab-panel" role="tabpanel">
+              <div class="raw-grid">
+                <article><h3 data-i18n="solverStdout">调度器 stdout</h3><pre id="rawOutput"></pre></article>
+                <article><h3 data-i18n="solverTrace">调度器 trace</h3><pre id="rawTrace"></pre></article>
+              </div>
+            </div>
+            <div id="provenanceTab" class="tab-panel" role="tabpanel">
+              <div id="provenanceCard" class="provenance-card"></div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -82,7 +82,9 @@ const TRACE_LABELS = {
 };
 
 const state = {
-  data: null, module: null, language: "en", scenarioId: "medium-tight", budgetIndex: 2,
+  data: null, module: null,
+  language: document.documentElement.lang.toLowerCase().startsWith("zh") ? "zh" : "en",
+  scenarioId: "medium-tight", budgetIndex: 2,
   stageId: "full", customText: null, customName: null, result: null, currentMeta: null,
   currentInput: null, currentHash: null, runSerial: 0,
   status: { kind: "loading", key: "engineLoading", detail: "" }
@@ -125,8 +127,10 @@ function markStale() {
 
 function applyLanguage() {
   document.documentElement.lang = state.language === "zh" ? "zh-CN" : "en";
-  $$('[data-i18n]').forEach((node) => { node.textContent = t(node.dataset.i18n); });
-  $("#languageToggle").textContent = state.language === "zh" ? "EN" : "中文";
+  const scope = $(".demo-app") || document;
+  [...scope.querySelectorAll('[data-i18n]')].forEach((node) => { node.textContent = t(node.dataset.i18n); });
+  const languageToggle = $("#languageToggle");
+  if (languageToggle) languageToggle.textContent = state.language === "zh" ? "EN" : "中文";
   setStatus(state.status.kind, state.status.key, state.status.detail);
   if (state.data) {
     populateScenarioOptions();
@@ -306,7 +310,8 @@ function renderProvenance(item, current){
   const executedStage=state.data.stages.find((entry)=>entry.id===item.stageId);
   const stageLabel=executedStage?labelFor(executedStage):item.stageId;
   const seed=item.seed===null||item.seed===undefined?"—":item.seed;
-  $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("inputName")}</span><b>${escapeHtml(item.inputName)}</b></article><article><span>${t("fixedSeed")}</span><b>${escapeHtml(seed)}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(stageLabel)} · ${item.budgetMs} ms</b></article><article><span>${t("runIdentity")}</span><b>#${item.runSerial} · ${t("browserWall")} ${current.totalWallMs.toFixed(2)} ms</b></article><article><span>${t("executionMode")}</span><b>${t("liveExecution")}</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>Static Space</span><b>${t("staticNote")}</b></article>`;
+  const hostLabel = location.hostname.endsWith("github.io") ? "GitHub Pages" : "Static Space";
+  $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("inputName")}</span><b>${escapeHtml(item.inputName)}</b></article><article><span>${t("fixedSeed")}</span><b>${escapeHtml(seed)}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(stageLabel)} · ${item.budgetMs} ms</b></article><article><span>${t("runIdentity")}</span><b>#${item.runSerial} · ${t("browserWall")} ${current.totalWallMs.toFixed(2)} ms</b></article><article><span>${t("executionMode")}</span><b>${t("liveExecution")}</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>${hostLabel}</span><b>${t("staticNote")}</b></article>`;
 }
 
 function render(){
@@ -400,7 +405,15 @@ function setupTabs(){
 
 async function start(){
   setupTabs();
-  $("#languageToggle").addEventListener("click",()=>{state.language=state.language==="en"?"zh":"en";applyLanguage();});
+  const languageToggle = $("#languageToggle");
+  if (languageToggle) {
+    languageToggle.addEventListener("click",()=>{state.language=state.language==="en"?"zh":"en";applyLanguage();});
+  } else {
+    $$('[data-locale]').forEach((button)=>button.addEventListener("click",()=>{
+      state.language=button.dataset.locale==="en"?"en":"zh";
+      applyLanguage();
+    }));
+  }
   $("#scenarioSelect").addEventListener("change",(event)=>{state.scenarioId=event.target.value;markStale();});
   $("#budgetSlider").addEventListener("input",(event)=>{state.budgetIndex=Number(event.target.value);markStale();});
   $("#runButton").addEventListener("click",runDemo);
