@@ -14,12 +14,17 @@
 </p>
 
 <p align="center">
+  <a href="https://fptr-scheduler.config-h.chatgpt.site"><img src="https://img.shields.io/badge/Project_Website-Open_FPTR-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Open the FPTR project website"></a>
+</p>
+
+<p align="center">
   <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white" alt="C++17"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3"></a>
   <a href="#validation"><img src="https://img.shields.io/badge/Validation-unittest%20%2B%20validator-2CA02C?style=flat-square" alt="Unit tests and validator"></a>
 </p>
 
 <p align="center">
+  <a href="https://fptr-scheduler.config-h.chatgpt.site">Website</a> ·
   <a href="#overview">Overview</a> ·
   <a href="#method">Method</a> ·
   <a href="#visual-summary">Figures</a> ·
