@@ -209,3 +209,83 @@ tbody tr:hover { background: #f7fbff; }
   .control-panel, .results-section, .detail-section { padding: 1.2rem; border-radius: 22px; }
 }
 @media (prefers-reduced-motion: reduce) { .demo-app * { scroll-behavior: auto !important; animation: none !important; } }
+
+/* Paper-companion revision: keep the live comparison prominent and fold expert views. */
+.demo-hero { min-height: 330px; }
+.demo-hero h1 { font-size: clamp(2.7rem, 4.5vw, 4rem); }
+.advanced-controls,
+.advanced-results,
+.advanced-detail {
+  overflow: hidden;
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: #f8fbff;
+}
+.advanced-controls > summary,
+.advanced-results > summary,
+.advanced-detail > summary {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  padding: 12px 16px;
+  color: var(--structure);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 850;
+  list-style-position: inside;
+}
+.advanced-controls-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; padding: 0 16px 16px; }
+.custom-input-row { display: flex; align-items: end; gap: 8px; }
+.advanced-results .dashboard-grid { padding: 0 16px 16px; }
+.advanced-detail { padding: 0; }
+.advanced-detail > .section-heading,
+.advanced-detail > .tabs,
+.advanced-detail > .tab-panel { margin-right: 16px; margin-left: 16px; }
+.advanced-detail > .section-heading { margin-top: 8px; }
+
+/* Semantic text stays readable at normal desktop zoom. */
+.demo-eyebrow,
+.panel-kicker,
+.hero-badges > span,
+.runtime-card small,
+.status-pill,
+.control-field > span,
+.control-field legend,
+.control-field small,
+.range-ticks,
+.stage-buttons button,
+.input-source b,
+.input-source small,
+.file-button,
+.secondary-button,
+.run-button,
+.execution-note,
+.kpi span,
+.kpi small,
+.comparison-heading p,
+.comparison-status,
+.comparison-bar-label,
+.comparison-bar-value,
+.comparison-note,
+.legend-inline,
+.share-legend,
+.chart-note,
+.explain-list li::before,
+.explain-list b,
+.explain-list span,
+.chart-tooltip,
+.beam-label,
+.pass-badge,
+.provenance-card span,
+.provenance-card b,
+.provenance-card code,
+.raw-grid h3 { font-size: 14px; }
+.run-icon { font-size: 14px; }
+.demo-app table { font-size: 14px; }
+.raw-grid pre { font-size: 14px; }
+
+@media (max-width: 900px) {
+  .advanced-controls-body { grid-template-columns: 1fr; }
+  .custom-input-row { align-items: center; }
+}

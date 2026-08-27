@@ -38,12 +38,12 @@
         </a>
 
         <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i aria-hidden="true">✦</i><span data-i18n="navOverview">概览</span></a>
-          <a href="../problem/"><i aria-hidden="true">⌁</i><span data-i18n="navProblem">问题</span></a>
-          <a href="../method/"><i aria-hidden="true">◇</i><span data-i18n="navMethod">方法</span></a>
-          <a href="../evidence/"><i aria-hidden="true">✓</i><span data-i18n="navEvidence">证据</span></a>
-          <a href="../reproduce/"><i aria-hidden="true">›_</i><span data-i18n="navReproduce">复现</span></a>
-          <a href="../demo/" aria-current="page"><i aria-hidden="true">▶</i><span data-i18n="navDemo">Demo</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
+          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
+          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
+          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
+          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../demo/" aria-current="page"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
 
         <div class="header-actions">
@@ -52,12 +52,12 @@
             <button type="button" data-locale="en" aria-pressed="false">EN</button>
           </div>
           <a
-            class="icon-link"
+            class="icon-link github-icon"
             href="https://github.com/rudykon/FPTR_Scheduler"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub repository"
-          ><span aria-hidden="true">GH</span></a>
+          ></a>
         </div>
       </header>
 
@@ -116,23 +116,31 @@
                 <small data-i18n="deadlineHint">所有对比方法使用相同的时间截止条件。</small>
               </div>
 
-              <fieldset class="control-field stage-field">
-                <legend data-i18n="stopStage">FPTR 停止阶段</legend>
-                <div id="stageButtons" class="stage-buttons"></div>
-                <small data-i18n="stageHint">后续阶段只能提交完整且可行的改进。</small>
-              </fieldset>
             </div>
+
+            <details class="advanced-controls">
+              <summary data-i18n="advancedSettings">高级设置：停止阶段与自定义输入</summary>
+              <div class="advanced-controls-body">
+                <fieldset class="control-field stage-field">
+                  <legend data-i18n="stopStage">FPTR 停止阶段</legend>
+                  <div id="stageButtons" class="stage-buttons"></div>
+                  <small data-i18n="stageHint">后续阶段只能提交完整且可行的改进。</small>
+                </fieldset>
+                <div class="custom-input-row">
+                  <label class="file-button">
+                    <span data-i18n="customInput">使用自定义 .in 文件</span>
+                    <input id="customInput" type="file" accept=".in,.txt,text/plain" />
+                  </label>
+                  <button id="clearCustomButton" class="secondary-button" type="button" hidden data-i18n="clearCustom">恢复预设</button>
+                </div>
+              </div>
+            </details>
 
             <div class="execution-bar">
               <div class="input-source">
                 <span class="live-mark" aria-hidden="true"></span>
                 <div><b id="inputSourceLabel">预设输入</b><small id="inputSourceDetail">—</small></div>
               </div>
-              <label class="file-button">
-                <span data-i18n="customInput">使用自定义 .in 文件</span>
-                <input id="customInput" type="file" accept=".in,.txt,text/plain" />
-              </label>
-              <button id="clearCustomButton" class="secondary-button" type="button" hidden data-i18n="clearCustom">恢复预设</button>
               <button id="runButton" class="run-button" type="button" disabled>
                 <span class="run-icon">▶</span><span data-i18n="runReal">运行实时对比</span>
               </button>
@@ -187,7 +195,9 @@
               <p class="comparison-note" data-i18n="comparisonNote">随机搜索方法使用固定种子；计时与得分来自本次浏览器运行，不读取预计算结果。</p>
             </article>
 
-            <div class="dashboard-grid">
+            <details class="advanced-results">
+              <summary data-i18n="advancedResults">展开分配图、阶段轨迹与需求细节</summary>
+              <div class="dashboard-grid">
               <article class="panel panel-wide">
                 <div class="panel-heading">
                   <div>
@@ -253,10 +263,12 @@
                 </div>
                 <div id="beamGrid" class="beam-grid"></div>
               </article>
-            </div>
+              </div>
+            </details>
           </section>
 
-          <section class="detail-section" aria-labelledby="detailTitle">
+          <details class="detail-section advanced-detail">
+            <summary data-i18n="verificationDetails">展开审计、用户明细与原始输出</summary>
             <div class="section-heading">
               <div>
                 <span class="step-number">03</span>
@@ -287,13 +299,13 @@
             <div id="provenanceTab" class="tab-panel" role="tabpanel">
               <div id="provenanceCard" class="provenance-card"></div>
             </div>
-          </section>
+          </details>
         </div>
       </main>
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
       </footer>
     </div>
   </body>

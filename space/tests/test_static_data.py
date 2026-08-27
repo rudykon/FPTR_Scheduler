@@ -139,6 +139,53 @@ class StaticSpaceTests(unittest.TestCase):
             (REPOSITORY / "src" / "core.h").read_bytes(),
         )
 
+    def test_github_pages_is_a_readable_multipage_paper_companion(self) -> None:
+        docs = REPOSITORY / "docs"
+        home = (docs / "index.html").read_text(encoding="utf-8")
+        method = (docs / "method" / "index.html").read_text(encoding="utf-8")
+        evidence = (docs / "evidence" / "index.html").read_text(encoding="utf-8")
+        demo = (docs / "demo" / "index.html").read_text(encoding="utf-8")
+        css = (docs / "assets" / "site.css").read_text(encoding="utf-8")
+
+        self.assertIn("FPTR：截止时间约束下的联合波束与资源调度", home)
+        self.assertIn("Feasibility-Preserving Transactional Refinement", home)
+        for route in ("problem", "method", "evidence", "reproduce", "demo"):
+            self.assertIn(f'href="./{route}/"', home)
+        for cutoff in ("84–87", "87–100", "B = 87 ms", "D = 100 ms"):
+            self.assertIn(cutoff, home)
+
+        self.assertIn("Full · Pair refinement", method)
+        self.assertNotIn(
+            '<img src="../images/Deadline_Aware_FPTR_Scheduler.png"', method
+        )
+        for rq in ("RQ1", "RQ2", "RQ3", "RQ4"):
+            self.assertIn(rq, evidence)
+        for panel in (
+            "web_stage_gain.png",
+            "web_scenario_gain.png",
+            "web_budget_quality.png",
+            "web_runtime_ecdf.png",
+            "web_cg_stress.png",
+            "web_optimality_gap.png",
+        ):
+            self.assertIn(panel, evidence)
+            self.assertTrue((docs / "images" / panel).is_file(), panel)
+
+        self.assertIn('class="advanced-controls"', demo)
+        self.assertIn('class="advanced-results"', demo)
+        self.assertIn('id="comparisonBars"', demo)
+        self.assertIn('id="comparisonBody"', demo)
+        self.assertIn('src="./wasm/fptr_baselines.js"', demo)
+        self.assertEqual(demo.count('id="customInput"'), 1)
+        self.assertEqual(demo.count('id="stageButtons"'), 1)
+
+        self.assertIn("--text-body: 1.0625rem", css)
+        self.assertIn("min-height: 44px", css)
+        self.assertIn(
+            "https://rudykon.github.io/FPTR_Scheduler/demo/",
+            (REPOSITORY / "README.md").read_text(encoding="utf-8"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

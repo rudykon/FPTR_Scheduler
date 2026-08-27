@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6faff" />
-    <meta name="description" content="FPTR 联合波束与资源调度中的六类耦合约束，以及直接修改当前解带来的超时风险。" />
+    <meta name="theme-color" content="#f5faff" />
+    <meta name="description" content="FPTR 联合波束与资源调度的系统模型、目标函数、确定性链路映射与耦合约束。" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="问题 · FPTR Scheduler" />
-    <meta property="og:description" content="Six coupled constraints in deadline-aware joint beam and resource scheduling." />
+    <meta property="og:title" content="问题建模 · FPTR Scheduler" />
+    <meta property="og:description" content="The model and coupled constraints behind deadline-aware joint beam and resource scheduling." />
     <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/problem/" />
     <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/scenario_constraint_coupling.png" />
-    <title>问题 · FPTR Scheduler</title>
+    <title>问题建模 · FPTR Scheduler</title>
     <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/problem/" />
     <link rel="icon" type="image/png" href="../assets/brand/favicon-32.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
@@ -19,33 +19,27 @@
   </head>
   <body data-title-key="problemPageTitle" data-description-key="problemPageDescription">
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
-
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
-          <img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" />
-        </a>
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i aria-hidden="true">✦</i><span data-i18n="navOverview">概览</span></a>
-          <a href="../problem/" aria-current="page"><i aria-hidden="true">⌁</i><span data-i18n="navProblem">问题</span></a>
-          <a href="../method/"><i aria-hidden="true">◇</i><span data-i18n="navMethod">方法</span></a>
-          <a href="../evidence/"><i aria-hidden="true">✓</i><span data-i18n="navEvidence">证据</span></a>
-          <a href="../reproduce/"><i aria-hidden="true">›_</i><span data-i18n="navReproduce">复现</span></a>
-          <a href="../demo/"><i aria-hidden="true">▶</i><span data-i18n="navDemo">Demo</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
+          <a href="../problem/" aria-current="page"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
+          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
+          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
+          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language">
-            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
-            <button type="button" data-locale="en" aria-pressed="false">EN</button>
-          </div>
-          <a class="icon-link" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"><span aria-hidden="true">GH</span></a>
+          <div class="language-switch" aria-label="Language"><button type="button" data-locale="zh" class="active" aria-pressed="true">中</button><button type="button" data-locale="en" aria-pressed="false">EN</button></div>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>
 
       <main id="main">
         <section class="page-hero page-hero-problem">
           <div class="section-wrap">
-            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="problemKicker">01 · 为什么难</p>
             <h1 data-i18n="problemTitle">六类约束不是排队出现，而是同时咬合。</h1>
             <p data-i18n="problemBody">波束选择会改变可用速率，资源成员关系会影响共享，缓存上限又会改变每一步的真实收益。任何局部修改，都可能让原本合法的分配越界。</p>
@@ -53,73 +47,90 @@
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
 
-        <section class="problem-section detail-section">
+        <section class="detail-section">
           <div class="section-wrap">
-            <div class="model-overview">
-              <div class="model-copy">
+            <section class="editorial-section editorial-grid">
+              <div class="editorial-copy">
                 <p class="section-kicker" data-i18n="systemModelKicker">系统模型</p>
                 <h2 data-i18n="systemModelTitle">一次调度，同时决定波束掩码与每个资源上的用户集合。</h2>
                 <p data-i18n="systemModelBody">论文用 U、R、T、P 表示用户、资源、子带与波束。每个用户具有有限缓存 Bᵤ、基础链路质量 γᵤ 和波束能力 cᵤ,ₚ；每个资源显式属于一至两个子带，两个成员可以不相邻。</p>
-                <div class="model-sets" aria-label="System model sets">
-                  <span><b>U</b><small data-i18n="modelUsers">用户</small></span>
-                  <span><b>R</b><small data-i18n="modelResources">资源</small></span>
-                  <span><b>T</b><small data-i18n="modelSubbands">子带</small></span>
-                  <span><b>P</b><small data-i18n="modelBeams">波束</small></span>
+                <div class="symbol-row" aria-label="System model symbols">
+                  <span><b>U</b><span data-i18n="modelUsers">用户</span></span>
+                  <span><b>R</b><span data-i18n="modelResources">资源</span></span>
+                  <span><b>T</b><span data-i18n="modelSubbands">子带</span></span>
+                  <span><b>P</b><span data-i18n="modelBeams">波束</span></span>
                 </div>
               </div>
-
-              <aside class="objective-card">
-                <span data-i18n="objectiveLabel">目标：最大化受缓存上限约束的传输量</span>
-                <div class="objective-formula" aria-label="FPTR traffic objective">
-                  F(α,G) = Σ<sub>u∈U</sub> min { B<sub>u</sub>, Σ<sub>r:u∈Gᵣ</sub> q(z<sub>u,r</sub>) }
-                </div>
-                <p data-i18n="objectiveBody">α 表示子带—波束激活，Gᵣ 表示资源 r 上的合法用户集合。只有在外部截止时间 D 前通过全部约束并完成序列化，输出才获得正效用。</p>
+              <aside class="callout">
+                <h3 data-i18n="scenarioQuestionTitle">调度器每个周期回答什么？</h3>
+                <p data-i18n="scenarioQuestionBody">激活哪些子带—波束组合，并把哪些用户放到每个资源上；结果必须在截止时间前完整序列化且通过全部约束。</p>
               </aside>
-            </div>
+            </section>
 
-            <div class="traffic-map">
-              <div class="traffic-map-copy">
-                <span data-i18n="trafficMapLabel">确定性链路映射</span>
-                <h2 data-i18n="trafficMapTitle">有效链路值先经过阶梯函数，再计入传输量。</h2>
-                <p data-i18n="trafficMapBody">这个 q(z) 是单快照的确定性流量抽象，不是连续物理层速率定律。</p>
+            <section class="editorial-section editorial-grid">
+              <div class="editorial-copy">
+                <p class="section-kicker" data-i18n="objectiveLabel">目标：最大化受缓存上限约束的传输量</p>
+                <h2 data-i18n="objectiveTitle">收益由实际可交付流量决定，而不是无限累加链路分数。</h2>
+                <div class="formula-block" aria-label="FPTR traffic objective">F(α,G) = Σ<sub>u∈U</sub> min { B<sub>u</sub>, Σ<sub>r:u∈Gᵣ</sub> q(z<sub>u,r</sub>) }</div>
+                <p data-i18n="objectiveBody">α 表示子带—波束激活，Gᵣ 表示资源 r 上的合法用户集合。只有在外部截止时间 D 前通过全部约束并完成序列化，输出才获得正效用。</p>
               </div>
-              <div class="traffic-table-wrap">
-                <table class="traffic-table">
+              <aside class="callout">
+                <h3 data-i18n="trafficMapTitle">有效链路值先经过阶梯函数，再计入传输量。</h3>
+                <p data-i18n="trafficMapBody">这个 q(z) 是单快照的确定性流量抽象，不是连续物理层速率定律。</p>
+              </aside>
+              <div class="traffic-table-wrap" style="grid-column: 1 / -1">
+                <table>
                   <thead><tr><th>z</th><th>≤ −10</th><th>(−10, 0]</th><th>(0, 3]</th><th>(3, 10]</th><th>(10, 15]</th><th>(15, 20]</th><th>&gt; 20</th></tr></thead>
                   <tbody><tr><th>q(z)</th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
                 </table>
               </div>
-            </div>
+            </section>
 
-            <div class="constraint-strip">
-              <div class="constraint-item"><b aria-hidden="true">⌁</b><span data-i18n="constraintBeam">全局波束预算</span></div>
-              <div class="constraint-item"><b aria-hidden="true">▤</b><span data-i18n="constraintMask">子带波束掩码</span></div>
-              <div class="constraint-item"><b aria-hidden="true">◴</b><span data-i18n="constraintBuffer">有限用户缓存</span></div>
-              <div class="constraint-item"><b aria-hidden="true">ϟ</b><span data-i18n="constraintLink">阶梯式链路自适应</span></div>
-              <div class="constraint-item"><b aria-hidden="true">◇</b><span data-i18n="constraintGroup">兼容组共享约束</span></div>
-              <div class="constraint-item"><b aria-hidden="true">◷</b><span data-i18n="constraintDeadline">硬截止时间</span></div>
-            </div>
-
-            <div class="problem-layout">
-              <figure class="figure-card wide-figure">
-                <img src="../images/scenario_constraint_coupling.png" alt="调度快照与资源—子带耦合" data-i18n-alt="figureProblemAlt" />
-                <figcaption><span>FIG. 01</span><b data-i18n="figureProblem">调度快照与资源—子带耦合。图件来自公开仓库。</b></figcaption>
+            <section class="editorial-section">
+              <div class="section-heading">
+                <p class="section-kicker" data-i18n="constraintKicker">约束结构</p>
+                <h2 data-i18n="constraintTitle">把六类约束归入三个会相互反馈的层次。</h2>
+                <p data-i18n="constraintBody">无线激活决定可用能力，资源共享决定组合合法性，交付契约再把有限缓存与硬截止时间施加到完整输出上。</p>
+              </div>
+              <div class="constraint-groups">
+                <article class="constraint-group">
+                  <h3 data-i18n="constraintRadioTitle">无线激活</h3>
+                  <ul><li data-i18n="constraintBeam">全局波束预算</li><li data-i18n="constraintMask">子带波束掩码</li></ul>
+                </article>
+                <article class="constraint-group">
+                  <h3 data-i18n="constraintSharingTitle">链路与共享</h3>
+                  <ul><li data-i18n="constraintLink">阶梯式链路自适应</li><li data-i18n="constraintGroup">兼容组共享约束</li></ul>
+                </article>
+                <article class="constraint-group">
+                  <h3 data-i18n="constraintDeliveryTitle">交付契约</h3>
+                  <ul><li data-i18n="constraintBuffer">有限用户缓存</li><li data-i18n="constraintDeadline">硬截止时间</li></ul>
+                </article>
+              </div>
+              <figure class="figure-wide">
+                <a href="../images/scenario_constraint_coupling.png" target="_blank" rel="noreferrer"><img src="../images/scenario_constraint_coupling.png" alt="调度快照与资源—子带耦合" data-i18n-alt="figureProblemAlt" /></a>
+                <figcaption data-i18n="figureProblem">调度快照与资源—子带耦合。点击可查看原尺寸图件。</figcaption>
               </figure>
-              <aside class="risk-card">
-                <div class="risk-icon" aria-hidden="true">×</div>
-                <p class="card-label">EDIT → TIMEOUT?</p>
+            </section>
+
+            <section class="editorial-section">
+              <div class="section-heading">
+                <p class="section-kicker" data-i18n="riskKicker">设计动机</p>
                 <h2 data-i18n="problemAsideTitle">传统“先改再修”的风险</h2>
                 <p data-i18n="problemAsideBody">如果细化直接写入当前解，超时或验证失败时可能只留下一个半成品。FPTR 把候选解隔离开，让失败只损失这次尝试，不损坏已经可用的结果。</p>
-                <div class="broken-schedule" aria-hidden="true"><i class="ok"></i><i class="ok"></i><i class="bad"></i><i></i><i></i></div>
-              </aside>
-            </div>
+              </div>
+              <div class="risk-compare">
+                <article class="risk-path bad"><h3 data-i18n="mutatingTitle">直接修改 live solution</h3><p data-i18n="mutatingBody">局部编辑 → 尚未修复全部约束 → 计时结束 → 当前解不可发布。</p></article>
+                <article class="risk-path good"><h3 data-i18n="transactionTitle">隔离候选 + 事务门</h3><p data-i18n="transactionBody">incumbent 保持不变 → 私有候选完成并验证 → 通过则整体提交，否则整体丢弃。</p></article>
+              </div>
+              <a class="button button-primary" href="../method/" style="margin-top: 1.5rem"><span data-i18n="continueMethod">继续阅读 FPTR 方法</span><span aria-hidden="true">→</span></a>
+            </section>
           </div>
         </section>
       </main>
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
       </footer>
     </div>
   </body>

@@ -15,7 +15,7 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/"><img src="https://img.shields.io/badge/Project_Website-Open_FPTR-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Open the FPTR project website"></a>
-  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo"><img src="https://img.shields.io/badge/Hugging_Face-Live_Demo-FFD21E?style=for-the-badge&logo=huggingface&logoColor=111111" alt="Open the interactive FPTR demo"></a>
+  <a href="https://rudykon.github.io/FPTR_Scheduler/demo/"><img src="https://img.shields.io/badge/GitHub_Pages-Live_Demo-9554E8?style=for-the-badge&logo=github&logoColor=white" alt="Open the canonical interactive FPTR demo"></a>
 </p>
 
 <p align="center">
@@ -27,7 +27,8 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/">Website</a> ·
-  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo">Live Demo</a> ·
+  <a href="https://rudykon.github.io/FPTR_Scheduler/demo/">Live Demo</a> ·
+  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo">HF mirror</a> ·
   <a href="#overview">Overview</a> ·
   <a href="#method">Method</a> ·
   <a href="#visual-summary">Figures</a> ·

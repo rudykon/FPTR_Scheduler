@@ -15,7 +15,7 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/"><img src="https://img.shields.io/badge/项目主页-打开_FPTR-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="打开 FPTR 项目主页"></a>
-  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo"><img src="https://img.shields.io/badge/Hugging_Face-交互_Demo-FFD21E?style=for-the-badge&logo=huggingface&logoColor=111111" alt="打开 FPTR 交互 Demo"></a>
+  <a href="https://rudykon.github.io/FPTR_Scheduler/demo/"><img src="https://img.shields.io/badge/GitHub_Pages-交互_Demo-9554E8?style=for-the-badge&logo=github&logoColor=white" alt="打开 FPTR 官方交互 Demo"></a>
 </p>
 
 <p align="center">
@@ -27,7 +27,8 @@
 
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/">项目主页</a> ·
-  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo">交互 Demo</a> ·
+  <a href="https://rudykon.github.io/FPTR_Scheduler/demo/">交互 Demo</a> ·
+  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo">HF 镜像</a> ·
   <a href="#overview">项目概览</a> ·
   <a href="#method">方法</a> ·
   <a href="#visual-summary">图示</a> ·

@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6faff" />
-    <meta name="description" content="编译、运行、独立验证 FPTR，并复现实验与检查公开研究代码。" />
+    <meta name="theme-color" content="#f5faff" />
+    <meta name="description" content="用三步编译、运行和独立验证 FPTR，并查看实验账本与仓库结构。" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="复现 · FPTR Scheduler" />
-    <meta property="og:description" content="Build, run, validate, and reproduce the public FPTR scheduler release." />
+    <meta property="og:title" content="代码与复现 · FPTR Scheduler" />
+    <meta property="og:description" content="Build, run, independently validate, and audit the public FPTR release." />
     <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/reproduce/" />
     <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/Deadline_Aware_FPTR_Scheduler.png" />
-    <title>复现 · FPTR Scheduler</title>
+    <title>代码与复现 · FPTR Scheduler</title>
     <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/reproduce/" />
     <link rel="icon" type="image/png" href="../assets/brand/favicon-32.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
@@ -19,123 +19,113 @@
   </head>
   <body data-title-key="reproducePageTitle" data-description-key="reproducePageDescription">
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
-
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
-          <img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" />
-        </a>
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i aria-hidden="true">✦</i><span data-i18n="navOverview">概览</span></a>
-          <a href="../problem/"><i aria-hidden="true">⌁</i><span data-i18n="navProblem">问题</span></a>
-          <a href="../method/"><i aria-hidden="true">◇</i><span data-i18n="navMethod">方法</span></a>
-          <a href="../evidence/"><i aria-hidden="true">✓</i><span data-i18n="navEvidence">证据</span></a>
-          <a href="../reproduce/" aria-current="page"><i aria-hidden="true">›_</i><span data-i18n="navReproduce">复现</span></a>
-          <a href="../demo/"><i aria-hidden="true">▶</i><span data-i18n="navDemo">Demo</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
+          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
+          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
+          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
+          <a href="../reproduce/" aria-current="page"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language">
-            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
-            <button type="button" data-locale="en" aria-pressed="false">EN</button>
-          </div>
-          <a class="icon-link" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"><span aria-hidden="true">GH</span></a>
+          <div class="language-switch" aria-label="Language"><button type="button" data-locale="zh" class="active" aria-pressed="true">中</button><button type="button" data-locale="en" aria-pressed="false">EN</button></div>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>
 
       <main id="main">
         <section class="page-hero page-hero-reproduce">
           <div class="section-wrap">
-            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="reproduceKicker">04 · 复现路径</p>
             <h1 data-i18n="reproduceTitle">从编译到独立验证，只需要三步。</h1>
-            <p data-i18n="reproduceBody">调度结果写入标准输出；可选阶段轨迹写入标准错误，因此诊断不会污染分配格式。</p>
+            <p data-i18n="reproduceBody">先给出最短可运行路径；实验口径、启动账本和仓库审计随后按需展开。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
 
-        <section class="reproduce-section detail-section">
+        <section class="detail-section">
           <div class="section-wrap">
-            <div class="audit-panel">
-              <div class="audit-heading">
-                <p class="section-kicker" data-i18n="auditKicker">审计边界</p>
-                <h2 data-i18n="auditTitle">论文中的每个结果，都能落到一次进程启动、一个生成实例或一组校验工件。</h2>
-                <p data-i18n="auditBody">一次 launch 是拥有独立输入流、执行顺序、随机种子和墙钟测量的子进程。质量以每个实例五次运行的中位数为单位，并在五个场景内先求平均、再等权汇总；置信区间使用 5,000 次分层 bootstrap。</p>
+            <section class="editorial-section">
+              <div class="section-heading">
+                <p class="section-kicker" data-i18n="quickStartKicker">快速开始</p>
+                <h2 data-i18n="quickStartTitle">克隆、运行、验证。</h2>
+                <p data-i18n="quickStartBody">调度结果写入标准输出，可选阶段轨迹只写入标准错误，因此诊断不会污染分配格式。</p>
               </div>
-              <ol class="audit-steps">
-                <li><span>01</span><div><b data-i18n="auditLaunchTitle">独立启动</b><p data-i18n="auditLaunchBody">固定实例、配置、随机种子与预算。</p></div></li>
-                <li><span>02</span><div><b data-i18n="auditSerializeTitle">序列化输出</b><p data-i18n="auditSerializeBody">分配写入标准输出，阶段轨迹只写入标准错误。</p></div></li>
-                <li><span>03</span><div><b data-i18n="auditValidateTitle">独立验证与重算</b><p data-i18n="auditValidateBody">Python 代码重新解析结果、检查全部约束并重算传输量。</p></div></li>
-                <li><span>04</span><div><b data-i18n="auditCreditTitle">统一计分与哈希</b><p data-i18n="auditCreditBody">迟到、非法或异常退出计零分；输入、源码和结果由 SHA-256 链绑定。</p></div></li>
-              </ol>
-            </div>
-
-            <div class="terminal-grid">
-              <article class="terminal-card terminal-main">
-                <div class="terminal-title"><span aria-hidden="true">›_</span><span>01 · <b data-i18n="runLabel">编译并运行 Full</b></span></div>
-                <pre><code>git clone https://github.com/rudykon/FPTR_Scheduler.git
+              <div class="quick-steps">
+                <article class="quick-step"><h3 data-i18n="runLabel">编译并运行 Full</h3><pre><code>git clone https://github.com/rudykon/FPTR_Scheduler.git
 cd FPTR_Scheduler
-g++ -std=c++17 -O2 src/scheduler.cpp src/core.cpp -o scheduler
-./scheduler --stage full --budget-ms 87 --trace &lt; instance.in &gt; allocation.out</code></pre>
-              </article>
-              <article class="terminal-card">
-                <div class="terminal-title"><span aria-hidden="true">✓</span><span>02 · <b data-i18n="validateLabel">独立验证</b></span></div>
-                <pre><code>python3 tools/scheduler_validator.py --help
-python3 -m unittest discover -s tests -v</code></pre>
-              </article>
-              <article class="terminal-card">
-                <div class="terminal-title"><span aria-hidden="true">{ }</span><span>03 · <b data-i18n="experimentLabel">快速实验</b></span></div>
-                <pre><code>python3 experiments/paper_experiments.py \
-  --quick \
-  --out /tmp/fptr-quick-results</code></pre>
-              </article>
-            </div>
+g++ -std=c++17 -O2 +  src/scheduler.cpp src/core.cpp +  -o scheduler
+./scheduler --stage full +  --budget-ms 87 --trace +  &lt; instance.in &gt; allocation.out</code></pre></article>
+                <article class="quick-step"><h3 data-i18n="validateLabel">独立验证</h3><pre><code>python3 +  tools/scheduler_validator.py +  --help
 
-            <section class="accounting-panel">
-              <div class="accounting-heading">
-                <p class="section-kicker" data-i18n="accountingKicker">内部正式运行账本</p>
-                <h2 data-i18n="accountingTitle">8,610 次内部启动全部通过独立验证，100 ms 未命中为零。</h2>
-                <p data-i18n="accountingBody">四个套件回答不同问题：主套件比较累积配置，预算扫描改变搜索上限，CG 压力同时增加组规模与覆盖率，精确套件则在微型案例上加入独立优化。</p>
+python3 -m unittest +  discover -s tests -v</code></pre></article>
+                <article class="quick-step"><h3 data-i18n="experimentLabel">快速实验</h3><pre><code>python3 +  experiments/paper_experiments.py +  --quick +  --out +  /tmp/fptr-quick-results</code></pre></article>
               </div>
-              <div class="accounting-table-wrap">
-                <table class="accounting-table">
-                  <thead><tr><th data-i18n="suiteLabel">套件</th><th data-i18n="instancesLabel">实例</th><th data-i18n="conditionsLabel">配置</th><th data-i18n="repeatsLabel">重复</th><th data-i18n="launchesLabel">启动</th><th data-i18n="validLabel">合法</th><th data-i18n="missesLabel">未命中</th></tr></thead>
-                  <tbody>
-                    <tr><th data-i18n="suiteMain">主套件</th><td>150</td><td>6</td><td>5</td><td>4,500</td><td>4,500</td><td>0</td></tr>
-                    <tr><th data-i18n="suiteBudget">预算扫描</th><td>150</td><td>4</td><td>5</td><td>3,000</td><td>3,000</td><td>0</td></tr>
-                    <tr><th data-i18n="suiteCg">CG 压力</th><td>50</td><td>3</td><td>5</td><td>750</td><td>750</td><td>0</td></tr>
-                    <tr><th data-i18n="suiteExact">精确校准</th><td>12</td><td>6</td><td>5</td><td>360</td><td>360</td><td>0</td></tr>
-                    <tr class="accounting-total"><th data-i18n="suiteTotal">总计</th><td>—</td><td>—</td><td>—</td><td>8,610</td><td>8,610</td><td>0</td></tr>
-                  </tbody>
-                </table>
+              <div class="repro-actions">
+                <a class="button button-primary" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span data-i18n="source">查看源代码</span><span aria-hidden="true">↗</span></a>
+                <a class="button button-secondary" href="../appendices/Appendix.pdf" target="_blank" rel="noreferrer"><span data-i18n="englishAppendix">英文附录</span></a>
+                <a class="button button-ghost" href="../appendices/Appendix_zh.pdf" target="_blank" rel="noreferrer"><span data-i18n="chineseAppendix">中文附录</span></a>
               </div>
-              <p class="external-accounting"><strong>6,750</strong><span data-i18n="externalAccounting">次匹配外部基线启动全部产生合法输出，其中 219 次被该匹配套件记为时限未命中。</span></p>
             </section>
 
-            <div class="repo-panel">
-              <div class="repo-intro">
-                <span class="repo-mark" aria-hidden="true">{ }</span>
+            <section class="editorial-section">
+              <div class="section-heading">
+                <p class="section-kicker" data-i18n="auditKicker">审计边界</p>
+                <h2 data-i18n="auditTitle">每个结果都落到一次启动、一个实例和一次独立校验。</h2>
+                <p data-i18n="auditBody">一次 launch 是拥有独立输入流、执行顺序、随机种子和墙钟测量的子进程。质量以每实例五次运行的中位数为单位，置信区间使用 5,000 次分层 bootstrap。</p>
+              </div>
+              <div class="audit-flow">
+                <article><span>01</span><h3 data-i18n="auditLaunchTitle">独立启动</h3><p data-i18n="auditLaunchBody">固定实例、配置、随机种子与预算。</p></article>
+                <article><span>02</span><h3 data-i18n="auditSerializeTitle">序列化输出</h3><p data-i18n="auditSerializeBody">分配写入 stdout，阶段轨迹只写入 stderr。</p></article>
+                <article><span>03</span><h3 data-i18n="auditValidateTitle">独立验证与重算</h3><p data-i18n="auditValidateBody">重新解析结果、检查全部约束并重算传输量。</p></article>
+                <article><span>04</span><h3 data-i18n="auditCreditTitle">统一计分与哈希</h3><p data-i18n="auditCreditBody">迟到、非法或异常退出计零分；SHA-256 绑定工件。</p></article>
+              </div>
+              <details>
+                <summary data-i18n="ledgerDetails">展开 8,610 次内部正式启动账本</summary>
+                <div class="details-body">
+                  <p data-i18n="accountingBody">四个套件回答不同问题：主套件比较累计配置，预算扫描改变搜索上限，CG 压力提高组规模与覆盖率，精确套件在微型案例上加入独立优化。</p>
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th data-i18n="suiteLabel">套件</th><th data-i18n="instancesLabel">实例</th><th data-i18n="conditionsLabel">配置</th><th data-i18n="repeatsLabel">重复</th><th data-i18n="launchesLabel">启动</th><th data-i18n="validLabel">合法</th><th data-i18n="missesLabel">未命中</th></tr></thead>
+                      <tbody>
+                        <tr><th data-i18n="suiteMain">主套件</th><td>150</td><td>6</td><td>5</td><td>4,500</td><td>4,500</td><td>0</td></tr>
+                        <tr><th data-i18n="suiteBudget">预算扫描</th><td>150</td><td>4</td><td>5</td><td>3,000</td><td>3,000</td><td>0</td></tr>
+                        <tr><th data-i18n="suiteCg">CG 压力</th><td>50</td><td>3</td><td>5</td><td>750</td><td>750</td><td>0</td></tr>
+                        <tr><th data-i18n="suiteExact">精确校准</th><td>12</td><td>6</td><td>5</td><td>360</td><td>360</td><td>0</td></tr>
+                        <tr><th data-i18n="suiteTotal">总计</th><td>—</td><td>—</td><td>—</td><td>8,610</td><td>8,610</td><td>0</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p><strong>6,750</strong> <span data-i18n="externalAccounting">次匹配外部基线启动全部产生合法输出，其中 219 次被该匹配套件记为时限未命中。</span></p>
+                </div>
+              </details>
+            </section>
+
+            <section class="editorial-section repo-map">
+              <div class="editorial-copy">
+                <p class="section-kicker" data-i18n="repoKicker">仓库地图</p>
                 <h2 data-i18n="repoTitle">一份能被检查的研究代码，而不是黑盒演示。</h2>
                 <p data-i18n="repoBody">实现、验证器、实验编排和图件生成彼此分离，便于逐层检查模型契约和结论来源。</p>
-                <div class="appendix-links">
-                  <span data-i18n="appendix">证据附录</span>
-                  <a href="../appendices/Appendix.pdf" target="_blank"><span data-i18n="englishAppendix">英文附录</span><span aria-hidden="true">↗</span></a>
-                  <a href="../appendices/Appendix_zh.pdf" target="_blank"><span data-i18n="chineseAppendix">中文附录</span><span aria-hidden="true">↗</span></a>
-                </div>
               </div>
-              <div class="repo-map">
-                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/src" target="_blank" rel="noreferrer"><code>src/</code><span data-i18n="repoSrc">C++17 调度器、共享模型与阶段入口</span><b aria-hidden="true">›</b></a>
-                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/tools" target="_blank" rel="noreferrer"><code>tools/</code><span data-i18n="repoTools">独立解析、可行性验证与目标值重算</span><b aria-hidden="true">›</b></a>
-                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/experiments" target="_blank" rel="noreferrer"><code>experiments/</code><span data-i18n="repoExperiments">确定性实例、实验编排、分析与绘图</span><b aria-hidden="true">›</b></a>
-                <a href="https://github.com/rudykon/FPTR_Scheduler/tree/main/tests" target="_blank" rel="noreferrer"><code>tests/</code><span data-i18n="repoTests">模型契约与端到端回归测试</span><b aria-hidden="true">›</b></a>
+              <div class="repo-tree" aria-label="Repository structure">
+                <div><b>src/</b> — <span data-i18n="repoSrc">C++17 调度器、共享模型与阶段入口</span></div>
+                <div><b>tools/</b> — <span data-i18n="repoTools">独立解析、可行性验证与目标值重算</span></div>
+                <div><b>experiments/</b> — <span data-i18n="repoExperiments">确定性实例、实验编排、分析与绘图</span></div>
+                <div><b>tests/</b> — <span data-i18n="repoTests">模型契约与端到端回归测试</span></div>
+                <div><b>docs/</b> — <span data-i18n="repoDocs">GitHub Pages 论文伴读站与浏览器 Demo</span></div>
               </div>
-            </div>
+            </section>
           </div>
         </section>
       </main>
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
       </footer>
     </div>
   </body>

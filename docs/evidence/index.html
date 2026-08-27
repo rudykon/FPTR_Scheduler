@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6faff" />
-    <meta name="description" content="FPTR 的阶段增益、预算—质量权衡、运行时间分布、压力测试与精确校准。" />
+    <meta name="theme-color" content="#f5faff" />
+    <meta name="description" content="FPTR 的阶段增益、运行时间、压力测试、外部基线比较与精确校准。" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="实验结果 · FPTR Scheduler" />
-    <meta property="og:description" content="Stage gains, runtime distributions, stress tests, and exact calibration for FPTR." />
+    <meta property="og:description" content="FPTR results organized by quality, deadline behavior, robustness, and exact calibration." />
     <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/evidence/" />
     <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/results_quality_runtime.png" />
     <title>实验结果 · FPTR Scheduler</title>
@@ -19,129 +19,156 @@
   </head>
   <body data-title-key="evidencePageTitle" data-description-key="evidencePageDescription">
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
-
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
-          <img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" />
-        </a>
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <nav class="main-nav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i aria-hidden="true">✦</i><span data-i18n="navOverview">概览</span></a>
-          <a href="../problem/"><i aria-hidden="true">⌁</i><span data-i18n="navProblem">问题</span></a>
-          <a href="../method/"><i aria-hidden="true">◇</i><span data-i18n="navMethod">方法</span></a>
-          <a href="../evidence/" aria-current="page"><i aria-hidden="true">✓</i><span data-i18n="navEvidence">证据</span></a>
-          <a href="../reproduce/"><i aria-hidden="true">›_</i><span data-i18n="navReproduce">复现</span></a>
-          <a href="../demo/"><i aria-hidden="true">▶</i><span data-i18n="navDemo">Demo</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
+          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
+          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
+          <a href="../evidence/" aria-current="page"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
+          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language">
-            <button type="button" data-locale="zh" class="active" aria-pressed="true">中</button>
-            <button type="button" data-locale="en" aria-pressed="false">EN</button>
-          </div>
-          <a class="icon-link" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"><span aria-hidden="true">GH</span></a>
+          <div class="language-switch" aria-label="Language"><button type="button" data-locale="zh" class="active" aria-pressed="true">中</button><button type="button" data-locale="en" aria-pressed="false">EN</button></div>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
         </div>
       </header>
 
       <main id="main">
         <section class="page-hero page-hero-evidence">
           <div class="section-wrap">
-            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="evidenceKicker">03 · 公开证据</p>
-            <h1 data-i18n="evidenceTitle">结果不靠一句“更好”，而靠阶段轨迹、压力测试与精确校准。</h1>
-            <p data-i18n="evidenceBody">公开仓库提供实验协议、独立验证器和绘图脚本。下列图展示累积阶段增益、预算—质量权衡、运行时间分布，以及兼容组压力与小规模精确比较。</p>
+            <h1 data-i18n="evidenceTitle">结果按研究问题展开，而不是堆成一张图表墙。</h1>
+            <p data-i18n="evidenceBody">下面依次回答质量是否提升、能否守住时限、压力下是否稳健，以及距离精确最优还有多远。每个结论先给答案，再给图与实验边界。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
 
-        <section class="evidence-section detail-section">
+        <section class="detail-section">
           <div class="section-wrap">
-            <div class="protocol-board">
-              <div class="protocol-copy">
-                <p class="section-kicker" data-i18n="protocolKicker">实验协议</p>
-                <h2 data-i18n="protocolTitle">同一输入、同一目标、同一验证器，并对迟到结果计零分。</h2>
-                <p data-i18n="protocolBody">单线程 C++17 调度器使用 g++ 13.3、-O2，在 Linux 6.8 与 2.30 GHz Xeon E5-2686 v4 上运行。外部墙钟时间覆盖进程启动到输出收集；非零退出、非法输出或超过 100 ms 的运行均计为零效用，Python 验证器独立重算目标值。</p>
+            <div class="terms" aria-label="Experiment terminology">
+              <span><b>Full</b> <span data-i18n="termFull">全部累计阶段后的 FPTR 配置</span></span>
+              <span><b>CG</b> <span data-i18n="termCg">Compatibility Group，兼容组共享</span></span>
+              <span><b>BeamFirst</b> <span data-i18n="termBeamFirst">独立的先选波束参考方法</span></span>
+              <span><b>W/T/L</b> <span data-i18n="termWtl">胜 / 平 / 负实例数</span></span>
+              <span><b>p50 / p95</b> <span data-i18n="termPercentile">墙钟时间的中位数 / 第 95 百分位</span></span>
+            </div>
+
+            <section class="rq">
+              <div class="rq-summary">
+                <span class="rq-label">RQ1 · QUALITY</span>
+                <h2 data-i18n="rq1Title">累计细化是否真的提升质量？</h2>
+                <span class="rq-metric">+3.83%</span>
+                <p data-i18n="rq1Body">是。Full 相对 BeamFirst 的平均增益为 3.83%（95% CI 3.09–4.67%），W/T/L 为 127/23/0；相对 Base 的平均增益为 1.79%。</p>
               </div>
-              <dl class="protocol-facts">
-                <div><dt>150</dt><dd data-i18n="protocolInstances">固定实例</dd></div>
-                <div><dt>5 × 30</dt><dd data-i18n="protocolRegimes">五种规模与压力场景</dd></div>
-                <div><dt>5</dt><dd data-i18n="protocolRepeats">每实例独立重复</dd></div>
-                <div><dt>15,360</dt><dd data-i18n="protocolLaunches">内部与外部正式启动总数</dd></div>
-              </dl>
-            </div>
-
-            <div class="paper-metrics">
-              <article><span>+3.83%</span><strong data-i18n="metricBeamTitle">相对 BeamFirst</strong><p data-i18n="metricBeamBody">95% CI：3.09–4.67%；实例中位数 W/T/L 为 127/23/0。</p></article>
-              <article><span>+1.79%</span><strong data-i18n="metricBaseTitle">相对 Base</strong><p data-i18n="metricBaseBody">95% CI：1.42–2.21%；五个场景均为正增益。</p></article>
-              <article><span>60.28 / 87.29 ms</span><strong data-i18n="metricRuntimeTitle">Full 的 p50 / p95</strong><p data-i18n="metricRuntimeBody">观测最坏墙钟时间为 92.14 ms。</p></article>
-              <article><span>750 / 750</span><strong data-i18n="metricValidTitle">Full 输出全部合法</strong><p data-i18n="metricValidBody">独立验证全部通过，且没有一次超过 100 ms。</p></article>
-            </div>
-
-            <div class="evidence-grid">
-              <figure class="result-card">
-                <div class="result-header"><span>01</span><h2 data-i18n="resultA">质量与运行时间</h2><b aria-hidden="true">◴</b></div>
-                <img src="../images/results_quality_runtime.png" alt="质量与运行时间实验结果" data-i18n-alt="resultAAlt" />
-                <figcaption data-i18n="resultACaption">150 个配对实例、每个实例 5 次运行的仓库图件：展示有序阶段增益、分场景提升、预算曲线与 87 ms 运行时间 ECDF。</figcaption>
-              </figure>
-              <figure class="result-card">
-                <div class="result-header"><span>02</span><h2 data-i18n="resultB">压力测试与精确校准</h2><b aria-hidden="true">✓</b></div>
-                <img src="../images/results_stress_optimality.png" alt="压力测试与精确校准结果" data-i18n-alt="resultBAlt" />
-                <figcaption data-i18n="resultBCaption">兼容组规模压力测试与 12 个小规模精确案例，用于观察鲁棒性并校准相对最优解的差距。</figcaption>
-              </figure>
-            </div>
-
-            <section class="baseline-panel">
-              <div class="baseline-heading">
-                <p class="section-kicker" data-i18n="baselineKicker">匹配外部基线</p>
-                <h2 data-i18n="baselineTitle">Full 在统一的 87 ms 预算和 100 ms 计分规则下领先六种独立搜索实现。</h2>
-                <p data-i18n="baselineBody">这些程序共享输入输出契约、目标和验证过程，但不调用 FPTR 核心代码。结果仅说明本模型、主机和实现族下的匹配比较，不代表对所有已发表求解器的普遍排名。</p>
-              </div>
-              <div class="baseline-table-wrap">
-                <table class="baseline-table">
-                  <thead>
-                    <tr><th data-i18n="baselineMethod">基线</th><th data-i18n="baselineGain">Full 相对增益</th><th>W / T / L</th><th data-i18n="baselineMisses">750 次中的 87 ms 未命中</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr><th>ALNS</th><td>+7.61%</td><td>134 / 5 / 11</td><td>74</td></tr>
-                    <tr><th>Tabu</th><td>+7.75%</td><td>139 / 4 / 7</td><td>18</td></tr>
-                    <tr><th>GA</th><td>+6.58%</td><td>127 / 2 / 21</td><td>44</td></tr>
-                    <tr><th>SA</th><td>+7.90%</td><td>137 / 4 / 9</td><td>15</td></tr>
-                    <tr><th>ILS</th><td>+8.40%</td><td>137 / 4 / 9</td><td>41</td></tr>
-                    <tr><th>GRASP</th><td>+7.59%</td><td>140 / 2 / 8</td><td>27</td></tr>
-                  </tbody>
-                </table>
+              <div>
+                <div class="figure-legend"><span class="legend-chip">BeamFirst / Base</span><span class="legend-chip green">Global / CG</span><span class="legend-chip orange">Remask</span><span class="legend-chip violet">Full</span></div>
+                <figure class="web-figure">
+                  <a href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_stage_gain.png" alt="FPTR ordered cumulative stage gain" /></a>
+                  <figcaption data-i18n="stageGainCaption">固定顺序下的条件增量：Global +0.44、CG +0.49、Remask +0.59、Full · Pair +0.25 个百分点。它们不是独立模块效应。</figcaption>
+                </figure>
+                <figure class="web-figure">
+                  <a href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_scenario_gain.png" alt="Scenario-wise FPTR Full gain" /></a>
+                  <figcaption data-i18n="scenarioGainCaption">Full 在五种规模与压力场景中的平均增益均为正；点击图件可按原尺寸查看。</figcaption>
+                </figure>
               </div>
             </section>
 
-            <div class="calibration-grid">
-              <article class="calibration-card calibration-stages">
-                <span data-i18n="stageGainLabel">固定顺序增益</span>
-                <h2 data-i18n="stageGainTitle">后续阶段贡献较小，但从不让中位数退化。</h2>
-                <div class="stage-gain-row"><b>Global <i>+0.44%</i></b><b>CG <i>+0.49%</i></b><b>Remask <i>+0.59%</i></b><b>Pair <i>+0.25%</i></b></div>
-                <p data-i18n="stageGainBody">这些是固定顺序下的条件增量，不是独立模块效应。预算从 60 ms 增至 87 ms 时，平均增益仅从 1.60% 增至 1.65%，显示收益开始趋平。</p>
-              </article>
-              <article class="calibration-card calibration-exact">
-                <span data-i18n="exactLabel">小规模精确校准</span>
-                <h2><b>8 / 12</b><span data-i18n="exactTitle">案例达到全局最优</span></h2>
-                <p data-i18n="exactBody">独立动态规划复现了 12 个审计最优解。Full 的最优差距中位数为 0%、均值为 3.19%、最大为 25%；事务门保证可行与严格改进，不保证近似最优。</p>
-              </article>
-              <article class="calibration-card calibration-limits">
-                <span data-i18n="limitsLabel">结论边界</span>
-                <h2 data-i18n="limitsTitle">这是受控静态快照研究，不是硬实时部署证明。</h2>
-                <p data-i18n="limitsBody">实验使用合成静态实例、单台未绑核主机和较小精确套件；尚未覆盖动态队列、公平性、移动性、复杂干扰、连续预编码和真实部署轨迹。</p>
-              </article>
-            </div>
+            <section class="rq">
+              <div class="rq-summary">
+                <span class="rq-label">RQ2 · DEADLINE</span>
+                <h2 data-i18n="rq2Title">质量提升是否以错过截止时间为代价？</h2>
+                <span class="rq-metric">750 / 750</span>
+                <p data-i18n="rq2Body">没有。Full 的 750 次运行全部通过独立验证且均未超过 100 ms；墙钟时间 p50 / p95 为 60.28 / 87.29 ms，观测最坏值为 92.14 ms。</p>
+              </div>
+              <div>
+                <div class="figure-legend"><span class="legend-chip">累计 FPTR 配置</span><span class="legend-chip orange">100 ms 外部截止</span></div>
+                <figure class="web-figure">
+                  <a href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><img src="../images/web_runtime_ecdf.png" alt="Runtime ECDF under the 87 millisecond internal budget" /></a>
+                  <figcaption data-i18n="runtimeCaption">87 ms 内部预算下的求解器墙钟时间 ECDF；100 ms 虚线表示外部计分截止。</figcaption>
+                </figure>
+                <figure class="web-figure">
+                  <a href="../images/web_budget_quality.png" target="_blank" rel="noreferrer"><img src="../images/web_budget_quality.png" alt="FPTR budget and quality trade-off" /></a>
+                  <figcaption data-i18n="budgetCaption">预算从 60 ms 增至 87 ms 时，平均增益从 1.60% 增至 1.65%，显示边际收益已开始趋平。</figcaption>
+                </figure>
+              </div>
+            </section>
 
-            <div class="release-note">
-              <span class="release-icon" aria-hidden="true">◇</span>
-              <p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。历史密封结果与论文正文不在仓库中；所有性能主张应由重新生成的工件或单独提供的证据复核。</span></p>
-            </div>
+            <section class="rq">
+              <div class="rq-summary">
+                <span class="rq-label">RQ3 · ROBUSTNESS</span>
+                <h2 data-i18n="rq3Title">共享规模增大、换成外部搜索基线后，优势还在吗？</h2>
+                <span class="rq-metric">+6.58–8.40%</span>
+                <p data-i18n="rq3Body">在匹配的 87 ms 预算与 100 ms 计分规则下，Full 相对六种独立搜索实现的平均增益位于 6.58% 到 8.40%。CG 压力测试中优势保持为正，但方差会随规模变化。</p>
+              </div>
+              <div>
+                <div class="figure-legend"><span class="legend-chip green">CG</span><span class="legend-chip violet">Full</span></div>
+                <figure class="web-figure">
+                  <a href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><img src="../images/web_cg_stress.png" alt="Compatibility group size stress test" /></a>
+                  <figcaption data-i18n="cgStressCaption">兼容组大小与覆盖率共同变化；图中同时标出 Full 的 p95 墙钟时间。</figcaption>
+                </figure>
+                <details>
+                  <summary data-i18n="baselineDetails">展开六种匹配外部基线的完整结果</summary>
+                  <div class="details-body">
+                    <p data-i18n="baselineBody">这些程序共享输入输出契约、目标和验证过程，但不调用 FPTR 核心代码。结果只适用于本模型、主机和实现族，不代表对所有已发表求解器的普遍排名。</p>
+                    <div class="table-wrap">
+                      <table class="baseline-table">
+                        <thead><tr><th data-i18n="baselineMethod">基线</th><th data-i18n="baselineGain">Full 相对增益</th><th>W / T / L</th><th data-i18n="baselineMisses">750 次中的 87 ms 未命中</th></tr></thead>
+                        <tbody>
+                          <tr><th>ALNS</th><td>+7.61%</td><td>134 / 5 / 11</td><td>74</td></tr>
+                          <tr><th>Tabu</th><td>+7.75%</td><td>139 / 4 / 7</td><td>18</td></tr>
+                          <tr><th>GA</th><td>+6.58%</td><td>127 / 2 / 21</td><td>44</td></tr>
+                          <tr><th>SA</th><td>+7.90%</td><td>137 / 4 / 9</td><td>15</td></tr>
+                          <tr><th>ILS</th><td>+8.40%</td><td>137 / 4 / 9</td><td>41</td></tr>
+                          <tr><th>GRASP</th><td>+7.59%</td><td>140 / 2 / 8</td><td>27</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </section>
+
+            <section class="rq">
+              <div class="rq-summary">
+                <span class="rq-label">RQ4 · OPTIMALITY</span>
+                <h2 data-i18n="rq4Title">在能精确求解的小案例上，FPTR 距离最优多远？</h2>
+                <span class="rq-metric">8 / 12</span>
+                <p data-i18n="rq4Body">Full 在 12 个独立动态规划校准案例中有 8 个达到全局最优；最优差距中位数为 0%、均值 3.19%、最大 25%。</p>
+              </div>
+              <div>
+                <div class="figure-legend"><span class="legend-chip">核心案例</span><span class="legend-chip orange">更宽案例</span><span class="legend-chip violet">均值</span></div>
+                <figure class="web-figure">
+                  <a href="../images/web_optimality_gap.png" target="_blank" rel="noreferrer"><img src="../images/web_optimality_gap.png" alt="Exact optimality gaps on twelve small cases" /></a>
+                  <figcaption data-i18n="optimalityCaption">事务门保证可行与严格改进，但不保证接近全局最优；较宽案例揭示了这一边界。</figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <section class="limitations">
+              <h2 data-i18n="limitsTitle">这是受控静态快照研究，不是硬实时部署证明。</h2>
+              <p data-i18n="limitsBody">实验使用合成静态实例、单台未绑核主机和较小精确套件；尚未覆盖动态队列、公平性、移动性、复杂干扰、连续预编码和真实部署轨迹。</p>
+            </section>
+
+            <details>
+              <summary data-i18n="protocolDetails">展开完整实验协议与计数口径</summary>
+              <div class="details-body">
+                <h2 data-i18n="protocolTitle">同一输入、同一目标、同一验证器，并对迟到结果计零分。</h2>
+                <p data-i18n="protocolBody">单线程 C++17 调度器使用 g++ 13.3、-O2，在 Linux 6.8 与 2.30 GHz Xeon E5-2686 v4 上运行。外部墙钟时间覆盖进程启动到输出收集；非零退出、非法输出或超过 100 ms 的运行均计为零效用，Python 验证器独立重算目标值。</p>
+                <p><strong>150</strong> <span data-i18n="protocolInstances">固定实例</span> · <strong>5 × 30</strong> <span data-i18n="protocolRegimes">五种规模与压力场景</span> · <strong>5</strong> <span data-i18n="protocolRepeats">每实例独立重复</span> · <strong>15,360</strong> <span data-i18n="protocolLaunches">内部与外部正式启动总数</span></p>
+              </div>
+            </details>
+            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。所有性能主张应由重新生成的工件或单独提供的证据复核。</span></p></div>
           </div>
         </section>
       </main>
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span aria-hidden="true">GH</span> rudykon/FPTR_Scheduler</a>
+        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
       </footer>
     </div>
   </body>
