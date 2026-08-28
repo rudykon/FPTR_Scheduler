@@ -40,12 +40,12 @@
 <a id="overview"></a>
 ## Overview
 
-FPTR, short for Feasibility-Preserving Transactional Refinement, is a single-threaded heuristic scheduler for deadline-constrained joint beam and resource allocation. It keeps a releasable feasible incumbent at all times, builds each refinement candidate in private state, and commits a candidate only when it is complete, timely, structurally valid, and strictly better in transmitted traffic.
+FPTR, short for Feasibility-Preserving Transactional Refinement, is a single-threaded heuristic scheduler for deadline-constrained joint beam and resource allocation. It keeps an incumbent—the current releasable feasible solution—at all times, builds each refinement candidate in private state, and commits a candidate only when it is complete, timely, structurally valid, and strictly better in transmitted traffic.
 
 | Goal | Implementation | Public evidence path |
 | --- | --- | --- |
 | Return a legal allocation under tight deadlines | Empty-allocation fallback plus anytime feasible incumbent | Independent Python parser, validator, and score recomputation |
-| Improve transmitted traffic under coupled constraints | Cumulative FPTR stages from `Base` to `Full` | Stage traces and reproducible synthetic experiment harness |
+| Improve transmitted traffic under coupled constraints | Cumulative FPTR stages from the base construction (`Base`) to the full configuration (`Full`) | Stage traces and reproducible synthetic experiment harness |
 | Keep experiment outputs auditable | Explicit output paths under ignored local directories | Unit tests, quick integration run, and figure-generation scripts |
 
 The scheduler reads one allocation instance from standard input and writes the allocation contract to standard output. Optional traces go to standard error, so diagnostics do not change the solution format.

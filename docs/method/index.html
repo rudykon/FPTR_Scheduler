@@ -22,7 +22,7 @@
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler 首页" data-i18n-aria="brandHomeAria"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
           <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
@@ -33,8 +33,8 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><a href="../method/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/method/" data-locale="en" lang="en">EN</a></div>
-          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
+          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria"><a href="../method/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/method/" data-locale="en" lang="en">EN</a></div>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub 仓库" data-i18n-aria="githubAria"></a>
         </div>
       </header>
 
@@ -44,7 +44,7 @@
             <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
             <p class="section-kicker" data-i18n="methodKicker">02 · 核心方法</p>
             <h1 data-i18n="methodTitle">FPTR 方法</h1>
-            <p data-i18n="methodBody">FPTR 始终保留可发布的 incumbent，并在隔离状态中构造候选；只有四项检查全部通过才整体替换，任一失败都不改变当前可行解。</p>
+            <p data-i18n="methodBody">FPTR 始终保留可发布的当前可行解（incumbent），并在隔离状态中构造候选；只有四项检查全部通过才整体替换，任一失败都不改变当前可行解。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
@@ -57,16 +57,16 @@
                 <h2 data-i18n="methodStateTitle">事务门</h2>
                 <p data-i18n="methodStateBody">I 始终保持完整可行；每次尝试先复制到 C，再在私有状态中细化。成功候选整体提交，失败候选整体丢弃。</p>
               </div>
-              <div class="transaction-diagram" aria-label="FPTR incumbent and candidate channels">
+              <div class="transaction-diagram" aria-label="FPTR 当前可行解与候选解通道" data-i18n-aria="transactionDiagramAria">
                 <div class="transaction-lane incumbent-lane">
-                  <span class="lane-label" data-i18n="incumbentTitle">Incumbent</span>
+                  <span class="lane-label" data-i18n="incumbentTitle">当前可行解</span>
                   <article><strong><math class="inline-math"><mi>I</mi></math></strong><p data-i18n="incumbentBody">已经完整验证、随时可以序列化的当前最好可行解。</p></article>
                   <i aria-hidden="true" data-i18n="incumbentPersist">保持可发布 →</i>
                   <article><strong><math class="inline-math"><mi>I</mi></math></strong><p data-i18n="publishableBody">探索期间不被原地修改；截止时可立即返回。</p></article>
                 </div>
                 <div class="transaction-lane candidate-lane">
-                  <span class="lane-label" data-i18n="candidateTitle">Candidate</span>
-                  <article><strong><math class="inline-math"><mi>I</mi><mo>→</mo><mi>C</mi></math></strong><p data-i18n="candidateIsolation">复制后隔离构造候选</p></article>
+                  <span class="lane-label" data-i18n="candidateTitle">候选解</span>
+                  <article><strong><math class="inline-math"><mi>I</mi><mo>→</mo><mi>C</mi></math></strong><p data-i18n="candidateIsolation">隔离构造候选</p></article>
                   <i aria-hidden="true" data-i18n="refineArrow">细化 →</i>
                   <article><strong><math class="inline-math"><mi mathvariant="normal">gate</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math></strong><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
                 </div>
@@ -81,10 +81,11 @@
                   <em><span data-i18n="fail">任一失败</span> <span aria-hidden="true">→</span> <span data-i18n="discard">DISCARD · 保留</span> <math class="inline-math"><mi>I</mi></math></em>
                 </div>
               </div>
+              <p class="equation-order-note" data-i18n="paperEquationOrderNote">网页按概念顺序组织，公式编号沿用论文原编号，因此式（9）先于式（8）出现。</p>
               <p class="equation-lead" data-i18n="equation9Lead">共同事务提交门</p>
               <div class="formula-block" id="eq-9" data-equation="9" tabindex="0">
                 <div class="equation-row">
-                  <math display="block" aria-label="式（9）：当且仅当候选完整、验证完成时间早于阶段截止、验证通过且目标严格改善时，用候选替换 incumbent" data-i18n-aria="equation9Aria">
+                  <math display="block" aria-label="式（9）：当且仅当候选完整、验证完成时间早于阶段截止、验证通过且目标严格改善时，用候选替换当前可行解" data-i18n-aria="equation9Aria">
                     <semantics>
                       <mrow>
                         <mi>I</mi><mo>←</mo><mi>C</mi><mspace width=".6em"></mspace><mo>⇔</mo><mspace width=".6em"></mspace>
@@ -109,12 +110,12 @@
                 <p data-i18n="methodMilestoneBody">五个细化阶段依次在 45、60、70、78 与 84 ms 截止；最终验证和序列化在 87 ms 内完成。</p>
               </div>
               <div class="method-timeline">
-                <article class="stage"><time datetime="PT0.045S"><math class="inline-math"><mo>≤</mo><mn>45</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Base</h3><p data-i18n="stageBase">构造</p></article>
-                <article class="stage"><time datetime="PT0.060S"><math class="inline-math"><mo>≤</mo><mn>60</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Global</h3><p data-i18n="stageGlobal">重价</p></article>
-                <article class="stage"><time datetime="PT0.070S"><math class="inline-math"><mo>≤</mo><mn>70</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>CG</h3><p data-i18n="stageCg">共享</p></article>
-                <article class="stage"><time datetime="PT0.078S"><math class="inline-math"><mo>≤</mo><mn>78</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Remask</h3><p data-i18n="stageRemask">修复</p></article>
-                <article class="stage"><time datetime="PT0.084S"><math class="inline-math"><mo>≤</mo><mn>84</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Pair</h3><p data-i18n="stagePair">重建</p></article>
-                <article class="stage finalize-stage"><time datetime="PT0.087S"><math class="inline-math"><mo>≤</mo><mn>87</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Validate</h3><p data-i18n="stageFinalizeShort">验证与序列化</p></article>
+                <article class="stage"><time datetime="PT0.045S"><math class="inline-math"><mo>≤</mo><mn>45</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Base</h3><p data-i18n="stageBase">可行构造</p></article>
+                <article class="stage"><time datetime="PT0.060S"><math class="inline-math"><mo>≤</mo><mn>60</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Global</h3><p data-i18n="stageGlobal">全局重价</p></article>
+                <article class="stage"><time datetime="PT0.070S"><math class="inline-math"><mo>≤</mo><mn>70</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>CG</h3><p data-i18n="stageCg">兼容组共享</p></article>
+                <article class="stage"><time datetime="PT0.078S"><math class="inline-math"><mo>≤</mo><mn>78</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Remask</h3><p data-i18n="stageRemask">掩码修复</p></article>
+                <article class="stage"><time datetime="PT0.084S"><math class="inline-math"><mo>≤</mo><mn>84</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Pair</h3><p data-i18n="stagePair">双资源重建</p></article>
+                <article class="stage finalize-stage"><time datetime="PT0.087S"><math class="inline-math"><mo>≤</mo><mn>87</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Validate</h3><p data-i18n="stageFinalizeShort">验证输出</p></article>
               </div>
               <p class="equation-lead" data-i18n="budgetRuleLead">任意内部预算下的阶段截止缩放规则</p>
               <div class="formula-block unnumbered compact-equation" id="budget-rule" data-equation="budget" tabindex="0">
@@ -149,10 +150,10 @@
                   <span>LEMMA 1</span>
                   <h3 data-i18n="invariantTitle">可行性不变量</h3>
                   <div class="theory-copy">
-                    <p class="theory-summary" data-i18n="invariantSummary">任意阶段结束时，incumbent 都是可发布的合法解。</p>
+                    <p class="theory-summary" data-i18n="invariantSummary">任意阶段结束时，当前可行解都是可发布的合法解。</p>
                     <details class="theory-details">
                       <summary data-i18n="proofDetails">查看证明要点</summary>
-                      <div class="details-body"><p data-i18n="invariantBody">只要空回退可行且验证器可靠，拒绝不会改变 incumbent，接受又必须通过独立验证；因此每次提交后和序列化前，当前解始终可行。</p></div>
+                      <div class="details-body"><p data-i18n="invariantBody">只要空回退可行且验证器可靠，拒绝不会改变当前可行解，接受又必须通过独立验证；因此每次提交后和序列化前，当前解始终可行。</p></div>
                     </details>
                   </div>
                 </article>

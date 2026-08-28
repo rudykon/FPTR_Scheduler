@@ -22,7 +22,7 @@
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler 首页" data-i18n-aria="brandHomeAria"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
           <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
@@ -33,8 +33,8 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><a href="../evidence/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/evidence/" data-locale="en" lang="en">EN</a></div>
-          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
+          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria"><a href="../evidence/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/evidence/" data-locale="en" lang="en">EN</a></div>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub 仓库" data-i18n-aria="githubAria"></a>
         </div>
       </header>
 
@@ -51,18 +51,18 @@
 
         <section class="detail-section">
           <div class="section-wrap">
-            <div class="evidence-highlights" aria-label="Key results">
-              <article><strong>+3.83%</strong><span data-i18n="highlightQuality">Full vs BeamFirst</span></article>
-              <article><strong>750 / 750</strong><span data-i18n="highlightDeadline">合法且未超过 100 ms</span></article>
-              <article><strong>8 / 12</strong><span data-i18n="highlightExact">精确案例达到全局最优</span></article>
+            <div class="evidence-highlights" aria-label="关键结果" data-i18n-aria="keyResultsAria">
+              <a href="#quality"><strong>+3.83%</strong><span data-i18n="highlightQuality">完整配置（Full）vs BeamFirst</span></a>
+              <a href="#deadline"><strong>750 / 750</strong><span data-i18n="highlightDeadline">合法且未超过 100 ms</span></a>
+              <a href="#exact"><strong>8 / 12</strong><span data-i18n="highlightExact">小型精确校准案例达到最优</span></a>
             </div>
 
             <div class="rq-navigation">
               <button class="rq-toggle" type="button" aria-expanded="false" aria-controls="rqNav"><span data-i18n="rqOnThisPage">本页：</span><strong data-rq-current data-i18n="rqNavQuality">质量</strong><i aria-hidden="true">⌄</i></button>
-              <nav class="rq-nav" id="rqNav" aria-label="Evidence sections">
+              <nav class="rq-nav" id="rqNav" aria-label="实验结果章节" data-i18n-aria="evidenceSectionsAria">
                 <a href="#quality" data-i18n="rqNavQuality">质量</a>
                 <a href="#deadline" data-i18n="rqNavDeadline">截止时间</a>
-                <a href="#cg-stress" data-i18n="rqNavCg">CG 压力</a>
+                <a href="#cg-stress" data-i18n="rqNavCg">兼容组压力</a>
                 <a href="#baselines" data-i18n="rqNavBaselines">外部基线</a>
                 <a href="#exact" data-i18n="rqNavExact">精确校准</a>
                 <a href="#limits" data-i18n="rqNavLimits">结论边界</a>
@@ -73,19 +73,18 @@
               <div class="rq-summary">
                 <h2 data-i18n="rq1Title">RQ1 · 质量增益</h2>
                 <p class="rq-question" data-i18n="rq1Question">累计细化是否真的提升质量？</p>
-                <span class="rq-metric">+3.83%</span>
-                <p data-i18n="rq1Body">是。Full 相对 BeamFirst 的平均增益为 3.83%（95% CI 3.09–4.67%），W/T/L 为 127/23/0；相对 Base 的平均增益为 1.79%。</p>
+                <p data-i18n="rq1Body">是。完整配置（Full）相对 BeamFirst 的平均增益为 3.83%（95% CI 3.09–4.67%），胜／平／负（W/T/L）为 127/23/0；相对基础构造（Base）的平均增益为 1.79%。</p>
               </div>
               <div>
                 <figure class="web-figure">
                   <a class="figure-image-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_stage_gain.png" alt="FPTR 各累计细化阶段的条件增益" data-i18n-alt="stageGainAlt" /></a>
-                  <figcaption><span data-i18n="stageGainCaption">固定顺序下的条件增量：Global +0.44、CG +0.49、Remask +0.59、Full · Pair +0.25 个百分点。它们不是独立模块效应。</span><a class="figure-size-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
+                  <figcaption><span data-i18n="stageGainCaption">固定顺序下的条件增量：Global +0.44、CG +0.49、Remask +0.59、Full 的 Pair 阶段 +0.25 个百分点。它们不是独立模块效应。</span><a class="figure-size-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
                 <details class="secondary-figure">
                   <summary data-i18n="scenarioFigureDetails">查看五种场景中的增益</summary>
                   <div class="details-body"><figure class="web-figure">
                     <a class="figure-image-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_scenario_gain.png" alt="FPTR 在五种规模与压力场景中的平均增益" data-i18n-alt="scenarioGainAlt" /></a>
-                    <figcaption><span data-i18n="scenarioGainCaption">Full 在五种规模与压力场景中的平均增益均为正。</span><a class="figure-size-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
+                    <figcaption><span data-i18n="scenarioGainCaption">完整配置在五种规模与压力场景中的平均增益均为正；点击图件可按原尺寸查看。</span><a class="figure-size-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                   </figure></div>
                 </details>
               </div>
@@ -95,13 +94,12 @@
               <div class="rq-summary">
                 <h2 data-i18n="rq2Title">RQ2 · 截止时间</h2>
                 <p class="rq-question" data-i18n="rq2Question">质量提升是否以错过截止时间为代价？</p>
-                <span class="rq-metric">750 / 750</span>
-                <p data-i18n="rq2Body">没有。Full 的 750 次运行全部通过独立验证且均未超过 100 ms；墙钟时间 p50 / p95 为 60.28 / 87.29 ms，观测最坏值为 92.14 ms。</p>
+                <p data-i18n="rq2Body">完整配置（Full）的 750 次运行全部通过独立验证，端到端墙钟时间均低于 100 ms。87 ms 是算法内部预算；运行时间中位数／95 分位数（p50／p95）和最坏值采用包含启动与输入输出的外部墙钟口径，因此可以略高于 87 ms，分别为 60.28、87.29 和 92.14 ms。</p>
               </div>
               <div>
                 <figure class="web-figure">
                   <a class="figure-image-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><img src="../images/web_runtime_ecdf.png" alt="87 毫秒内部预算下的 FPTR 运行时间经验累积分布" data-i18n-alt="runtimeAlt" /></a>
-                  <figcaption><span data-i18n="runtimeCaption">87 ms 内部预算下的求解器墙钟时间 ECDF；100 ms 虚线表示外部计分截止。</span><a class="figure-size-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
+                  <figcaption><span data-i18n="runtimeCaption">87 ms 内部预算下的求解器墙钟时间经验累积分布（ECDF）；100 ms 虚线表示外部计分截止。</span><a class="figure-size-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
                 <details class="secondary-figure">
                   <summary data-i18n="budgetFigureDetails">查看预算扫描</summary>
@@ -117,13 +115,13 @@
               <div class="rq-summary">
                 <h2 data-i18n="rq3Title">RQ3 · 兼容组压力</h2>
                 <p class="rq-question" data-i18n="rq3Question">兼容组规模增大时，质量与运行时间是否稳定？</p>
-                <span class="rq-metric">CG 2 → 20</span>
-                <p data-i18n="rq3Body">CG 压力套件让兼容组大小与覆盖率共同变化。Full 的优势保持为正，同时报告 p95 墙钟时间，避免只看质量不看时限。</p>
+                <div class="rq-metric rq-metric-labeled"><strong>CG 2 → 20</strong><span data-i18n="testRangeLabel">测试范围</span></div>
+                <p data-i18n="rq3Body">兼容组（CG）压力套件让组大小与覆盖率共同变化。完整配置的优势保持为正，同时报告 95 分位墙钟时间，避免只看质量不看时限。</p>
               </div>
               <div>
                 <figure class="web-figure">
                   <a class="figure-image-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><img src="../images/web_cg_stress.png" alt="兼容组规模压力测试中的质量与运行时间" data-i18n-alt="cgStressAlt" /></a>
-                  <figcaption><span data-i18n="cgStressCaption">兼容组大小与覆盖率共同变化；图中同时标出 Full 的 p95 墙钟时间。</span><a class="figure-size-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
+                  <figcaption><span data-i18n="cgStressCaption">兼容组大小与覆盖率共同变化；图中同时标出完整配置的 95 分位墙钟时间。</span><a class="figure-size-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
               </div>
             </section>
@@ -132,17 +130,18 @@
               <div class="rq-summary">
                 <h2 data-i18n="rq4Title">RQ4 · 外部基线</h2>
                 <p class="rq-question" data-i18n="rq4Question">在匹配预算与计分规则下，外部搜索基线表现如何？</p>
-                <span class="rq-metric">+6.58–8.40%</span>
-                <p data-i18n="rq4Body">在统一的 87 ms 内部预算和 100 ms 外部计分规则下，Full 相对六种独立搜索实现的平均增益为 6.58%–8.40%。</p>
+                <div class="rq-metric rq-metric-labeled"><strong>+6.58–8.40%</strong><span data-i18n="matchedImplementationsLabel">相对六种匹配实现</span></div>
+                <p data-i18n="rq4Body">在统一的 87 ms 内部预算和 100 ms 外部计分规则下，完整配置（Full）相对六种独立搜索实现的平均增益为 6.58%–8.40%。</p>
+                <p class="rq-qualifier" data-i18n="rq4Qualifier">该比较针对同一仓库内、同预算、同验证规则下的六种独立实现，不代表对所有已发表求解器的普遍排名。</p>
               </div>
               <div>
                 <details>
                   <summary data-i18n="baselineDetails">展开六种匹配外部基线的完整结果</summary>
                   <div class="details-body">
-                    <p data-i18n="baselineBody">这些程序共享输入输出契约、目标和验证过程，但不调用 FPTR 核心代码。结果只适用于本模型、主机和实现族，不代表对所有已发表求解器的普遍排名。</p>
+                    <p data-i18n="baselineBody">这些程序共享输入输出契约、目标和验证过程，但不调用 FPTR 核心代码。结果仅说明本模型、主机和实现族下的匹配比较，不代表对所有已发表求解器的普遍排名。</p>
                     <div class="table-wrap">
                       <table class="baseline-table">
-                        <thead><tr><th data-i18n="baselineMethod">基线</th><th data-i18n="baselineGain">Full 相对增益</th><th>W / T / L</th><th data-i18n="baselineMisses">750 次中的 87 ms 未命中</th></tr></thead>
+                        <thead><tr><th data-i18n="baselineMethod">基线</th><th data-i18n="baselineGain">完整配置相对增益</th><th>W / T / L</th><th data-i18n="baselineMisses">750 次中的 87 ms 未命中</th></tr></thead>
                         <tbody>
                           <tr><th>ALNS</th><td>+7.61%</td><td>134 / 5 / 11</td><td>74</td></tr>
                           <tr><th>Tabu</th><td>+7.75%</td><td>139 / 4 / 7</td><td>18</td></tr>
@@ -162,7 +161,7 @@
               <div class="rq-summary">
                 <h2 data-i18n="rq5Title">RQ5 · 最优性</h2>
                 <p class="rq-question" data-i18n="rq5Question">在可精确求解的小案例上，FPTR 距离最优多远？</p>
-                <p data-i18n="rq5Body">Full 在 12 个独立动态规划校准案例中有 8 个达到全局最优；最优差距中位数为 0%、均值 3.19%、最大 25%。</p>
+                <p data-i18n="rq5Body">完整配置（Full）在 12 个独立动态规划校准案例中有 8 个达到全局最优；最优差距中位数为 0%、均值 3.19%、最大 25%。</p>
               </div>
               <div>
                 <div class="exact-metrics">
@@ -208,7 +207,7 @@
                 <p><strong>150</strong> <span data-i18n="protocolInstances">固定实例</span> · <strong>5 × 30</strong> <span data-i18n="protocolRegimes">五种规模与压力场景</span> · <strong>5</strong> <span data-i18n="protocolRepeats">每实例独立重复</span> · <strong>15,360</strong> <span data-i18n="protocolLaunches">内部与外部正式启动总数</span></p>
               </div>
             </details>
-            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。当前实验图为经审计的历史 PNG 回退；无面板字母、大字号的 Web 原生图与手机专用图，须在正式结果数据包公开后重新生成。所有性能主张仍应由重生成工件或单独提供的证据复核。</span></p></div>
+            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">公开版本包含代码与经审计的 PNG 图件；性能主张以论文工件和可复核证据为准。</span></p></div>
           </div>
         </section>
       </main>

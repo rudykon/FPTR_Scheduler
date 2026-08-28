@@ -22,7 +22,7 @@
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler 首页" data-i18n-aria="brandHomeAria"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
           <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
@@ -33,8 +33,8 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><a href="../problem/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/problem/" data-locale="en" lang="en">EN</a></div>
-          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
+          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria"><a href="../problem/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/problem/" data-locale="en" lang="en">EN</a></div>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub 仓库" data-i18n-aria="githubAria"></a>
         </div>
       </header>
 
@@ -61,10 +61,10 @@
                 <h3 data-i18n="scenarioQuestionTitle">调度器每个周期回答什么？</h3>
                 <p data-i18n="scenarioQuestionBody">激活哪些子带—波束组合，并把哪些用户放到每个资源上；结果必须在截止时间前完整序列化且通过全部约束。</p>
               </aside>
-              <div class="key-symbols" style="grid-column: 1 / -1" aria-label="Core model symbols">
+              <div class="key-symbols" style="grid-column: 1 / -1" aria-label="核心模型符号" data-i18n-aria="coreSymbolsAria">
                 <article><math class="inline-math"><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub></math><span data-i18n="symbolActivationMeaning">子带—波束激活</span></article>
-                <article><math class="inline-math"><msub><mi>G</mi><mi>r</mi></msub></math><span data-i18n="symbolGroupMeaning">资源上的用户集合</span></article>
-                <article><math class="inline-math"><msub><mi>B</mi><mi>u</mi></msub></math><span data-i18n="symbolBufferMeaning">用户缓存</span></article>
+                <article><math class="inline-math"><msub><mi>G</mi><mi>r</mi></msub></math><span data-i18n="symbolGroupMeaning">资源 r 的用户集合</span></article>
+                <article><math class="inline-math"><msub><mi>B</mi><mi>u</mi></msub></math><span data-i18n="symbolBufferMeaning">用户 u 的缓存</span></article>
                 <article><math class="inline-math"><mi>D</mi></math><span data-i18n="symbolDeadlineMeaning">外部截止时间</span></article>
               </div>
               <details class="symbol-details" style="grid-column: 1 / -1">
@@ -75,10 +75,10 @@
                   <table class="symbol-table">
                     <thead><tr><th data-i18n="symbolLabel">符号</th><th data-i18n="meaningLabel">含义</th><th data-i18n="roleLabel">在模型中的角色</th></tr></thead>
                     <tbody>
-                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>U</mi></math></th><td data-i18n="modelUsers">用户集合</td><td data-i18n="symbolUsersRole">被服务的有限缓存业务实体</td></tr>
-                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>R</mi></math></th><td data-i18n="modelResources">资源集合</td><td data-i18n="symbolResourcesRole">承载用户分配的离散资源块</td></tr>
-                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>T</mi></math></th><td data-i18n="modelSubbands">子带集合</td><td data-i18n="symbolSubbandsRole">资源显式属于一至两个子带</td></tr>
-                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>P</mi></math></th><td data-i18n="modelBeams">波束集合</td><td data-i18n="symbolBeamsRole">受全局预算与子带掩码共同约束</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>U</mi></math></th><td data-i18n="modelUsers">用户</td><td data-i18n="symbolUsersRole">被服务的有限缓存业务实体</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>R</mi></math></th><td data-i18n="modelResources">资源</td><td data-i18n="symbolResourcesRole">承载用户分配的离散资源块</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>T</mi></math></th><td data-i18n="modelSubbands">子带</td><td data-i18n="symbolSubbandsRole">资源显式属于一至两个子带</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>P</mi></math></th><td data-i18n="modelBeams">波束</td><td data-i18n="symbolBeamsRole">受全局预算与子带掩码共同约束</td></tr>
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>T</mi><mi>r</mi></msub></math></th><td data-i18n="symbolMembershipMeaning">资源的子带成员集合</td><td data-i18n="symbolMembershipRole">包含一至两个子带，成员可以不相邻</td></tr>
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>d</mi><mi>r</mi></msub></math></th><td data-i18n="symbolSpanMeaning">资源成员的含端点跨度</td><td data-i18n="symbolSpanRole">归一化所选波束能力</td></tr>
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>L</mi></math></th><td data-i18n="symbolBudgetMeaning">全局波束预算</td><td data-i18n="symbolBudgetRole">限制所有子带上的激活总数</td></tr>
@@ -228,7 +228,7 @@
                 <p class="equation-note" data-i18n="equation7Note">式（7）中的约束（2）与（3）分别对应上方的激活预算和合法共享域；有限缓存与硬截止共同构成交付契约。</p>
               </div>
               <aside class="callout">
-                <h3 data-i18n="trafficMapTitle">有效链路值先经过阶梯函数，再计入传输量。</h3>
+                <h3 data-i18n="trafficMapTitle">阶梯流量映射</h3>
                 <p data-i18n="trafficMapBody">这个阶梯函数是单快照的确定性流量抽象，不是连续物理层速率定律。</p>
               </aside>
               <details class="traffic-details" style="grid-column: 1 / -1">
@@ -244,7 +244,7 @@
 
             <section class="editorial-section">
               <div class="section-heading">
-                <p class="section-kicker" data-i18n="constraintKicker">约束结构</p>
+                <p class="section-kicker" data-i18n="constraintKicker">6 类耦合约束</p>
                 <h2 data-i18n="constraintTitle">约束结构</h2>
                 <p data-i18n="constraintBody">无线激活决定可用能力，资源共享决定组合合法性，交付契约再把有限缓存与硬截止时间施加到完整输出上。</p>
               </div>
@@ -277,7 +277,7 @@
               </div>
               <div class="risk-compare">
                 <article class="risk-path bad"><h3 data-i18n="mutatingTitle">直接修改 live solution</h3><p data-i18n="mutatingBody">局部编辑 → 尚未修复全部约束 → 计时结束 → 当前解不可发布。</p></article>
-                <article class="risk-path good"><h3 data-i18n="transactionTitle">隔离候选 + 事务门</h3><p data-i18n="transactionBody">incumbent 保持不变 → 私有候选完成并验证 → 通过则整体提交，否则整体丢弃。</p></article>
+                <article class="risk-path good"><h3 data-i18n="transactionTitle">隔离候选 + 事务门</h3><p data-i18n="transactionBody">当前可行解保持不变 → 私有候选完成并验证 → 通过则整体提交，否则整体丢弃。</p></article>
               </div>
               <a class="button button-primary" href="../method/" style="margin-top: 1.5rem"><span data-i18n="continueMethod">继续阅读 FPTR 方法</span><span aria-hidden="true">→</span></a>
             </section>

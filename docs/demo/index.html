@@ -34,7 +34,7 @@
 
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home">
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler 首页" data-i18n-aria="brandHomeAria">
           <img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" />
         </a>
 
@@ -50,7 +50,7 @@
         </nav>
 
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language">
+          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria">
             <a href="../demo/" data-locale="zh" class="active" aria-current="page">中</a>
             <a href="../en/demo/" data-locale="en" lang="en">EN</a>
           </div>
@@ -59,7 +59,8 @@
             href="https://github.com/rudykon/FPTR_Scheduler"
             target="_blank"
             rel="noreferrer"
-            aria-label="GitHub repository"
+            aria-label="GitHub 仓库"
+            data-i18n-aria="githubAria"
           ></a>
         </div>
       </header>
@@ -72,7 +73,7 @@
             <p class="demo-intro" data-i18n="intro">
               同一输入、同一预算，实时运行 FPTR 与 7 个参考方法。
             </p>
-            <div class="hero-badges" aria-label="Demo properties">
+            <div class="hero-badges" aria-label="Demo 特性" data-i18n-aria="demoPropertiesAria">
               <span><i class="dot green"></i><span data-i18n="realSnapshots">实时 C++17 WebAssembly</span></span>
               <span><i class="dot blue"></i><span data-i18n="audit">独立验证器</span></span>
               <span><i class="dot violet"></i><span data-i18n="freeStatic">在本地浏览器运行</span></span>
@@ -170,7 +171,7 @@
                 </div>
                 <span id="comparisonStatus" class="comparison-status">8 C++ / WASM</span>
               </div>
-              <div id="comparisonBars" class="comparison-bars chart-empty" aria-label="Live algorithm score comparison"></div>
+              <div id="comparisonBars" class="comparison-bars chart-empty" aria-label="实时算法得分比较" data-i18n-aria="liveComparisonAria"></div>
               <details class="comparison-table-details">
                 <summary data-i18n="comparisonTableDetails">展开完整算法比较表</summary>
                 <div class="table-scroll comparison-table-wrap">
@@ -180,7 +181,7 @@
                         <th data-i18n="method">算法</th>
                         <th data-i18n="score">得分</th>
                         <th data-i18n="demandServed">需求满足率</th>
-                        <th data-i18n="versusFptr">相对 FPTR</th>
+                        <th data-i18n="versusFptr">相对所选 FPTR</th>
                         <th data-i18n="algorithmTime">算法时间</th>
                         <th data-i18n="searchWork">搜索工作量</th>
                         <th data-i18n="validation">验证</th>
@@ -241,7 +242,7 @@
                     <span data-i18n="none">未用</span><i></i><i></i><i></i><i></i><span data-i18n="shared">共享</span>
                   </div>
                 </div>
-                <div class="canvas-scroll"><canvas id="allocationCanvas" aria-label="User by resource allocation heatmap"></canvas></div>
+                <div class="canvas-scroll"><canvas id="allocationCanvas" aria-label="用户与资源分配热力图" data-i18n-aria="allocationHeatmapAria"></canvas></div>
                 <div id="allocationTooltip" class="chart-tooltip" role="status"></div>
               </article>
 
@@ -252,7 +253,7 @@
                     <h3 data-i18n="demandTitle">已传输与未满足需求</h3>
                   </div>
                 </div>
-                <div class="canvas-scroll"><canvas id="demandCanvas" aria-label="Per-user delivered and unmet demand chart"></canvas></div>
+                <div class="canvas-scroll"><canvas id="demandCanvas" aria-label="各用户已传输量与未满足需求图" data-i18n-aria="demandChartAria"></canvas></div>
                 <div id="demandTooltip" class="chart-tooltip" role="status"></div>
               </article>
 
@@ -280,7 +281,7 @@
                 </div>
               </div>
             </div>
-            <div class="tabs" role="tablist" aria-label="Detailed result views">
+            <div class="tabs" role="tablist" aria-label="详细结果视图" data-i18n-aria="detailedViewsAria">
               <button class="tab active" data-tab="audit" role="tab" aria-selected="true" data-i18n="auditTrail">阶段审计</button>
               <button class="tab" data-tab="users" role="tab" aria-selected="false" data-i18n="userDetail">用户明细</button>
               <button class="tab" data-tab="raw" role="tab" aria-selected="false" data-i18n="rawOutput">原始输出</button>

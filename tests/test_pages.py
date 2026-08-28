@@ -10,6 +10,7 @@ import unittest
 from html.parser import HTMLParser
 from pathlib import Path
 
+from tools.build_pages import validate_template_fallbacks
 from tools.build_web_figure_fallbacks import validate_native_svg
 
 
@@ -166,7 +167,9 @@ class PagesContractTests(unittest.TestCase):
         self.assertEqual(len(re.findall(r'<a class="summary-card [^"]+" href="[^"]+">', home)), 3)
         self.assertNotIn('class="reading-grid"', home)
         self.assertNotIn('class="home-reading"', home)
-        self.assertEqual(len(re.findall(r"<h2\b", home)), 0)
+        self.assertEqual(len(re.findall(r"<h2\b", home)), 1)
+        self.assertRegex(home, r'<h2\b[^>]*data-i18n="coreFindings"')
+        self.assertNotIn('class="home-secondary-links"', home)
         for key in ("constraintCountLabel", "gateCountLabel", "beamFirstGainLabel"):
             self.assertIn(f'data-i18n="{key}"', home)
 
@@ -178,13 +181,25 @@ class PagesContractTests(unittest.TestCase):
         self.assertEqual(evidence.count('class="evidence-highlights"'), 1)
         highlights = re.search(r'<div class="evidence-highlights"[^>]*>(.*?)</div>', evidence, re.DOTALL)
         self.assertIsNotNone(highlights)
-        self.assertEqual(highlights.group(1).count("<article>"), 3)
+        self.assertEqual(highlights.group(1).count("<a "), 3)
+        for target in ("quality", "deadline", "exact"):
+            self.assertIn(f'href="#{target}"', highlights.group(1))
         self.assertEqual(evidence.count('class="secondary-figure"'), 2)
         self.assertEqual(evidence.count('class="figure-size-link"'), 6)
         self.assertNotIn('class="terms terms-desktop"', evidence)
         self.assertNotIn('class="terms-mobile"', evidence)
         for question in range(1, 6):
             self.assertIn(f'data-i18n="rq{question}Question"', evidence)
+        for section_id in ("quality", "deadline"):
+            section = re.search(
+                rf'<section class="rq" id="{section_id}">(.*?)(?=<section class="rq"|<section class="limitations")',
+                evidence,
+                re.DOTALL,
+            )
+            self.assertIsNotNone(section)
+            self.assertNotIn('class="rq-metric', section.group(1))
+        for key in ("testRangeLabel", "matchedImplementationsLabel", "rq4Qualifier"):
+            self.assertIn(f'data-i18n="{key}"', evidence)
         for key in (
             "stageGainAlt",
             "scenarioGainAlt",
@@ -207,6 +222,7 @@ class PagesContractTests(unittest.TestCase):
         self.assertEqual(timeline.group(1).count('class="stage'), 6)
         self.assertIn('data-i18n-aria="budgetBAria"', method)
         self.assertIn('data-i18n-aria="budgetDAria"', method)
+        self.assertIn('data-i18n="paperEquationOrderNote"', method)
         for key in ("invariantSummary", "topSSummary", "methodLimitSummary", "proofDetails", "scopeDetails"):
             self.assertIn(f'data-i18n="{key}"', method)
 
@@ -223,6 +239,10 @@ class PagesContractTests(unittest.TestCase):
         zh = json.loads((DOCS / "content/zh.json").read_text(encoding="utf-8"))
         en = json.loads((DOCS / "content/en.json").read_text(encoding="utf-8"))
         self.assertEqual(set(zh), set(en))
+        self.assertEqual(zh["runLabel"], "运行公开样例")
+        self.assertEqual(en["runLabel"], "Run the public sample")
+        self.assertEqual(zh["stageFinalizeShort"], "验证输出")
+        self.assertEqual(en["stageFinalizeShort"], "Validate and serialize")
         pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
             source = page.read_text(encoding="utf-8")
@@ -243,6 +263,25 @@ class PagesContractTests(unittest.TestCase):
                 self.assertIn("<summary", details, f"details without summary in {page}")
             for image in re.findall(r"<img\b[^>]*>", source, flags=re.DOTALL):
                 self.assertRegex(image, r'\balt="[^"]*"', f"image without alt in {page}")
+
+    def test_chinese_template_fallbacks_and_aria_match_catalog(self) -> None:
+        zh = json.loads((DOCS / "content/zh.json").read_text(encoding="utf-8"))
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        for page in pages:
+            source = page.read_text(encoding="utf-8")
+            validate_template_fallbacks(page.relative_to(DOCS), source, zh)
+        for page, key in (
+            (DOCS / "problem/index.html", "coreSymbolsAria"),
+            (DOCS / "method/index.html", "transactionDiagramAria"),
+            (DOCS / "evidence/index.html", "keyResultsAria"),
+            (DOCS / "evidence/index.html", "evidenceSectionsAria"),
+            (DOCS / "demo/index.html", "demoPropertiesAria"),
+            (DOCS / "demo/index.html", "liveComparisonAria"),
+            (DOCS / "demo/index.html", "allocationHeatmapAria"),
+            (DOCS / "demo/index.html", "demandChartAria"),
+            (DOCS / "demo/index.html", "detailedViewsAria"),
+        ):
+            self.assertIn(f'data-i18n-aria="{key}"', page.read_text(encoding="utf-8"))
 
     def test_acm_equation_contract(self) -> None:
         problem = (DOCS / "problem/index.html").read_text(encoding="utf-8")
@@ -351,6 +390,8 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn('html[lang="en"] .home-hero h1', site_css)
         self.assertIn('html[lang="en"] .page-hero h1', site_css)
         self.assertIn('html[lang="en"] .page-hero p:last-of-type', site_css)
+        self.assertIn("--muted: #506f89", site_css)
+        self.assertNotIn('html[lang="en"] .home-hero .hero-actions .button:last-child', site_css)
 
         site_js = (DOCS / "assets/site.js").read_text(encoding="utf-8")
         for behavior in ("nav-toggle", "rq-toggle", "copy-code", "dataset.scrollRegion"):
@@ -418,6 +459,9 @@ class PagesContractTests(unittest.TestCase):
             "npx playwright install --with-deps chromium",
         ):
             self.assertIn(required, workflow)
+        browser_test = (ROOT / "tests/browser_pages.js").read_text(encoding="utf-8")
+        for required in ("contrastIssues", "heroButtons", "fullPage: true"):
+            self.assertIn(required, browser_test)
         browser_test = (ROOT / "tests/browser_pages.js").read_text(encoding="utf-8")
         for required in (
             "{ width: 360, height: 800 }",

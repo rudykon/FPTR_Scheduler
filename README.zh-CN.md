@@ -40,12 +40,12 @@
 <a id="overview"></a>
 ## 项目概览
 
-FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务式细化）的缩写，是面向截止时间约束联合波束与资源分配的单线程启发式调度器。它始终保留一个可发布的可行 incumbent，在私有状态中构造每个细化候选，并且只有当候选解完整、及时、结构合法且严格提升传输量时才提交。
+FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务式细化）的缩写，是面向截止时间约束联合波束与资源分配的单线程启发式调度器。它始终保留一个可发布的当前可行解（incumbent），在私有状态中构造每个细化候选，并且只有当候选解完整、及时、结构合法且严格提升传输量时才提交。
 
 | 目标 | 实现方式 | 公开证据路径 |
 | --- | --- | --- |
-| 在紧截止时间内返回合法分配 | 空分配兜底 + 随时可发布的可行 incumbent | 独立 Python 解析器、验证器和目标值重算 |
-| 在耦合约束下提升传输量 | 从 `Base` 到 `Full` 的累积 FPTR 阶段 | 阶段轨迹与可复现合成实验框架 |
+| 在紧截止时间内返回合法分配 | 空分配兜底 + 随时可发布的当前可行解 | 独立 Python 解析器、验证器和目标值重算 |
+| 在耦合约束下提升传输量 | 从基础构造（`Base`）到完整配置（`Full`）的累积 FPTR 阶段 | 阶段轨迹与可复现合成实验框架 |
 | 保持实验输出可审计 | 显式输出到被忽略的本地目录 | 单元测试、快速集成运行和图件生成脚本 |
 
 调度器从标准输入读取一个分配实例，并将分配结果写入标准输出。可选轨迹写入标准错误，因此诊断信息不会改变解的输出格式。
@@ -64,7 +64,7 @@ FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务
 | `Remask` | 基于剩余需求的掩码修复 |
 | `Full` | 在前述阶段之后执行双资源 ruin-and-recreate |
 
-各阶段共享同一提交规则：被拒绝、超时、不完整或不可行的候选解不能修改 incumbent。
+各阶段共享同一提交规则：被拒绝、超时、不完整或不可行的候选解不能修改当前可行解。
 
 <a id="visual-summary"></a>
 ## 图示概览
@@ -81,7 +81,7 @@ FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务
     <img src="docs/images/Deadline_Aware_FPTR_Scheduler.png?v=20260806-2338" alt="面向截止时间的 FPTR 调度器" width="92%">
   </a>
 </p>
-<p align="center"><em>图 2｜每个有界细化阶段都构造私有候选解，并且只能通过提交或丢弃验证进入 incumbent。</em></p>
+<p align="center"><em>图 2｜每个有界细化阶段都构造私有候选解，并且只能通过提交或丢弃验证进入当前可行解。</em></p>
 
 <details>
 <summary><strong>展开结果与压力测试图</strong></summary>

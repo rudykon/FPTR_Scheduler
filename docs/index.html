@@ -22,7 +22,7 @@
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="./" aria-label="FPTR Scheduler home"><img src="./assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
+        <a class="brand-link" href="./" aria-label="FPTR Scheduler 首页" data-i18n-aria="brandHomeAria"><img src="./assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
           <a href="./" aria-current="page"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
@@ -33,11 +33,11 @@
           <a href="./demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language">
+          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria">
             <a href="./" data-locale="zh" class="active" aria-current="page">中</a>
             <a href="./en/" data-locale="en" lang="en">EN</a>
           </div>
-          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub 仓库" data-i18n-aria="githubAria"></a>
         </div>
       </header>
 
@@ -54,14 +54,14 @@
             </div>
           </div>
           <figure class="home-visual">
-            <img src="./assets/brand/hero-light-1280x720.webp" alt="智能基站协调波束与资源块" data-i18n-alt="heroArtAlt" />
-            <figcaption data-i18n="heroCaption">一次有界调度：可行 incumbent 始终可发布，候选只在通过事务门后生效。</figcaption>
+            <img src="./assets/brand/hero-light-1280x720.webp" alt="智能基站协调彩色资源块与截止路径" data-i18n-alt="heroArtAlt" />
+            <figcaption data-i18n="heroCaption">一次有界调度：当前可行解始终可发布，候选仅在通过事务门后生效。</figcaption>
           </figure>
         </section>
 
         <section class="home-summary">
           <div class="section-wrap">
-            <p class="section-kicker" data-i18n="coreFindings">核心结论</p>
+            <h2 class="section-kicker" data-i18n="coreFindings">核心结论</h2>
             <div class="summary-grid">
               <a class="summary-card problem-card" href="./problem/">
                 <span>01 · MODEL</span><strong>6<small data-i18n="constraintCountLabel">类耦合约束</small></strong>
@@ -78,13 +78,9 @@
               <a class="summary-card evidence-card" href="./evidence/">
                 <span>03 · EVIDENCE</span><strong>+3.83%<small data-i18n="beamFirstGainLabel">vs BeamFirst</small></strong>
                 <h3 data-i18n="snapshotResultTitle">结果</h3>
-                <p data-i18n="snapshotResultBody">Full 提升调度质量，同时满足外部时限。</p>
+                <p data-i18n="snapshotResultBody">完整配置提升调度质量，同时满足 100 ms 外部时限。</p>
                 <b class="card-arrow" aria-hidden="true">→</b>
               </a>
-            </div>
-            <div class="secondary-links home-secondary-links">
-              <a href="./reproduce/"><span data-i18n="navReproduce">复现</span><b aria-hidden="true">↗</b></a>
-              <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub<b aria-hidden="true">↗</b></a>
             </div>
             <p class="release-line"><strong data-i18n="release">Code-only public release</strong><span aria-hidden="true"> · </span><span data-i18n="releaseShort">公开代码与可执行 Demo；实验结论以论文工件为准。</span></p>
           </div>

@@ -57,6 +57,47 @@ def replace_i18n(text: str, strings: dict[str, str]) -> str:
     return pattern.sub(replace, text)
 
 
+def normalized_fallback(value: str) -> str:
+    """Return the text that a reader receives from an HTML fallback."""
+    without_tags = re.sub(r"<[^>]+>", " ", value)
+    return " ".join(html.unescape(without_tags).split())
+
+
+def validate_template_fallbacks(relative: Path, source: str, zh: dict[str, str]) -> None:
+    """Keep checked-in Chinese fallbacks identical to the canonical catalog."""
+    text_pattern = re.compile(
+        r'<(?P<tag>[a-z][\w-]*)\b[^>]*\bdata-i18n="(?P<key>[^"]+)"[^>]*>'
+        r'(?P<body>.*?)'
+        r'</(?P=tag)>',
+        re.IGNORECASE | re.DOTALL,
+    )
+    for match in text_pattern.finditer(source):
+        key = match.group("key")
+        fallback = normalized_fallback(match.group("body"))
+        expected = normalized_fallback(zh[key])
+        if fallback != expected:
+            raise SystemExit(
+                f"{relative}: HTML fallback differs from zh.json for {key}: "
+                f"{fallback!r} != {expected!r}"
+            )
+
+    for data_name, attr_name in (("data-i18n-alt", "alt"), ("data-i18n-aria", "aria-label")):
+        tag_pattern = re.compile(
+            rf'<[a-z][\w-]*\b(?P<attrs>[^>]*\b{data_name}="(?P<key>[^"]+)"[^>]*)>',
+            re.IGNORECASE,
+        )
+        for match in tag_pattern.finditer(source):
+            key = match.group("key")
+            attr = re.search(rf'\b{attr_name}="([^"]*)"', match.group("attrs"))
+            fallback = normalized_fallback(attr.group(1) if attr else "")
+            expected = normalized_fallback(zh[key])
+            if fallback != expected:
+                raise SystemExit(
+                    f"{relative}: {attr_name} fallback differs from zh.json for {key}: "
+                    f"{fallback!r} != {expected!r}"
+                )
+
+
 def replace_attribute_i18n(text: str, strings: dict[str, str], data_name: str, attr_name: str) -> str:
     pattern = re.compile(
         rf'<(?P<tag>[a-z][\w-]*)\b(?P<attrs>[^>]*\b{re.escape(data_name)}="(?P<key>[^"]+)"[^>]*)>',
@@ -140,8 +181,9 @@ def render_page(template: str, relative: Path, locale: str, strings: dict[str, s
     )
     output = re.sub(r'(\s*<link\b[^>]*\brel="canonical"[^>]*>)', rf'\1\n{alternates}', output, count=1)
 
+    language_aria = html.escape(strings["languageAria"], quote=True)
     switch = (
-        '<div class="language-switch" aria-label="Language">'
+        f'<div class="language-switch" aria-label="{language_aria}" data-i18n-aria="languageAria">'
         f'<a href="{route_path(relative, "zh")}" data-locale="zh"'
         f'{" class=\"active\" aria-current=\"page\"" if locale == "zh" else ""}>中</a>'
         f'<a href="{route_path(relative, "en")}" data-locale="en" lang="en"'
@@ -192,6 +234,9 @@ def build(source_dir: Path, output_dir: Path, prune_unused: bool = False) -> Non
                 f"{locale}.json has unused translation keys: {', '.join(unused)}. "
                 "Run build_pages.py once with --prune-unused."
             )
+
+    for relative, template in templates.items():
+        validate_template_fallbacks(relative, template, content["zh"])
 
     for relative, template in templates.items():
         root_destination = output_dir / relative

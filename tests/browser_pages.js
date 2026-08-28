@@ -87,31 +87,106 @@ async function visible(element) {
 }
 
 async function assertLayout(page, route, viewport) {
-  const metrics = await page.evaluate(() => ({
-    clientWidth: document.documentElement.clientWidth,
-    scrollWidth: document.documentElement.scrollWidth,
-    heroHeight: document.querySelector(".page-hero, .home-hero")?.getBoundingClientRect().height || 0,
-    demoHeroHeight: document.querySelector(".demo-hero")?.getBoundingClientRect().height || 0,
-    smallText: [...document.querySelectorAll("main p, main li, main a, main button, main summary, main label, main th, main td, main h1, main h2, main h3, .site-footer p, .main-nav a")]
+  const metrics = await page.evaluate(() => {
+    const isVisible = (node) => {
+      const style = getComputedStyle(node);
+      const box = node.getBoundingClientRect();
+      return style.display !== "none" && style.visibility !== "hidden" && box.width > 0 && box.height > 0;
+    };
+    const parseColor = (value) => {
+      const channels = value.match(/[\d.]+/g)?.map(Number);
+      if (!channels || channels.length < 3) return null;
+      return { r: channels[0], g: channels[1], b: channels[2], a: channels[3] ?? 1 };
+    };
+    const composite = (foreground, background) => {
+      const alpha = foreground.a + background.a * (1 - foreground.a);
+      if (alpha === 0) return { r: 0, g: 0, b: 0, a: 0 };
+      return {
+        r: (foreground.r * foreground.a + background.r * background.a * (1 - foreground.a)) / alpha,
+        g: (foreground.g * foreground.a + background.g * background.a * (1 - foreground.a)) / alpha,
+        b: (foreground.b * foreground.a + background.b * background.a * (1 - foreground.a)) / alpha,
+        a: alpha
+      };
+    };
+    const effectiveBackground = (node) => {
+      const layers = [];
+      for (let current = node; current instanceof Element; current = current.parentElement) {
+        const color = parseColor(getComputedStyle(current).backgroundColor);
+        if (color && color.a > 0) layers.push(color);
+      }
+      return layers.reverse().reduce(
+        (background, foreground) => composite(foreground, background),
+        { r: 255, g: 255, b: 255, a: 1 }
+      );
+    };
+    const linear = (channel) => {
+      const value = channel / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    };
+    const luminance = (color) => 0.2126 * linear(color.r) + 0.7152 * linear(color.g) + 0.0722 * linear(color.b);
+    const contrast = (left, right) => {
+      const lighter = Math.max(luminance(left), luminance(right));
+      const darker = Math.min(luminance(left), luminance(right));
+      return (lighter + 0.05) / (darker + 0.05);
+    };
+    const mutedProbe = document.createElement("span");
+    mutedProbe.style.color = "var(--muted)";
+    document.body.append(mutedProbe);
+    const muted = parseColor(getComputedStyle(mutedProbe).color);
+    mutedProbe.remove();
+    const sameRgb = (left, right) => left && right
+      && Math.abs(left.r - right.r) < 1
+      && Math.abs(left.g - right.g) < 1
+      && Math.abs(left.b - right.b) < 1;
+    const contrastIssues = [...document.querySelectorAll("body *")]
       .filter((node) => {
-        if (!node.textContent.trim() || node.closest("svg, pre, code, sub, sup, [aria-hidden='true']")) return false;
-        const style = getComputedStyle(node);
-        const box = node.getBoundingClientRect();
-        return style.display !== "none" && style.visibility !== "hidden" && box.width > 0 && box.height > 0;
+        const hasDirectText = [...node.childNodes].some(
+          (child) => child.nodeType === Node.TEXT_NODE && child.textContent.trim()
+        );
+        return hasDirectText && isVisible(node) && sameRgb(parseColor(getComputedStyle(node).color), muted);
       })
-      .map((node) => ({ text: node.textContent.trim().slice(0, 60), size: parseFloat(getComputedStyle(node).fontSize) }))
-      .filter((item) => item.size < 13.9),
-    unfocusableScrollRegions: [...document.querySelectorAll("[data-scroll-region='true']")]
-      .filter((node) => node.tabIndex < 0)
-      .map((node) => node.className)
-  }));
+      .map((node) => {
+        const ratio = contrast(muted, effectiveBackground(node));
+        return { text: node.textContent.trim().slice(0, 60), ratio: Number(ratio.toFixed(2)) };
+      })
+      .filter((item) => item.ratio < 4.5);
+    return {
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      heroHeight: document.querySelector(".page-hero, .home-hero")?.getBoundingClientRect().height || 0,
+      demoHeroHeight: document.querySelector(".demo-hero")?.getBoundingClientRect().height || 0,
+      heroButtons: [...document.querySelectorAll(".home-hero .hero-actions .button")]
+        .filter(isVisible)
+        .map((node) => {
+          const box = node.getBoundingClientRect();
+          return { top: box.top, width: box.width };
+        }),
+      contrastIssues,
+      smallText: [...document.querySelectorAll("main p, main li, main a, main button, main summary, main label, main th, main td, main h1, main h2, main h3, .site-footer p, .main-nav a")]
+        .filter((node) => {
+          if (!node.textContent.trim() || node.closest("svg, pre, code, sub, sup, [aria-hidden='true']")) return false;
+          return isVisible(node);
+        })
+        .map((node) => ({ text: node.textContent.trim().slice(0, 60), size: parseFloat(getComputedStyle(node).fontSize) }))
+        .filter((item) => item.size < 13.9),
+      unfocusableScrollRegions: [...document.querySelectorAll("[data-scroll-region='true']")]
+        .filter((node) => node.tabIndex < 0)
+        .map((node) => node.className)
+    };
+  });
   assert.ok(metrics.scrollWidth <= metrics.clientWidth + 1, `${route.name} overflows at ${viewport.width}px: ${metrics.scrollWidth} > ${metrics.clientWidth}`);
   assert.deepEqual(metrics.smallText, [], `${route.name} contains semantic text below 14px: ${JSON.stringify(metrics.smallText)}`);
+  assert.deepEqual(metrics.contrastIssues, [], `${route.name} contains muted text below 4.5:1 contrast: ${JSON.stringify(metrics.contrastIssues)}`);
   assert.deepEqual(metrics.unfocusableScrollRegions, [], `${route.name} has an unfocusable scroll region`);
   if (route.interior) assert.ok(metrics.heroHeight <= 360, `${route.name} hero is ${metrics.heroHeight}px high`);
   if (route.demo) assert.ok(metrics.demoHeroHeight <= 240, `${route.name} Demo hero is ${metrics.demoHeroHeight}px high`);
   if (viewport.width <= 390 && route.home === "zh") assert.ok(metrics.heroHeight <= 680, `Chinese mobile hero is ${metrics.heroHeight}px high`);
-  if (viewport.width <= 390 && route.home === "en") assert.ok(metrics.heroHeight <= 720, `English mobile hero is ${metrics.heroHeight}px high`);
+  if (viewport.width <= 390 && route.home === "en") {
+    assert.ok(metrics.heroHeight <= 720, `English mobile hero is ${metrics.heroHeight}px high`);
+    assert.equal(metrics.heroButtons.length, 2, "English mobile home must have two actions");
+    assert.ok(Math.abs(metrics.heroButtons[0].top - metrics.heroButtons[1].top) <= 2, "English mobile home actions must share one row");
+    assert.ok(Math.abs(metrics.heroButtons[0].width - metrics.heroButtons[1].width) <= 2, "English mobile home actions must have equal widths");
+  }
 }
 
 async function assertMobileNavigation(page, route) {
@@ -204,7 +279,7 @@ async function runLiveDemo(browser, origin, { path: routePath, status, screensho
   const postRunWidth = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
   assert.ok(postRunWidth.scroll <= postRunWidth.client + 1, `${routePath} overflows after run: ${postRunWidth.scroll} > ${postRunWidth.client}`);
   await assertLoadedResources(page, { name: routePath }, errors);
-  await page.screenshot({ path: path.join(screenshots, screenshot) });
+  await page.screenshot({ path: path.join(screenshots, screenshot), fullPage: true });
   await context.close();
 }
 
@@ -265,7 +340,7 @@ async function runLiveDemo(browser, origin, { path: routePath, status, screensho
         await assertLoadedResources(page, route, responseErrors);
         const folder = path.join(screenshots, `${viewport.width}x${viewport.height}`);
         await fs.promises.mkdir(folder, { recursive: true });
-        await page.screenshot({ path: path.join(folder, `${route.name}.png`) });
+        await page.screenshot({ path: path.join(folder, `${route.name}.png`), fullPage: true });
         assert.deepEqual(pageErrors, [], `browser errors on ${route.name} at ${viewport.width}px: ${pageErrors.join("; ")}`);
         await page.close();
         routeChecks += 1;

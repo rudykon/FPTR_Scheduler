@@ -22,7 +22,7 @@
     <a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
     <div class="site-shell" id="top">
       <header class="site-header">
-        <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
+        <a class="brand-link" href="../" aria-label="FPTR Scheduler 首页" data-i18n-aria="brandHomeAria"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
           <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
@@ -33,8 +33,8 @@
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="Language"><a href="../reproduce/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/reproduce/" data-locale="en" lang="en">EN</a></div>
-          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub repository"></a>
+          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria"><a href="../reproduce/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/reproduce/" data-locale="en" lang="en">EN</a></div>
+          <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub 仓库" data-i18n-aria="githubAria"></a>
         </div>
       </header>
 
@@ -78,7 +78,7 @@ cp space/data/cases/small-balanced.in \
   --output-dir /tmp/fptr-output</code></pre></div></article>
               </div>
               <details class="experiment-command">
-                <summary data-i18n="experimentLabel">运行快速实验</summary>
+                <summary data-i18n="experimentLabel">快速实验</summary>
                 <div class="details-body"><div class="code-shell"><button class="copy-code" type="button"><span data-copy-default data-i18n="copyCode">复制命令</span><span data-copy-success data-i18n="copiedCode" hidden>已复制</span></button><pre data-shell tabindex="0" aria-label="运行快速实验命令" data-i18n-aria="experimentCodeAria"><code class="language-bash">python3 experiments/paper_experiments.py \
   --quick \
   --out /tmp/fptr-quick-results</code></pre></div></div>
