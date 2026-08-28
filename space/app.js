@@ -377,7 +377,7 @@ function renderProvenance(item, current){
   const executedStage=state.data.stages.find((entry)=>entry.id===item.stageId);
   const stageLabel=executedStage?labelFor(executedStage):item.stageId;
   const seed=item.seed===null||item.seed===undefined?"—":item.seed;
-  const hostLabel = location.hostname.endsWith("github.io") ? "GitHub Pages" : "Static Space";
+  const hostLabel = location.hostname.endsWith("github.io") ? "GitHub Pages" : "Browser host";
   $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("inputName")}</span><b>${escapeHtml(item.inputName)}</b></article><article><span>${t("fixedSeed")}</span><b>${escapeHtml(seed)}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(stageLabel)} · ${item.budgetMs} ms</b></article><article><span>${t("runIdentity")}</span><b>#${item.runSerial} · ${t("browserWall")} ${current.totalWallMs.toFixed(2)} ms</b></article><article><span>${t("executionMode")}</span><b>${t("liveExecution")}</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>${hostLabel}</span><b>${t("staticNote")}</b></article>`;
 }
 
