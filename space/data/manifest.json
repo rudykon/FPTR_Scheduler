@@ -1,14 +1,18 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "execution": "browser-webassembly",
   "schedulerSourceCommit": "dca2f77141c2abd8a4741b229bb9c5f3053792ec",
-  "budgets": [
-    20,
-    50,
-    87,
-    125,
-    180
-  ],
+  "timing": {
+    "internalBudget": {
+      "minimumMs": 20,
+      "maximumMs": 87,
+      "stepMs": 1,
+      "paperMs": 87
+    },
+    "lastRefinementCutoffAtPaperBudgetMs": 84,
+    "finalizationReserveMs": 3,
+    "externalDeadlineMs": 100
+  },
   "stages": [
     {
       "id": "full",

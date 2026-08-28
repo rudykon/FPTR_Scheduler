@@ -44,8 +44,9 @@ const COPY = {
     runIdentity: "Live run", browserWall: "Browser wall time", liveExecution: "Live C++17 WebAssembly in this browser",
     inputName: "Input source", browserHost: "Browser host",
     stagesUnit: "stages", iterationsUnit: "iterations",
-    recommended: "recommended", paperDefaultTitle: "paper default",
-    demandDelivery: "Demand delivery", fptrAlgorithmTime: "FPTR algorithm time", selectedStageTime: "Selected-stage time", budgetUsed: "of budget",
+    recommended: "recommended", paperDefaultTitle: "paper internal budget",
+    demandDelivery: "Demand delivery", fptrAlgorithmTime: "FPTR internal algorithm time", selectedStageTime: "Selected-stage internal time", budgetUsed: "Internal budget used",
+    browserFptrWall: "This browser's FPTR wall time", timingContract: "Timing contract",
     stageChartAria: "FPTR cumulative score by refinement stage"
   },
   zh: {
@@ -63,8 +64,9 @@ const COPY = {
     runIdentity: "实时运行", browserWall: "浏览器总耗时", liveExecution: "当前浏览器内实时执行 C++17 WebAssembly",
     inputName: "输入来源", browserHost: "浏览器主机",
     stagesUnit: "阶段", iterationsUnit: "次迭代",
-    recommended: "推荐", paperDefaultTitle: "论文默认",
-    demandDelivery: "需求交付", fptrAlgorithmTime: "FPTR 算法时间", selectedStageTime: "所选阶段用时", budgetUsed: "预算占用",
+    recommended: "推荐", paperDefaultTitle: "论文内部预算",
+    demandDelivery: "需求交付", fptrAlgorithmTime: "FPTR 内部算法时间", selectedStageTime: "所选阶段内部时间", budgetUsed: "内部预算占用",
+    browserFptrWall: "本次浏览器 FPTR 墙钟", timingContract: "时间契约",
     stageChartAria: "FPTR 各细化阶段的累计得分图"
   }
 };
@@ -101,6 +103,8 @@ const labelFor = (item) => state.language === "zh" ? item.labelZh : item.label;
 function scenario() { return state.data.scenarios.find((item) => item.id === state.scenarioId) || state.data.scenarios[0]; }
 function stageMeta() { return state.data.stages.find((item) => item.id === state.stageId); }
 function budget() { return state.budgetMs; }
+function timing() { return state.data.timing; }
+function externalDeadline() { return timing().externalDeadlineMs; }
 function enginesReady() { return Boolean(state.module && (!state.comparisonEnabled || state.baselineModule)); }
 
 function setStatus(kind, key, detail = "") {
@@ -144,27 +148,26 @@ function syncBudgetControl() {
   const slider = $("#budgetSlider");
   const control = $("#budgetControl");
   if (!slider || !control || !state.data) return;
-  const minimum = Math.min(...state.data.budgets);
-  const maximum = Math.max(...state.data.budgets);
-  const paperDefault = state.data.budgets.includes(87) ? 87 : state.data.budgets[0];
+  const config = timing().internalBudget;
+  const minimum = config.minimumMs;
+  const maximum = config.maximumMs;
+  const paperDefault = config.paperMs;
   state.budgetMs = Math.min(maximum, Math.max(minimum, Math.round(state.budgetMs)));
   const progress = 100 * (state.budgetMs - minimum) / Math.max(1, maximum - minimum);
-  const paperPosition = 100 * (paperDefault - minimum) / Math.max(1, maximum - minimum);
   slider.min = String(minimum);
   slider.max = String(maximum);
-  slider.step = "1";
+  slider.step = String(config.stepMs);
   slider.value = String(state.budgetMs);
   slider.setAttribute(
     "aria-valuetext",
     `${state.budgetMs} ms${state.budgetMs === paperDefault ? ` · ${t("paperDefaultTitle")}` : ""}`
   );
   control.style.setProperty("--budget-progress", `${progress.toFixed(3)}%`);
-  control.style.setProperty("--paper-default-position", `${paperPosition.toFixed(3)}%`);
   $("#budgetValue").value = `${state.budgetMs} ms`;
   $("#budgetValue").textContent = `${state.budgetMs} ms`;
   $("#budgetMin").textContent = `${minimum} ms`;
-  $("#budgetMax").textContent = `${maximum} ms`;
   $("#budgetPaperDefaultValue").textContent = `${paperDefault} ms`;
+  $("#externalDeadlineValue").textContent = `D = ${externalDeadline()} ms`;
 }
 
 function populateStageButtons() {
@@ -199,7 +202,7 @@ function updateKpis(item, current) {
   const cards = [
     [t("demandDelivery"), `${fmt.format(current.score)} / ${fmt.format(inst.demand)}`, `${satisfaction.toFixed(1)}%`, ""],
     [t("versus"), `${current.deltaVsBaseline >= 0 ? "+" : ""}${fmt.format(current.deltaVsBaseline)}`, `${deltaPercent >= 0 ? "+" : ""}${deltaPercent.toFixed(1)}%`, deltaClass],
-    [timeLabel, `${current.algorithmMs.toFixed(2)} / ${item.budgetMs} ms`, `${budgetPercent.toFixed(1)}% ${t("budgetUsed")}`, ""]
+    [timeLabel, `${current.algorithmMs.toFixed(2)} ms / B = ${item.budgetMs} ms`, `${t("budgetUsed")} ${budgetPercent.toFixed(1)}%`, ""]
   ];
   $("#kpiGrid").innerHTML = cards.map(([label, value, note, klass]) => `<article class="kpi ${klass}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(note)}</small></article>`).join("");
 }
@@ -355,7 +358,7 @@ function renderProvenance(item, current){
   const stageLabel=executedStage?labelFor(executedStage):item.stageId;
   const seed=item.seed===null||item.seed===undefined?"—":item.seed;
   const hostLabel = location.hostname.endsWith("github.io") ? "GitHub Pages" : t("browserHost");
-  $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("inputName")}</span><b>${escapeHtml(item.inputName)}</b></article><article><span>${t("fixedSeed")}</span><b>${escapeHtml(seed)}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(stageLabel)} · ${item.budgetMs} ms</b></article><article><span>${t("runIdentity")}</span><b>#${item.runSerial} · ${t("browserWall")} ${current.totalWallMs.toFixed(2)} ms</b></article><article><span>${t("executionMode")}</span><b>${t("liveExecution")}</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>${hostLabel}</span><b>${t("staticNote")}</b></article>`;
+  $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("inputName")}</span><b>${escapeHtml(item.inputName)}</b></article><article><span>${t("fixedSeed")}</span><b>${escapeHtml(seed)}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(stageLabel)}</b></article><article><span>${t("timingContract")}</span><b>B = ${item.budgetMs} ms · D = ${item.externalDeadlineMs} ms</b></article><article><span>${t("runIdentity")}</span><b>#${item.runSerial} · ${t("browserWall")} ${current.totalWallMs.toFixed(2)} ms</b></article><article><span>${t("executionMode")}</span><b>${t("liveExecution")}</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>${hostLabel}</span><b>${t("staticNote")}</b></article>`;
 }
 
 function populateRawOutput() {
@@ -382,7 +385,8 @@ function render(){
   const item=state.currentMeta,current=state.result;
   const executedStage=state.data.stages.find((entry)=>entry.id===item.stageId);
   const stageLabel=executedStage?labelFor(executedStage):item.stageId;
-  $("#instanceSummary").textContent=`${labelFor(item)} · ${stageLabel} · ${item.instance.users} ${t("users")} · ${item.instance.resources} ${t("resources")} · ${item.instance.beams} ${t("beams")} · ${item.budgetMs} ms`;
+  $("#instanceSummary").textContent=`${labelFor(item)} · ${stageLabel} · ${item.instance.users} ${t("users")} · ${item.instance.resources} ${t("resources")} · ${item.instance.beams} ${t("beams")} · B = ${item.budgetMs} ms · D = ${item.externalDeadlineMs} ms`;
+  $("#browserTimingSummary").textContent=`${t("browserFptrWall")}: ${current.wallMs.toFixed(2)} ms`;
   updateKpis(item,current);
   renderComparison(item,current);
   renderStageChart(current);
@@ -498,7 +502,7 @@ async function runDemo(){
     state.currentMeta={
       id:custom?"custom":preset.id,label:custom?state.customName:preset.label,labelZh:custom?state.customName:preset.labelZh,
       note:custom?`Custom local input · ${customNote}`:preset.note,noteZh:custom?`本地自定义输入 · ${customNote}`:preset.noteZh,
-      seed:externalSeed,inputName,sha256:digest,stageId:state.stageId,budgetMs,runSerial:state.runSerial,
+      seed:externalSeed,inputName,sha256:digest,stageId:state.stageId,budgetMs,externalDeadlineMs:externalDeadline(),runSerial:state.runSerial,
       instance:FPTRRuntime.instanceView(caseData)
     };
     state.currentInput=input;state.currentHash=digest;state.result=selected;state.rawOutputRun=0;
@@ -526,9 +530,9 @@ async function runDemo(){
 function downloadSnapshot(){
   if(!state.result||!state.currentMeta)return;
   const item=state.currentMeta;
-  const payload={schemaVersion:2,execution:"live-cpp17-webassembly",runId:item.runSerial,input:{name:item.inputName,sha256:item.sha256,text:state.currentInput},stage:item.stageId,budgetMs:item.budgetMs,schedulerSourceCommit:state.data.schedulerSourceCommit,instance:item.instance,result:state.result};
+  const payload={schemaVersion:3,execution:"live-cpp17-webassembly",runId:item.runSerial,input:{name:item.inputName,sha256:item.sha256,text:state.currentInput},stage:item.stageId,timing:{internalBudgetMs:item.budgetMs,externalDeadlineMs:item.externalDeadlineMs,browserFptrWallMs:state.result.wallMs,browserWallScope:"single-fptr-wasm-call",paperDeadlineScope:"native-cpp-subprocess-wall"},schedulerSourceCommit:state.data.schedulerSourceCommit,instance:item.instance,result:state.result};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const anchor=document.createElement("a");anchor.href=url;
-  const safeName=item.id.replace(/[^a-z0-9_-]+/gi,"-");anchor.download=`fptr-live-${safeName}-${item.budgetMs}ms-${item.stageId}.json`;anchor.click();URL.revokeObjectURL(url);
+  const safeName=item.id.replace(/[^a-z0-9_-]+/gi,"-");anchor.download=`fptr-live-${safeName}-B${item.budgetMs}ms-D${item.externalDeadlineMs}ms-${item.stageId}.json`;anchor.click();URL.revokeObjectURL(url);
 }
 
 function setupTabs(){

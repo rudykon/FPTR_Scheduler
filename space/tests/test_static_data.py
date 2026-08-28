@@ -85,10 +85,24 @@ class BrowserDemoTests(unittest.TestCase):
 
     def test_manifest_and_public_inputs_are_self_consistent(self) -> None:
         manifest = self.manifest
-        self.assertEqual(manifest["schemaVersion"], 2)
+        self.assertEqual(manifest["schemaVersion"], 3)
         self.assertEqual(manifest["execution"], "browser-webassembly")
         self.assertEqual(len(manifest["scenarios"]), 5)
-        self.assertEqual(len(manifest["budgets"]), 5)
+        self.assertNotIn("budgets", manifest)
+        self.assertEqual(
+            manifest["timing"],
+            {
+                "internalBudget": {
+                    "minimumMs": 20,
+                    "maximumMs": 87,
+                    "stepMs": 1,
+                    "paperMs": 87,
+                },
+                "lastRefinementCutoffAtPaperBudgetMs": 84,
+                "finalizationReserveMs": 3,
+                "externalDeadlineMs": 100,
+            },
+        )
         self.assertEqual(len(manifest["stages"]), 6)
         self.assertEqual(
             {stage["id"] for stage in manifest["stages"]},
@@ -196,6 +210,8 @@ class BrowserDemoTests(unittest.TestCase):
         self.assertEqual(demo.count('id="stageButtons"'), 1)
         self.assertIn('id="budgetSlider"', demo)
         self.assertIn('type="range"', demo)
+        self.assertIn('max="87"', demo)
+        self.assertIn('id="externalDeadlineValue"', demo)
         self.assertNotIn('id="budgetButtons"', demo)
         self.assertNotIn('id="runPrompt"', demo)
         for share_class in ("share-0", "share-1", "share-2", "share-3"):

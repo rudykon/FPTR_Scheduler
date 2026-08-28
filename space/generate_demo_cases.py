@@ -93,10 +93,20 @@ def main() -> None:
         )
 
     manifest = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "execution": "browser-webassembly",
         "schedulerSourceCommit": SOURCE_COMMIT,
-        "budgets": [20, 50, 87, 125, 180],
+        "timing": {
+            "internalBudget": {
+                "minimumMs": 20,
+                "maximumMs": 87,
+                "stepMs": 1,
+                "paperMs": 87,
+            },
+            "lastRefinementCutoffAtPaperBudgetMs": 84,
+            "finalizationReserveMs": 3,
+            "externalDeadlineMs": 100,
+        },
         "stages": [
             {"id": stage, "label": label, "labelZh": label_zh}
             for stage, label, label_zh in STAGES

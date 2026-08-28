@@ -70,7 +70,7 @@
         <section class="demo-hero section-wrap" aria-labelledby="demoTitle">
           <h1 id="demoTitle" data-i18n="demoHeroTitle">在线调度 Demo</h1>
           <p class="demo-intro" data-i18n="intro">
-            同一输入、同一预算，实时运行 FPTR 与 7 个参考方法。
+            同一输入、同一内部预算 B，实时运行 FPTR 与 7 个参考方法。
           </p>
           <p class="demo-runtime-line" data-i18n="demoRuntimeLine">
             C++17 / WASM · 本地运行 · 独立验证
@@ -87,7 +87,7 @@
               <div>
                 <div>
                   <h2 id="controlsTitle" data-i18n="configure">运行设置</h2>
-                  <p data-i18n="configureHint">选择场景与预算，再运行 8 种方法。</p>
+                  <p data-i18n="configureHint">选择场景与内部预算 B，再运行 8 种方法。</p>
                 </div>
               </div>
             </div>
@@ -99,7 +99,7 @@
               </label>
 
               <fieldset class="toolbar-field budget-field">
-                <legend data-i18n="deadline">截止时间预算</legend>
+                <legend data-i18n="deadline">FPTR 内部预算 B</legend>
                 <div id="budgetControl" class="budget-control">
                   <div class="budget-readout">
                     <output id="budgetValue" for="budgetSlider" aria-live="polite">87 ms</output>
@@ -111,22 +111,24 @@
                       class="budget-slider"
                       type="range"
                       min="20"
-                      max="180"
+                      max="87"
                       step="1"
                       value="87"
-                      aria-label="截止时间预算，20 到 180 毫秒"
+                      aria-label="FPTR 内部预算 B，20 到 87 毫秒"
                       data-i18n-aria="budgetSliderAria"
                       disabled
                     />
-                    <span class="budget-default-tick" aria-hidden="true"></span>
                   </div>
                   <div class="budget-scale" aria-hidden="true">
                     <span id="budgetMin">20 ms</span>
-                    <span class="budget-default-label">
+                    <span class="budget-paper-label">
                       <b id="budgetPaperDefaultValue">87 ms</b>
-                      <small data-i18n="paperDefaultShort">论文默认</small>
+                      <small data-i18n="paperDefaultShort">论文内部预算</small>
                     </span>
-                    <span id="budgetMax">180 ms</span>
+                  </div>
+                  <div class="external-deadline-line">
+                    <span data-i18n="externalDeadlineFixed">论文外部截止</span>
+                    <strong id="externalDeadlineValue">D = 100 ms</strong>
                   </div>
                 </div>
               </fieldset>
@@ -163,7 +165,7 @@
               </details>
             </div>
             <p id="executionNote" class="execution-note" data-i18n="executionNote">
-              输入不会上传；8 种方法使用同一实例和预算。
+              输入不会上传；8 种方法使用同一实例和内部预算 B。
             </p>
           </section>
 
@@ -186,11 +188,12 @@
 
             <article class="panel comparison-panel" aria-labelledby="comparisonTitle">
               <div class="panel-heading comparison-heading">
-                <h3 id="comparisonTitle" data-i18n="scoreComparison">同一输入与预算下的得分</h3>
+                <h3 id="comparisonTitle" data-i18n="scoreComparison">同一输入与内部预算 B 下的得分</h3>
               </div>
               <div id="comparisonBars" class="comparison-bars" aria-label="实时算法得分比较" data-i18n-aria="liveComparisonAria"></div>
               <p class="result-boundary">
-                <span data-i18n="comparisonBoundary">浏览器计时用于解释单个实例；论文统计来自原生 C++ 独立进程实验。</span>
+                <strong id="browserTimingSummary" class="browser-timing-summary">—</strong>
+                <span data-i18n="comparisonBoundary">论文外部截止 D = 100 ms 采用原生 C++ 子进程墙钟口径；浏览器 WASM 单次墙钟仅解释本机实例，不能替代论文统计。</span>
                 <a href="../evidence/" data-i18n="paperResultsLink">查看实验结果 →</a>
               </p>
             </article>

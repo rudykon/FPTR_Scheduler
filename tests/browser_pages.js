@@ -323,11 +323,12 @@ async function runLiveDemo(browser, origin, {
   const budgetSlider = page.locator("#budgetSlider");
   assert.equal(await budgetSlider.getAttribute("type"), "range", `${routePath} does not use a linear budget control`);
   assert.equal(await budgetSlider.getAttribute("min"), "20", `${routePath} has the wrong minimum budget`);
-  assert.equal(await budgetSlider.getAttribute("max"), "180", `${routePath} has the wrong maximum budget`);
+  assert.equal(await budgetSlider.getAttribute("max"), "87", `${routePath} allows the internal budget to exceed the paper operating point`);
   assert.equal(await budgetSlider.getAttribute("step"), "1", `${routePath} does not support 1 ms budget steps`);
   assert.equal(await budgetSlider.inputValue(), "87", `${routePath} does not start at the paper-default budget`);
   assert.equal((await page.locator("#budgetValue").textContent()).trim(), "87 ms", `${routePath} does not expose the current budget`);
   assert.ok((await budgetSlider.getAttribute("aria-valuetext")).includes("87 ms"), `${routePath} has no accessible budget value`);
+  assert.equal((await page.locator("#externalDeadlineValue").textContent()).trim(), "D = 100 ms", `${routePath} does not separate the external deadline from internal budget B`);
   assert.equal(await page.locator("#budgetButtons").count(), 0, `${routePath} still exposes discrete budget buttons`);
 
   const stageButton = page.locator(`#stageButtons button[data-stage="${stageId}"]`);
@@ -345,6 +346,12 @@ async function runLiveDemo(browser, origin, {
   assert.equal(await page.locator("#comparisonBars .comparison-bar").count(), 8, `${routePath} does not show eight comparison bars`);
   assert.equal(await page.locator("#comparisonBody tr").count(), 8);
   assert.ok((await page.locator("#instanceSummary").textContent()).includes(stageLabel), `${routePath} omits the executed FPTR stage from its result summary`);
+  assert.ok((await page.locator("#instanceSummary").textContent()).includes("B = 87 ms"), `${routePath} does not identify the internal paper budget`);
+  assert.ok((await page.locator("#instanceSummary").textContent()).includes("D = 100 ms"), `${routePath} does not identify the external paper deadline`);
+  const timeKpi = (await page.locator("#kpiGrid .kpi").nth(2).textContent()).replace(/\s+/g, " ");
+  assert.ok(timeKpi.includes("B = 87 ms"), `${routePath} time KPI does not use internal budget B as its denominator`);
+  assert.ok(!timeKpi.includes("/ 100 ms"), `${routePath} time KPI still conflates the external deadline with internal budget B`);
+  assert.ok((await page.locator("#browserTimingSummary").textContent()).includes("ms"), `${routePath} does not report browser FPTR wall time separately`);
   const primaryLabel = (await page.locator("#comparisonBars .comparison-bar.primary .comparison-bar-label").textContent()).trim();
   assert.equal(primaryLabel, stageId === "full" ? "FPTR" : `FPTR · ${stageLabel}`, `${routePath} mislabels the selected FPTR stage`);
   const positions = await page.evaluate(() => {
@@ -389,11 +396,12 @@ async function runLiveDemo(browser, origin, {
     await page.waitForFunction(() => {
       const results = document.querySelector("#results");
       const summary = document.querySelector("#instanceSummary")?.textContent || "";
-      return !results?.classList.contains("is-stale") && summary.includes("73 ms");
+      return !results?.classList.contains("is-stale") && summary.includes("B = 73 ms") && summary.includes("D = 100 ms");
     }, null, { timeout: 60000 });
     assert.equal(await visible(page.locator("#staleBanner")), false, `${routePath} keeps the stale warning after a 73 ms rerun`);
     assert.equal(await page.locator("#downloadButton").isEnabled(), true, `${routePath} does not enable export after a 73 ms rerun`);
-    assert.ok((await page.locator("#instanceSummary").textContent()).includes("73 ms"), `${routePath} did not run all methods at the intermediate budget`);
+    assert.ok((await page.locator("#instanceSummary").textContent()).includes("B = 73 ms"), `${routePath} did not run all methods at the intermediate internal budget`);
+    assert.ok((await page.locator("#instanceSummary").textContent()).includes("D = 100 ms"), `${routePath} changed the fixed external deadline during an internal-budget rerun`);
   }
   await context.close();
 }
