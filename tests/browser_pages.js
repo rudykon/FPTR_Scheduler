@@ -166,6 +166,11 @@ async function assertEquations(page, route) {
       if (rect.left < -1 || rect.right > viewportWidth + 1) errors.push(`${id}: formula container leaves viewport`);
       if (id !== "budget" && !number) errors.push(`${id}: missing equation number`);
     });
+    [...document.querySelectorAll(".inline-math")].forEach((math, index) => {
+      if (getComputedStyle(math).whiteSpace !== "nowrap") {
+        errors.push(`inline-${index + 1}: inline MathML may break across lines`);
+      }
+    });
     details.forEach((node, index) => { node.open = previous[index]; });
     return { count: blocks.length, errors };
   });
