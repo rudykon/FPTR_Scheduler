@@ -1,17 +1,6 @@
----
-title: FPTR Scheduler Demo
-emoji: 📡
-colorFrom: blue
-colorTo: purple
-sdk: static
-app_file: index.html
-pinned: false
-short_description: Run the FPTR C++ scheduler live in your browser
----
+# FPTR GitHub Pages Demo
 
-# FPTR Joint Beam and Resource Scheduler
-
-This free Static Space executes the repository's real single-threaded C++17
+This browser Demo executes the repository's real single-threaded C++17
 scheduler in the visitor's browser through WebAssembly. Results are produced when
 **Run real C++ scheduler** is clicked: the demo does not load precomputed scores and
 does not reimplement or approximate FPTR in JavaScript. The scheduler and browser

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Contract tests for the browser-executed FPTR Static Space."""
+"""Contract tests for the browser-executed FPTR GitHub Pages Demo."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT))
 from tools import scheduler_validator  # noqa: E402
 
 
-class StaticSpaceTests(unittest.TestCase):
+class BrowserDemoTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.manifest = json.loads(
@@ -30,9 +30,8 @@ class StaticSpaceTests(unittest.TestCase):
             encoding="utf-8"
         )
         script = (ROOT / "app.js").read_text(encoding="utf-8")
-        card = (ROOT / "README.md").read_text(encoding="utf-8")
         workflow = (
-            REPOSITORY / ".github" / "workflows" / "deploy-hf-space.yml"
+            REPOSITORY / ".github" / "workflows" / "pages.yml"
         ).read_text(encoding="utf-8")
 
         self.assertIn('src="runtime.js"', html)
@@ -44,18 +43,17 @@ class StaticSpaceTests(unittest.TestCase):
         self.assertIn('ccall("fptr_run"', script)
         self.assertIn('"fptr_baseline_run"', script)
         self.assertNotIn("data/results.json", script)
-        self.assertEqual(card.count("sdk: static"), 1)
-        self.assertNotIn("sdk: docker", card)
-        short_description = next(
-            line.split(":", 1)[1].strip()
-            for line in card.splitlines()
-            if line.startswith("short_description:")
+        self.assertIn("bash space/build_wasm.sh", workflow)
+        self.assertIn("node space/tests/smoke_wasm.js", workflow)
+        self.assertIn("Deploy to GitHub Pages", workflow)
+        self.assertFalse(
+            (REPOSITORY / ".github" / "workflows" / "deploy-hf-space.yml").exists()
         )
-        self.assertLessEqual(len(short_description), 60)
-        self.assertIn("space_sdk: static", workflow)
-        self.assertIn("space/build_wasm.sh", workflow)
-        self.assertIn("space/tests/smoke_wasm.js", workflow)
-        self.assertIn('PYTHONDONTWRITEBYTECODE: "1"', workflow)
+        for readme in ("README.md", "README.zh-CN.md"):
+            self.assertNotIn(
+                "huggingface.co/spaces/",
+                (REPOSITORY / readme).read_text(encoding="utf-8"),
+            )
         self.assertNotIn(
             "wasm/fptr_solver.js", (ROOT / ".gitignore").read_text(encoding="utf-8")
         )

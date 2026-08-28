@@ -28,7 +28,6 @@
 <p align="center">
   <a href="https://rudykon.github.io/FPTR_Scheduler/">Website</a> ·
   <a href="https://rudykon.github.io/FPTR_Scheduler/demo/">Live Demo</a> ·
-  <a href="https://huggingface.co/spaces/config-h/FPTR-Scheduler-Demo">HF mirror</a> ·
   <a href="#overview">Overview</a> ·
   <a href="#method">Method</a> ·
   <a href="#visual-summary">Figures</a> ·
@@ -207,7 +206,7 @@ They summarize execution accounting, external-baseline comparisons, exact calibr
 | `tools/audit_exact_suite.py` | Independent exact-audit workflow for externally supplied result artifacts |
 | `experiments/` | Deterministic instance generation, experiment orchestration, analysis, and plotting |
 | `tests/` | Validator, model-contract, scheduler, and release-helper regression tests |
-| `space/` | Free Static Space with live C++17 WebAssembly execution, custom inputs, independent validation, and JSON run records |
+| `space/` | Browser Demo source with live C++17 WebAssembly execution, custom inputs, independent validation, and JSON run records |
 | `docs/images/` | Approved explanatory and result figures for the public README |
 | `docs/index.html` | Bilingual static project website deployed through GitHub Pages |
 | `.github/workflows/pages.yml` | Automatic GitHub Pages deployment workflow |
