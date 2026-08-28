@@ -407,7 +407,7 @@ html[lang="en"] .home-hero h1 {
 .editorial-section { padding-block: 0 3.5rem; }
 .editorial-section + .editorial-section { padding-top: 3rem; border-top: 1px solid var(--line-strong); }
 .editorial-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .72fr); gap: clamp(2rem, 6vw, 4rem); align-items: start; }
-.editorial-copy { max-width: var(--prose-width); }
+.editorial-copy { min-width: 0; max-width: var(--prose-width); }
 .editorial-copy h2 { margin: 0; font: 900 clamp(1.9rem, 3.4vw, 3rem)/1.12 var(--ui); letter-spacing: -.035em; }
 .editorial-copy p { color: var(--ink-soft); }
 .callout {
