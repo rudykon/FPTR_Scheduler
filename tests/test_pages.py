@@ -174,6 +174,17 @@ class PagesContractTests(unittest.TestCase):
         for key in ("constraintCountLabel", "gateCountLabel", "beamFirstGainLabel"):
             self.assertIn(f'data-i18n="{key}"', home)
 
+        hero_kicker_keys = {
+            "problem": "problemKicker",
+            "method": "methodKicker",
+            "evidence": "evidenceKicker",
+            "reproduce": "reproduceKicker",
+        }
+        for page_name, kicker_key in hero_kicker_keys.items():
+            source = (DOCS / page_name / "index.html").read_text(encoding="utf-8")
+            self.assertNotIn('class="breadcrumb"', source)
+            self.assertNotIn(f'data-i18n="{kicker_key}"', source)
+
         evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
         for rq in ("RQ1", "RQ2", "RQ3", "RQ4", "RQ5"):
             self.assertIn(rq, evidence)
@@ -240,6 +251,9 @@ class PagesContractTests(unittest.TestCase):
         zh = json.loads((DOCS / "content/zh.json").read_text(encoding="utf-8"))
         en = json.loads((DOCS / "content/en.json").read_text(encoding="utf-8"))
         self.assertEqual(set(zh), set(en))
+        for key in ("problemKicker", "methodKicker", "evidenceKicker", "reproduceKicker"):
+            self.assertNotIn(key, zh)
+            self.assertNotIn(key, en)
         self.assertEqual(zh["runLabel"], "运行公开样例")
         self.assertEqual(en["runLabel"], "Run the public sample")
         self.assertEqual(zh["stageFinalizeShort"], "验证输出")

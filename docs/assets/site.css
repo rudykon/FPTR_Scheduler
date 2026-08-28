@@ -335,8 +335,6 @@ html[lang="en"] .home-hero h1 {
 .page-hero-evidence,
 .page-hero-reproduce { background: radial-gradient(circle at 84% 45%, color-mix(in srgb, var(--signal) 8%, transparent), transparent 22rem), color-mix(in srgb, var(--white) 72%, transparent); }
 .page-hero .section-wrap { position: relative; z-index: 2; }
-.breadcrumb { display: inline-flex; min-height: 42px; align-items: center; gap: .5rem; margin-bottom: .7rem; color: var(--ink-soft); font-size: var(--text-small); font-weight: 750; }
-.page-hero .section-kicker { margin-bottom: .65rem; }
 .page-hero h1 {
   max-width: 980px;
   margin: 0;
@@ -749,8 +747,6 @@ summary { min-height: 52px; padding: .75rem 1rem; cursor: pointer; font-weight: 
   .page-hero { padding-block: 1.45rem 1.35rem; }
   .page-hero h1 { font-size: clamp(2rem, 9vw, 2.5rem); }
   html[lang="en"] .page-hero { padding-block: 1.25rem 1.35rem; }
-  html[lang="en"] .page-hero .breadcrumb { min-height: 36px; margin-bottom: .3rem; }
-  html[lang="en"] .page-hero .section-kicker { margin-bottom: .35rem; }
   html[lang="en"] .page-hero h1 { font-size: clamp(1.85rem, 8.5vw, 2.15rem); line-height: 1.08; }
   html[lang="en"] .page-hero p:last-of-type { margin-top: .55rem; font-size: .9375rem; line-height: 1.48; }
   .page-mascot { display: none; }
