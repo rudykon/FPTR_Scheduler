@@ -25,11 +25,11 @@
         <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
-          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
-          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
-          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
-          <a href="../reproduce/" aria-current="page"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
+          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">模型</span></a>
+          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">方法</span></a>
+          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">结果</span></a>
+          <a href="../reproduce/" aria-current="page"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">复现</span></a>
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
@@ -41,9 +41,9 @@
       <main id="main">
         <section class="page-hero page-hero-reproduce">
           <div class="section-wrap">
-            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
             <p class="section-kicker" data-i18n="reproduceKicker">04 · 复现路径</p>
-            <h1 data-i18n="reproduceTitle">运行、验证与重现实验</h1>
+            <h1 data-i18n="reproduceTitle">复现</h1>
             <p data-i18n="reproduceBody">下面的命令从公开样例开始，完整覆盖编译、运行与独立验证。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
@@ -53,8 +53,8 @@
           <div class="section-wrap">
             <section class="editorial-section">
               <div class="section-heading">
-                <p class="section-kicker" data-i18n="quickStartKicker">快速开始</p>
-                <h2 data-i18n="quickStartTitle">克隆、编译、运行、验证。</h2>
+                <p class="section-kicker" data-i18n="quickStartKicker">C++17 · Python 3</p>
+                <h2 data-i18n="quickStartTitle">快速开始</h2>
                 <p data-i18n="quickStartBody">调度结果写入标准输出，可选阶段轨迹只写入标准错误，因此诊断不会污染分配格式。</p>
               </div>
               <div class="quick-steps">
@@ -83,67 +83,30 @@ cp space/data/cases/small-balanced.in \
   --quick \
   --out /tmp/fptr-quick-results</code></pre></div></div>
               </details>
+              <div class="expected-result">
+                <strong data-i18n="expectedResultTitle">预期结果</strong>
+                <code>valid_runs: 1/1</code>
+                <span data-i18n="expectedResultBody">验证器重新解析输出、检查全部约束并重算目标值。</span>
+              </div>
+              <div class="section-heading compact-heading">
+                <h2 data-i18n="fullExperimentTitle">完整实验</h2>
+                <p data-i18n="fullExperimentBody">完整协议、计数口径与统计公式集中在实验结果页和附录。</p>
+              </div>
               <div class="repro-actions">
-                <a class="button button-primary" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span data-i18n="source">查看源代码</span><span aria-hidden="true">↗</span></a>
+                <a class="button button-primary" href="../evidence/#protocol"><span data-i18n="fullProtocol">完整协议</span><span aria-hidden="true">→</span></a>
                 <a class="button button-secondary" href="../appendices/Appendix.pdf" target="_blank" rel="noreferrer"><span data-i18n="englishAppendix">英文附录</span></a>
                 <a class="button button-ghost" href="../appendices/Appendix_zh.pdf" target="_blank" rel="noreferrer"><span data-i18n="chineseAppendix">中文附录</span></a>
+                <a class="button button-ghost" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer"><span data-i18n="source">查看源代码</span><span aria-hidden="true">↗</span></a>
               </div>
             </section>
 
-            <section class="editorial-section">
-              <div class="section-heading">
-                <p class="section-kicker" data-i18n="auditKicker">审计边界</p>
-                <h2 data-i18n="auditTitle">每个结果都落到一次启动、一个实例和一次独立校验。</h2>
-                <p data-i18n="auditBody">一次 launch 是拥有独立输入流、执行顺序、随机种子和墙钟测量的子进程。质量以每实例五次运行的中位数为单位，置信区间使用 5,000 次分层 bootstrap。</p>
-              </div>
-              <div class="audit-flow">
-                <article><span>01</span><h3 data-i18n="auditLaunchTitle">独立启动</h3><p data-i18n="auditLaunchBody">固定实例、配置、随机种子与预算。</p></article>
-                <article><span>02</span><h3 data-i18n="auditSerializeTitle">序列化输出</h3><p data-i18n="auditSerializeBody">分配写入 stdout，阶段轨迹只写入 stderr。</p></article>
-                <article><span>03</span><h3 data-i18n="auditValidateTitle">独立验证与重算</h3><p data-i18n="auditValidateBody">重新解析结果、检查全部约束并重算传输量。</p></article>
-                <article><span>04</span><h3 data-i18n="auditCreditTitle">统一计分与哈希</h3><p data-i18n="auditCreditBody">迟到、非法或异常退出计零分；SHA-256 绑定工件。</p></article>
-              </div>
-              <details>
-                <summary data-i18n="ledgerDetails">展开 8,610 次内部正式启动账本</summary>
-                <div class="details-body">
-                  <p data-i18n="accountingBody">四个套件回答不同问题：主套件比较累计配置，预算扫描改变搜索上限，CG 压力提高组规模与覆盖率，精确套件在微型案例上加入独立优化。</p>
-                  <div class="table-wrap">
-                    <table>
-                      <thead><tr><th data-i18n="suiteLabel">套件</th><th data-i18n="instancesLabel">实例</th><th data-i18n="conditionsLabel">配置</th><th data-i18n="repeatsLabel">重复</th><th data-i18n="launchesLabel">启动</th><th data-i18n="validLabel">合法</th><th data-i18n="missesLabel">未命中</th></tr></thead>
-                      <tbody>
-                        <tr><th data-i18n="suiteMain">主套件</th><td>150</td><td>6</td><td>5</td><td>4,500</td><td>4,500</td><td>0</td></tr>
-                        <tr><th data-i18n="suiteBudget">预算扫描</th><td>150</td><td>4</td><td>5</td><td>3,000</td><td>3,000</td><td>0</td></tr>
-                        <tr><th data-i18n="suiteCg">CG 压力</th><td>50</td><td>3</td><td>5</td><td>750</td><td>750</td><td>0</td></tr>
-                        <tr><th data-i18n="suiteExact">精确校准</th><td>12</td><td>6</td><td>5</td><td>360</td><td>360</td><td>0</td></tr>
-                        <tr><th data-i18n="suiteTotal">总计</th><td>—</td><td>—</td><td>—</td><td>8,610</td><td>8,610</td><td>0</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <p><strong>6,750</strong> <span data-i18n="externalAccounting">次匹配外部基线启动全部产生合法输出，其中 219 次被该匹配套件记为时限未命中。</span></p>
-                </div>
-              </details>
-            </section>
-
-            <section class="editorial-section repo-map">
-              <div class="editorial-copy">
-                <p class="section-kicker" data-i18n="repoKicker">仓库地图</p>
-                <h2 data-i18n="repoTitle">实现、验证器、实验编排与图件生成各自独立。</h2>
-                <p data-i18n="repoBody">仓库结构把调度器、独立验证、实验协议和网页图件分开，便于逐层检查模型契约与结论来源。</p>
-              </div>
-              <div class="repo-tree" aria-label="Repository structure">
-                <div><b>src/</b> — <span data-i18n="repoSrc">C++17 调度器、共享模型与阶段入口</span></div>
-                <div><b>tools/</b> — <span data-i18n="repoTools">独立解析、可行性验证与目标值重算</span></div>
-                <div><b>experiments/</b> — <span data-i18n="repoExperiments">确定性实例、实验编排、分析与绘图</span></div>
-                <div><b>tests/</b> — <span data-i18n="repoTests">模型契约与端到端回归测试</span></div>
-                <div><b>docs/</b> — <span data-i18n="repoDocs">GitHub Pages、浏览器 Demo 与静态双语内容</span></div>
-              </div>
-            </section>
           </div>
         </section>
       </main>
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
+        <nav class="footer-links" aria-label="项目链接" data-i18n-aria="footerLinksAria"><a href="../reproduce/" aria-current="page" data-i18n="navReproduce">复现</a><a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
       </footer>
     </div>
   </body>

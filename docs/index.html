@@ -25,11 +25,11 @@
         <a class="brand-link" href="./" aria-label="FPTR Scheduler home"><img src="./assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="./" aria-current="page"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
-          <a href="./problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
-          <a href="./method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
-          <a href="./evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
-          <a href="./reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="./" aria-current="page"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
+          <a href="./problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">模型</span></a>
+          <a href="./method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">方法</span></a>
+          <a href="./evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">结果</span></a>
+          <a href="./reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">复现</span></a>
           <a href="./demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
@@ -45,19 +45,12 @@
         <section class="home-hero section-wrap">
           <div class="home-hero-copy">
             <span class="paper-badge" data-i18n="paperBadge">DEADLINE-AWARE SCHEDULING</span>
-            <h1 data-i18n="paperTitle">FPTR：截止时间约束下的联合波束与资源调度</h1>
-            <p class="paper-title-en">Feasibility-Preserving Transactional Refinement for Deadline-Constrained Joint Beam and Resource Allocation</p>
-            <p class="paper-thesis" data-i18n="paperThesis">FPTR 始终保留一个可发布的可行解，在隔离状态中细化候选，并且只提交完整、及时、合法且严格更优的结果。</p>
-            <p class="home-budget-note">
-              <span data-i18n="homeBudgetInternal">内部算法预算</span>
-              <math class="inline-math" aria-label="B 等于 87 毫秒" data-i18n-aria="budgetBAria"><mi>B</mi><mo>=</mo><mn>87</mn><mspace width=".22em"></mspace><mtext>ms</mtext></math><span aria-hidden="true">；</span>
-              <span data-i18n="homeBudgetExternal">外部端到端计分截止</span>
-              <math class="inline-math" aria-label="D 等于 100 毫秒" data-i18n-aria="budgetDAria"><mi>D</mi><mo>=</mo><mn>100</mn><mspace width=".22em"></mspace><mtext>ms</mtext></math><span aria-hidden="true">。</span>
-            </p>
+            <h1 data-i18n="paperTitle">FPTR Scheduler</h1>
+            <p class="home-subtitle" data-i18n="homeSubtitle">截止时间约束下的联合波束与资源调度</p>
+            <p class="paper-thesis" data-i18n="paperThesis">保留可行解，隔离细化，验证后提交。</p>
             <div class="hero-actions">
-              <a class="button button-primary" href="./method/"><span data-i18n="readMethod">理解核心方法</span><span aria-hidden="true">→</span></a>
-              <a class="button button-secondary" href="./evidence/"><span data-i18n="viewResults">查看实验结果</span><span aria-hidden="true">→</span></a>
-              <a class="button button-ghost" href="./demo/"><span aria-hidden="true">▶</span><span data-i18n="runDemo">运行 Demo</span></a>
+              <a class="button button-primary" href="./method/"><span data-i18n="readMethod">查看方法</span><span aria-hidden="true">→</span></a>
+              <a class="button button-secondary" href="./demo/"><span aria-hidden="true">▶</span><span data-i18n="runDemo">运行 Demo</span></a>
             </div>
           </div>
           <figure class="home-visual">
@@ -68,55 +61,39 @@
 
         <section class="home-summary">
           <div class="section-wrap">
-            <div class="home-summary-lead">
-              <p class="section-kicker" data-i18n="thirtyTitle">30 秒读懂 FPTR</p>
-              <h2 data-i18n="paperSnapshotBody">波束、资源、共享关系和有限缓存必须联合决策；任何迟到或违反约束的输出在当前周期中的效用都为零。</h2>
-            </div>
+            <p class="section-kicker" data-i18n="coreFindings">核心结论</p>
             <div class="summary-grid">
-              <article class="summary-card problem-card">
-                <span>01 · PROBLEM</span><strong>6<small data-i18n="constraintCountLabel">类耦合约束</small></strong>
-                <h3 data-i18n="snapshotProblemTitle">先保证按时交付</h3>
-                <p data-i18n="snapshotProblemBody">每个控制周期都必须完成波束与资源联合分配；迟到或违反任一约束的输出，在当前周期中的效用为零。</p>
-              </article>
-              <article class="summary-card method-card">
+              <a class="summary-card problem-card" href="./problem/">
+                <span>01 · MODEL</span><strong>6<small data-i18n="constraintCountLabel">类耦合约束</small></strong>
+                <h3 data-i18n="snapshotProblemTitle">模型</h3>
+                <p data-i18n="snapshotProblemBody">波束、资源、缓存与截止时间联合决定合法性。</p>
+                <b class="card-arrow" aria-hidden="true">→</b>
+              </a>
+              <a class="summary-card method-card" href="./method/">
                 <span>02 · METHOD</span><strong>4<small data-i18n="gateCountLabel">项提交检查</small></strong>
-                <h3 data-i18n="snapshotMethodTitle">候选只能整体提交</h3>
-                <p data-i18n="snapshotMethodBody">候选在隔离状态中构造，只有完整、及时、可行且严格更优时才替换 incumbent；否则直接丢弃。</p>
-              </article>
-              <article class="summary-card evidence-card">
+                <h3 data-i18n="snapshotMethodTitle">方法</h3>
+                <p data-i18n="snapshotMethodBody">完整、及时、合法且更优，候选才会提交。</p>
+                <b class="card-arrow" aria-hidden="true">→</b>
+              </a>
+              <a class="summary-card evidence-card" href="./evidence/">
                 <span>03 · EVIDENCE</span><strong>+3.83%<small data-i18n="beamFirstGainLabel">vs BeamFirst</small></strong>
-                <h3 data-i18n="snapshotResultTitle">把剩余时间换成增益</h3>
-                <p data-i18n="snapshotResultBody">在 150 个固定实例上，Full 相对 BeamFirst 平均提升 3.83%，750 次 Full 启动全部合法且均未超过 100 ms。</p>
-              </article>
+                <h3 data-i18n="snapshotResultTitle">结果</h3>
+                <p data-i18n="snapshotResultBody">Full 提升调度质量，同时满足外部时限。</p>
+                <b class="card-arrow" aria-hidden="true">→</b>
+              </a>
             </div>
-          </div>
-        </section>
-
-        <section class="home-reading">
-          <div class="section-wrap">
-            <div class="section-heading">
-              <p class="section-kicker" data-i18n="readingKicker">深入阅读</p>
-              <h2 data-i18n="readingTitle">从模型、方法与证据进入论文核心。</h2>
-            </div>
-            <div class="reading-grid">
-              <a href="./problem/"><span>01</span><h3 data-i18n="navProblem">问题建模</h3><p data-i18n="overviewProblemBody">理解波束、掩码、缓存、共享与硬截止时间为何必须一起处理。</p><b aria-hidden="true">→</b></a>
-              <a href="./method/"><span>02</span><h3 data-i18n="navMethod">FPTR 方法</h3><p data-i18n="overviewMethodBody">查看隔离候选、四项提交检查与五阶段累积细化链。</p><b aria-hidden="true">→</b></a>
-              <a href="./evidence/"><span>03</span><h3 data-i18n="navEvidence">实验结果</h3><p data-i18n="overviewEvidenceBody">检查阶段增益、预算曲线、运行时间、压力测试与精确校准。</p><b aria-hidden="true">→</b></a>
-            </div>
-            <div class="secondary-links">
-              <span data-i18n="secondaryLinks">交互运行与复现</span>
-              <a href="./demo/"><span data-i18n="runDemo">运行 Demo</span><b aria-hidden="true">↗</b></a>
-              <a href="./reproduce/"><span data-i18n="navReproduce">代码与复现</span><b aria-hidden="true">↗</b></a>
+            <div class="secondary-links home-secondary-links">
+              <a href="./reproduce/"><span data-i18n="navReproduce">复现</span><b aria-hidden="true">↗</b></a>
               <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub<b aria-hidden="true">↗</b></a>
             </div>
-            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。当前实验图为经审计的历史 PNG 回退；无面板字母、大字号的 Web 原生图与手机专用图，须在正式结果数据包公开后重新生成。所有性能主张仍应由重生成工件或单独提供的证据复核。</span></p></div>
+            <p class="release-line"><strong data-i18n="release">Code-only public release</strong><span aria-hidden="true"> · </span><span data-i18n="releaseShort">公开代码与可执行 Demo；实验结论以论文工件为准。</span></p>
           </div>
         </section>
       </main>
 
       <footer class="site-footer">
         <div><img src="./assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
+        <nav class="footer-links" aria-label="项目链接" data-i18n-aria="footerLinksAria"><a href="./reproduce/" data-i18n="navReproduce">复现</a><a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
       </footer>
     </div>
   </body>

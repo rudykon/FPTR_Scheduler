@@ -25,11 +25,11 @@
         <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
-          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
-          <a href="../method/" aria-current="page"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
-          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
-          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
+          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">模型</span></a>
+          <a href="../method/" aria-current="page"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">方法</span></a>
+          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">结果</span></a>
+          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">复现</span></a>
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
@@ -41,9 +41,9 @@
       <main id="main">
         <section class="page-hero page-hero-method">
           <div class="section-wrap">
-            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
             <p class="section-kicker" data-i18n="methodKicker">02 · 核心方法</p>
-            <h1 data-i18n="methodTitle">可行性保持的事务式细化</h1>
+            <h1 data-i18n="methodTitle">FPTR 方法</h1>
             <p data-i18n="methodBody">FPTR 始终保留可发布的 incumbent，并在隔离状态中构造候选；只有四项检查全部通过才整体替换，任一失败都不改变当前可行解。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
@@ -53,8 +53,8 @@
           <div class="section-wrap">
             <section class="editorial-section" id="transaction">
               <div class="section-heading">
-                <p class="section-kicker" data-i18n="commitRuleTitle">共同提交门</p>
-                <h2 data-i18n="methodStateTitle">一条可发布通道，一条隔离探索通道。</h2>
+                <p class="section-kicker" data-i18n="commitRuleTitle">可行性保持</p>
+                <h2 data-i18n="methodStateTitle">事务门</h2>
                 <p data-i18n="methodStateBody">I 始终保持完整可行；每次尝试先复制到 C，再在私有状态中细化。成功候选整体提交，失败候选整体丢弃。</p>
               </div>
               <div class="transaction-diagram" aria-label="FPTR incumbent and candidate channels">
@@ -71,10 +71,10 @@
                   <article><strong><math class="inline-math"><mi mathvariant="normal">gate</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math></strong><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
                 </div>
                 <div class="gate-checks">
-                  <div><math class="inline-math"><mi mathvariant="normal">complete</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math><p data-i18n="checkComplete">候选解完整</p></div>
-                  <div><math class="inline-math"><msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub></math><p data-i18n="checkTime">阶段截止前完成</p></div>
-                  <div><math class="inline-math"><mi>V</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>=</mo><mn>1</mn></math><p data-i18n="checkValid">结构验证通过</p></div>
-                  <div><math class="inline-math"><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>I</mi><mo>)</mo></math><p data-i18n="checkImprove">传输量严格提升</p></div>
+                  <div><math class="inline-math"><mi mathvariant="normal">complete</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math><p data-i18n="checkComplete">完整</p></div>
+                  <div><math class="inline-math"><msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub></math><p data-i18n="checkTime">及时</p></div>
+                  <div><math class="inline-math"><mi>V</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>=</mo><mn>1</mn></math><p data-i18n="checkValid">合法</p></div>
+                  <div><math class="inline-math"><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>I</mi><mo>)</mo></math><p data-i18n="checkImprove">更优</p></div>
                 </div>
                 <div class="gate-branches">
                   <strong><span data-i18n="pass">全部通过</span> <span aria-hidden="true">→</span> <span data-i18n="commit">COMMIT · 更新</span> <math class="inline-math"><mi>I</mi><mo>←</mo><mi>C</mi></math></strong>
@@ -104,16 +104,16 @@
 
             <section class="editorial-section">
               <div class="section-heading">
-                <p class="section-kicker" data-i18n="timelineKicker">累计细化链</p>
-                <h2 data-i18n="methodMilestoneTitle">六个等宽里程碑使用绝对截止点。</h2>
+                <p class="section-kicker" data-i18n="timelineKicker">累计细化</p>
+                <h2 data-i18n="methodMilestoneTitle">阶段链</h2>
                 <p data-i18n="methodMilestoneBody">五个细化阶段依次在 45、60、70、78 与 84 ms 截止；最终验证和序列化在 87 ms 内完成。</p>
               </div>
               <div class="method-timeline">
-                <article class="stage"><time datetime="PT0.045S"><math class="inline-math"><mo>≤</mo><mn>45</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Base</h3><p data-i18n="stageBase">多样化掩码构造首个可行解</p></article>
-                <article class="stage"><time datetime="PT0.060S"><math class="inline-math"><mo>≤</mo><mn>60</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Global</h3><p data-i18n="stageGlobal">按缓存感知的边际收益全局重定价</p></article>
-                <article class="stage"><time datetime="PT0.070S"><math class="inline-math"><mo>≤</mo><mn>70</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>CG</h3><p data-i18n="stageCg">在兼容组内进行合法多用户共享</p></article>
-                <article class="stage"><time datetime="PT0.078S"><math class="inline-math"><mo>≤</mo><mn>78</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Remask</h3><p data-i18n="stageRemask">根据剩余需求修复掩码与单资源分配</p></article>
-                <article class="stage"><time datetime="PT0.084S"><math class="inline-math"><mo>≤</mo><mn>84</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Pair</h3><p data-i18n="stagePair">双资源 ruin-and-refill，完成 Full 配置</p></article>
+                <article class="stage"><time datetime="PT0.045S"><math class="inline-math"><mo>≤</mo><mn>45</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Base</h3><p data-i18n="stageBase">构造</p></article>
+                <article class="stage"><time datetime="PT0.060S"><math class="inline-math"><mo>≤</mo><mn>60</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Global</h3><p data-i18n="stageGlobal">重价</p></article>
+                <article class="stage"><time datetime="PT0.070S"><math class="inline-math"><mo>≤</mo><mn>70</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>CG</h3><p data-i18n="stageCg">共享</p></article>
+                <article class="stage"><time datetime="PT0.078S"><math class="inline-math"><mo>≤</mo><mn>78</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Remask</h3><p data-i18n="stageRemask">修复</p></article>
+                <article class="stage"><time datetime="PT0.084S"><math class="inline-math"><mo>≤</mo><mn>84</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Pair</h3><p data-i18n="stagePair">重建</p></article>
                 <article class="stage finalize-stage"><time datetime="PT0.087S"><math class="inline-math"><mo>≤</mo><mn>87</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Validate</h3><p data-i18n="stageFinalizeShort">验证与序列化</p></article>
               </div>
               <p class="equation-lead" data-i18n="budgetRuleLead">任意内部预算下的阶段截止缩放规则</p>
@@ -141,35 +141,61 @@
 
             <section class="editorial-section">
               <div class="section-heading">
-                <p class="section-kicker" data-i18n="theoryKicker">保证与边界</p>
-                <h2 data-i18n="theoryTitle">事务门保证可行与单调改进，不承诺全局最优。</h2>
+                <p class="section-kicker" data-i18n="theoryKicker">保证与范围</p>
+                <h2 data-i18n="theoryTitle">理论边界</h2>
               </div>
               <div class="theory-list">
-                <article class="theory-item"><span>LEMMA 1</span><h3 data-i18n="invariantTitle">可行 incumbent 不变量</h3><div class="theory-copy"><p data-i18n="invariantBody">只要空回退可行且验证器可靠，拒绝不会改变 incumbent，接受又必须通过独立验证；因此每次提交后和序列化前，当前解始终可行。</p></div></article>
                 <article class="theory-item">
-                  <span>PROP. 1</span>
-                  <h3 data-i18n="topSTitle">固定基数 CG 的精确原语</h3>
+                  <span>LEMMA 1</span>
+                  <h3 data-i18n="invariantTitle">可行性不变量</h3>
                   <div class="theory-copy">
-                    <p data-i18n="topSBody">当波束掩码、资源、保留容量和共享人数固定时，共享惩罚只由人数决定；选择边际增益最大的用户即可精确求解该局部查询。</p>
-                    <div class="formula-block compact-equation" id="eq-8" data-equation="8" tabindex="0">
-                      <div class="equation-row">
-                        <math display="block" aria-label="式（8）：固定共享人数 s 时，用户 u 在资源 r 上的边际增益等于加入该资源后的截断流量减去原截断流量" data-i18n-aria="equation8Aria">
-                          <semantics>
-                            <mrow>
-                              <msubsup><mi>δ</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>=</mo>
-                              <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>+</mo><mi>q</mi><mo>⁡</mo><mo>(</mo><msubsup><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>)</mo><mo>}</mo><mo>−</mo>
-                              <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>}</mo><mo>.</mo>
-                            </mrow>
-                            <annotation encoding="application/x-tex">\delta_{u,r}^{(s)}=\min\{B_u,Y_u+q(z_{u,r}^{(s)})\}-\min\{B_u,Y_u\}.</annotation>
-                          </semantics>
-                        </math>
-                        <span class="equation-number" aria-hidden="true">(8)</span>
-                      </div>
-                    </div>
-                    <p class="equation-note" data-i18n="equation8Note">这里的保留容量排除了当前资源；共享基数固定后，每个用户的边际量彼此独立，因此取最大的 s 项即为最优。</p>
+                    <p class="theory-summary" data-i18n="invariantSummary">任意阶段结束时，incumbent 都是可发布的合法解。</p>
+                    <details class="theory-details">
+                      <summary data-i18n="proofDetails">查看证明要点</summary>
+                      <div class="details-body"><p data-i18n="invariantBody">只要空回退可行且验证器可靠，拒绝不会改变 incumbent，接受又必须通过独立验证；因此每次提交后和序列化前，当前解始终可行。</p></div>
+                    </details>
                   </div>
                 </article>
-                <article class="theory-item"><span>SCOPE</span><h3 data-i18n="methodLimitTitle">保证不等于近似比</h3><div class="theory-copy"><p data-i18n="methodLimitBody">FPTR 的理论契约是“始终能发布可行解，并只接受严格改进”。它不为最终方案提供全局最优或固定近似比保证。</p></div></article>
+                <article class="theory-item">
+                  <span>PROP. 1</span>
+                  <h3 data-i18n="topSTitle">局部精确性</h3>
+                  <div class="theory-copy">
+                    <p class="theory-summary" data-i18n="topSSummary">固定共享人数后，选择边际增益最大的用户可精确求解该局部查询。</p>
+                    <details class="theory-details">
+                      <summary data-i18n="proofDetails">查看证明要点</summary>
+                      <div class="details-body">
+                        <p data-i18n="topSBody">当波束掩码、资源、保留容量和共享人数固定时，共享惩罚只由人数决定；选择边际增益最大的用户即可精确求解该局部查询。</p>
+                        <div class="formula-block compact-equation" id="eq-8" data-equation="8" tabindex="0">
+                          <div class="equation-row">
+                            <math display="block" aria-label="式（8）：固定共享人数 s 时，用户 u 在资源 r 上的边际增益等于加入该资源后的截断流量减去原截断流量" data-i18n-aria="equation8Aria">
+                              <semantics>
+                                <mrow>
+                                  <msubsup><mi>δ</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>=</mo>
+                                  <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>+</mo><mi>q</mi><mo>⁡</mo><mo>(</mo><msubsup><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>)</mo><mo>}</mo><mo>−</mo>
+                                  <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>}</mo><mo>.</mo>
+                                </mrow>
+                                <annotation encoding="application/x-tex">\delta_{u,r}^{(s)}=\min\{B_u,Y_u+q(z_{u,r}^{(s)})\}-\min\{B_u,Y_u\}.</annotation>
+                              </semantics>
+                            </math>
+                            <span class="equation-number" aria-hidden="true">(8)</span>
+                          </div>
+                        </div>
+                        <p class="equation-note" data-i18n="equation8Note">这里的保留容量排除了当前资源；共享基数固定后，每个用户的边际量彼此独立，因此取最大的 s 项即为最优。</p>
+                      </div>
+                    </details>
+                  </div>
+                </article>
+                <article class="theory-item">
+                  <span>SCOPE</span>
+                  <h3 data-i18n="methodLimitTitle">不保证全局最优</h3>
+                  <div class="theory-copy">
+                    <p class="theory-summary" data-i18n="methodLimitSummary">FPTR 保证可行和单调改进，但不提供全局最优或固定近似比。</p>
+                    <details class="theory-details">
+                      <summary data-i18n="scopeDetails">查看适用范围</summary>
+                      <div class="details-body"><p data-i18n="methodLimitBody">FPTR 的理论契约是“始终能发布可行解，并只接受严格改进”。它不为最终方案提供全局最优或固定近似比保证。</p></div>
+                    </details>
+                  </div>
+                </article>
               </div>
               <a class="paper-figure-link" href="../images/Deadline_Aware_FPTR_Scheduler.png" target="_blank" rel="noreferrer"><span data-i18n="viewPaperFigure">查看论文原始方法图</span><span aria-hidden="true">↗</span></a>
               <a class="button button-primary" href="../evidence/" style="margin: 1.5rem 0 0 1rem"><span data-i18n="continueResults">继续阅读实验结果</span><span aria-hidden="true">→</span></a>
@@ -180,7 +206,7 @@
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
+        <nav class="footer-links" aria-label="项目链接" data-i18n-aria="footerLinksAria"><a href="../reproduce/" data-i18n="navReproduce">复现</a><a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
       </footer>
     </div>
   </body>

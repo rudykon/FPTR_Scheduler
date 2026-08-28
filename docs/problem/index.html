@@ -25,11 +25,11 @@
         <a class="brand-link" href="../" aria-label="FPTR Scheduler home"><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
-          <a href="../problem/" aria-current="page"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
-          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
-          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
-          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
+          <a href="../problem/" aria-current="page"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">模型</span></a>
+          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">方法</span></a>
+          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">结果</span></a>
+          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">复现</span></a>
           <a href="../demo/"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
@@ -41,9 +41,9 @@
       <main id="main">
         <section class="page-hero page-hero-problem">
           <div class="section-wrap">
-            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
+            <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">概览</span></a>
             <p class="section-kicker" data-i18n="problemKicker">01 · 为什么难</p>
-            <h1 data-i18n="problemTitle">联合波束与资源调度的模型与约束</h1>
+            <h1 data-i18n="problemTitle">问题建模</h1>
             <p data-i18n="problemBody">波束选择会改变可用速率，资源成员关系会影响共享，缓存上限又会改变每一步的真实收益。任何局部修改，都可能让原本合法的分配越界。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
@@ -54,16 +54,24 @@
             <section class="editorial-section editorial-grid">
               <div class="editorial-copy">
                 <p class="section-kicker" data-i18n="systemModelKicker">系统模型</p>
-                <h2 data-i18n="systemModelTitle">一次调度，同时决定波束掩码与每个资源上的用户集合。</h2>
+                <h2 data-i18n="systemModelTitle">决策变量</h2>
                 <p data-i18n="systemModelBody">论文分别定义用户、资源、子带与波束集合。每个用户具有有限缓存、基础链路质量与逐波束能力；每个资源显式属于一至两个子带，两个成员可以不相邻。</p>
               </div>
               <aside class="callout">
                 <h3 data-i18n="scenarioQuestionTitle">调度器每个周期回答什么？</h3>
                 <p data-i18n="scenarioQuestionBody">激活哪些子带—波束组合，并把哪些用户放到每个资源上；结果必须在截止时间前完整序列化且通过全部约束。</p>
               </aside>
-              <div class="symbol-table-wrap" style="grid-column: 1 / -1">
-                <h3 data-i18n="symbolTitle">符号与角色</h3>
-                <div class="table-wrap">
+              <div class="key-symbols" style="grid-column: 1 / -1" aria-label="Core model symbols">
+                <article><math class="inline-math"><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub></math><span data-i18n="symbolActivationMeaning">子带—波束激活</span></article>
+                <article><math class="inline-math"><msub><mi>G</mi><mi>r</mi></msub></math><span data-i18n="symbolGroupMeaning">资源上的用户集合</span></article>
+                <article><math class="inline-math"><msub><mi>B</mi><mi>u</mi></msub></math><span data-i18n="symbolBufferMeaning">用户缓存</span></article>
+                <article><math class="inline-math"><mi>D</mi></math><span data-i18n="symbolDeadlineMeaning">外部截止时间</span></article>
+              </div>
+              <details class="symbol-details" style="grid-column: 1 / -1">
+                <summary data-i18n="symbolDetails">查看完整符号表</summary>
+                <div class="details-body symbol-table-wrap">
+                  <h3 data-i18n="symbolTitle">符号与角色</h3>
+                  <div class="table-wrap">
                   <table class="symbol-table">
                     <thead><tr><th data-i18n="symbolLabel">符号</th><th data-i18n="meaningLabel">含义</th><th data-i18n="roleLabel">在模型中的角色</th></tr></thead>
                     <tbody>
@@ -85,9 +93,10 @@
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>q</mi><mo>⁡</mo><mo>(</mo><mi>z</mi><mo>)</mo></math></th><td data-i18n="symbolTrafficMeaning">确定性流量映射</td><td data-i18n="symbolTrafficRole">把有效链路值映射为离散可交付流量</td></tr>
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>D</mi></math></th><td data-i18n="symbolDeadlineMeaning">外部截止时间</td><td data-i18n="symbolDeadlineRole">迟到、非法或失败输出均计零效用</td></tr>
                     </tbody>
-                  </table>
+                    </table>
+                  </div>
                 </div>
-              </div>
+              </details>
               <details class="formal-equations" style="grid-column: 1 / -1">
                 <summary><span data-i18n="formalModelSummary">展开完整系统模型</span><span class="equation-range" aria-hidden="true">(1)–(5)</span></summary>
                 <div class="details-body equation-stack">
@@ -180,8 +189,8 @@
 
             <section class="editorial-section editorial-grid">
               <div class="editorial-copy">
-                <p class="section-kicker" data-i18n="objectiveLabel">目标：最大化受缓存上限约束的传输量</p>
-                <h2 data-i18n="objectiveTitle">收益由实际可交付流量决定，而不是无限累加链路分数。</h2>
+                <p class="section-kicker" data-i18n="objectiveLabel">优化目标</p>
+                <h2 data-i18n="objectiveTitle">目标函数</h2>
                 <p class="equation-lead" data-i18n="equation6Lead">受缓存截断的可交付流量目标</p>
                 <div class="formula-block" id="eq-6" data-equation="6" tabindex="0">
                   <div class="equation-row">
@@ -236,7 +245,7 @@
             <section class="editorial-section">
               <div class="section-heading">
                 <p class="section-kicker" data-i18n="constraintKicker">约束结构</p>
-                <h2 data-i18n="constraintTitle">把六类约束归入三个会相互反馈的层次。</h2>
+                <h2 data-i18n="constraintTitle">约束结构</h2>
                 <p data-i18n="constraintBody">无线激活决定可用能力，资源共享决定组合合法性，交付契约再把有限缓存与硬截止时间施加到完整输出上。</p>
               </div>
               <div class="constraint-groups">
@@ -262,8 +271,8 @@
 
             <section class="editorial-section">
               <div class="section-heading">
-                <p class="section-kicker" data-i18n="riskKicker">设计动机</p>
-                <h2 data-i18n="problemAsideTitle">传统“先改再修”的风险</h2>
+                <p class="section-kicker" data-i18n="riskKicker">为什么需要 FPTR</p>
+                <h2 data-i18n="problemAsideTitle">设计动机</h2>
                 <p data-i18n="problemAsideBody">如果细化直接写入当前解，超时或验证失败时可能只留下一个半成品。FPTR 把候选解隔离开，让失败只损失这次尝试，不损坏已经可用的结果。</p>
               </div>
               <div class="risk-compare">
@@ -278,7 +287,7 @@
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
+        <nav class="footer-links" aria-label="项目链接" data-i18n-aria="footerLinksAria"><a href="../reproduce/" data-i18n="navReproduce">复现</a><a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
       </footer>
     </div>
   </body>

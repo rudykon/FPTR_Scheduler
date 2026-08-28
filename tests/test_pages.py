@@ -138,7 +138,8 @@ class PagesContractTests(unittest.TestCase):
             root_parser, en_parser = I18nParser(), I18nParser()
             root_parser.feed(root_html)
             en_parser.feed(en_html)
-            self.assertNotEqual(root_parser.flattened()["paperTitle"], en_parser.flattened()["paperTitle"])
+            self.assertEqual(root_parser.flattened()["paperTitle"], "FPTR Scheduler")
+            self.assertNotEqual(root_parser.flattened()["homeSubtitle"], en_parser.flattened()["homeSubtitle"])
             self.assertIn('<html lang="zh-CN">', root_html)
             self.assertIn('<html lang="en">', en_html)
             self.assertIn('rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/"', root_html)
@@ -149,7 +150,7 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn('href="../../assets/site.css"', (output / "en/method/index.html").read_text(encoding="utf-8"))
             demo_en = (output / "en/demo/index.html").read_text(encoding="utf-8")
             self.assertIn('src="../../demo/app.js"', demo_en)
-            self.assertIn("See joint beam and resource scheduling take shape.", demo_en)
+            self.assertIn("Live Scheduling Demo", demo_en)
             self.assertNotIn("applyLocale", (DOCS / "assets/site.js").read_text(encoding="utf-8"))
 
     def test_information_hierarchy_and_research_questions(self) -> None:
@@ -162,7 +163,10 @@ class PagesContractTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, home)
         self.assertEqual(home.count('class="summary-card '), 3)
-        self.assertEqual(home.count('class="reading-grid"'), 1)
+        self.assertEqual(len(re.findall(r'<a class="summary-card [^"]+" href="[^"]+">', home)), 3)
+        self.assertNotIn('class="reading-grid"', home)
+        self.assertNotIn('class="home-reading"', home)
+        self.assertEqual(len(re.findall(r"<h2\b", home)), 0)
         for key in ("constraintCountLabel", "gateCountLabel", "beamFirstGainLabel"):
             self.assertIn(f'data-i18n="{key}"', home)
 
@@ -171,11 +175,16 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn(rq, evidence)
         for anchor in ("quality", "deadline", "cg-stress", "baselines", "exact", "limits"):
             self.assertIn(f'id="{anchor}"', evidence)
+        self.assertEqual(evidence.count('class="evidence-highlights"'), 1)
+        highlights = re.search(r'<div class="evidence-highlights"[^>]*>(.*?)</div>', evidence, re.DOTALL)
+        self.assertIsNotNone(highlights)
+        self.assertEqual(highlights.group(1).count("<article>"), 3)
         self.assertEqual(evidence.count('class="secondary-figure"'), 2)
         self.assertEqual(evidence.count('class="figure-size-link"'), 6)
-        self.assertIn('class="terms terms-desktop"', evidence)
-        self.assertIn('class="terms-mobile"', evidence)
-        self.assertIn('data-i18n="termsSummary"', evidence)
+        self.assertNotIn('class="terms terms-desktop"', evidence)
+        self.assertNotIn('class="terms-mobile"', evidence)
+        for question in range(1, 6):
+            self.assertIn(f'data-i18n="rq{question}Question"', evidence)
         for key in (
             "stageGainAlt",
             "scenarioGainAlt",
@@ -198,6 +207,42 @@ class PagesContractTests(unittest.TestCase):
         self.assertEqual(timeline.group(1).count('class="stage'), 6)
         self.assertIn('data-i18n-aria="budgetBAria"', method)
         self.assertIn('data-i18n-aria="budgetDAria"', method)
+        for key in ("invariantSummary", "topSSummary", "methodLimitSummary", "proofDetails", "scopeDetails"):
+            self.assertIn(f'data-i18n="{key}"', method)
+
+        problem = (DOCS / "problem/index.html").read_text(encoding="utf-8")
+        self.assertIn('class="key-symbols"', problem)
+        self.assertIn('class="symbol-details"', problem)
+
+        reproduce = (DOCS / "reproduce/index.html").read_text(encoding="utf-8")
+        for legacy in ("8,610", 'class="audit-flow"', 'class="repo-map"', 'class="repo-tree"'):
+            self.assertNotIn(legacy, reproduce)
+        self.assertIn('data-i18n="expectedResultTitle"', reproduce)
+        self.assertIn('data-i18n="fullExperimentTitle"', reproduce)
+
+        zh = json.loads((DOCS / "content/zh.json").read_text(encoding="utf-8"))
+        en = json.loads((DOCS / "content/en.json").read_text(encoding="utf-8"))
+        self.assertEqual(set(zh), set(en))
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        for page in pages:
+            source = page.read_text(encoding="utf-8")
+            self.assertEqual(len(re.findall(r"<h1\b", source)), 1, page)
+            self.assertLessEqual(len(re.findall(r"<h2\b", source)), 7, page)
+            heading_keys = re.findall(r'<h[12]\b[^>]*data-i18n="([^"]+)"', source)
+            for key in heading_keys:
+                self.assertLessEqual(len(re.sub(r"\s+", "", zh[key])), 18, f"Chinese heading {key} is too long")
+                self.assertLessEqual(len(en[key]), 32, f"English heading {key} is too long")
+            paragraph_values = [
+                zh[key]
+                for key in re.findall(r'<p\b[^>]*data-i18n="([^"]+)"', source)
+                if len(zh[key]) >= 20
+            ]
+            duplicate_paragraphs = sorted({value for value in paragraph_values if paragraph_values.count(value) > 1})
+            self.assertEqual(duplicate_paragraphs, [], f"duplicate long paragraphs in {page}")
+            for details in re.findall(r"<details\b.*?</details>", source, flags=re.DOTALL):
+                self.assertIn("<summary", details, f"details without summary in {page}")
+            for image in re.findall(r"<img\b[^>]*>", source, flags=re.DOTALL):
+                self.assertRegex(image, r'\balt="[^"]*"', f"image without alt in {page}")
 
     def test_acm_equation_contract(self) -> None:
         problem = (DOCS / "problem/index.html").read_text(encoding="utf-8")
@@ -290,12 +335,14 @@ class PagesContractTests(unittest.TestCase):
         self.assertNotRegex(site_css + demo_css, r"body\s*\{[^}]*overflow(?:-x)?\s*:\s*hidden")
         self.assertIn("--demo-body: 1rem", demo_css)
         self.assertIn("--demo-meta: .875rem", demo_css)
-        self.assertIn("padding: 2.25rem 0 2rem", site_css)
-        self.assertIn("clamp(2.4rem, 4.3vw, 3.75rem)", site_css)
+        self.assertIn("padding: 1.6rem 0 1.5rem", site_css)
+        self.assertIn("clamp(2.1rem, 3.4vw, 3rem)", site_css)
         self.assertIn(".js .main-nav.is-open", site_css)
         self.assertIn(".js .nav-toggle", site_css)
-        self.assertIn(".terms-mobile", site_css)
-        self.assertIn(".terms-desktop", site_css)
+        self.assertIn(".key-symbols", site_css)
+        self.assertIn(".evidence-highlights", site_css)
+        self.assertNotIn(".terms-mobile", site_css)
+        self.assertNotIn(".terms-desktop", site_css)
         self.assertIn(".rq-nav.is-open", site_css)
         self.assertIn('html[lang="en"] .home-hero h1', site_css)
         self.assertIn('html[lang="en"] .page-hero h1', site_css)

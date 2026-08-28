@@ -91,6 +91,7 @@ async function assertLayout(page, route, viewport) {
     clientWidth: document.documentElement.clientWidth,
     scrollWidth: document.documentElement.scrollWidth,
     heroHeight: document.querySelector(".page-hero, .home-hero")?.getBoundingClientRect().height || 0,
+    demoHeroHeight: document.querySelector(".demo-hero")?.getBoundingClientRect().height || 0,
     smallText: [...document.querySelectorAll("main p, main li, main a, main button, main summary, main label, main th, main td, main h1, main h2, main h3, .site-footer p, .main-nav a")]
       .filter((node) => {
         if (!node.textContent.trim() || node.closest("svg, pre, code, sub, sup, [aria-hidden='true']")) return false;
@@ -108,6 +109,7 @@ async function assertLayout(page, route, viewport) {
   assert.deepEqual(metrics.smallText, [], `${route.name} contains semantic text below 14px: ${JSON.stringify(metrics.smallText)}`);
   assert.deepEqual(metrics.unfocusableScrollRegions, [], `${route.name} has an unfocusable scroll region`);
   if (route.interior) assert.ok(metrics.heroHeight <= 360, `${route.name} hero is ${metrics.heroHeight}px high`);
+  if (route.demo) assert.ok(metrics.demoHeroHeight <= 240, `${route.name} Demo hero is ${metrics.demoHeroHeight}px high`);
   if (viewport.width <= 390 && route.home === "zh") assert.ok(metrics.heroHeight <= 680, `Chinese mobile hero is ${metrics.heroHeight}px high`);
   if (viewport.width <= 390 && route.home === "en") assert.ok(metrics.heroHeight <= 720, `English mobile hero is ${metrics.heroHeight}px high`);
 }

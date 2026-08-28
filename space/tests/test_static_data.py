@@ -146,17 +146,13 @@ class BrowserDemoTests(unittest.TestCase):
         demo = (docs / "demo" / "index.html").read_text(encoding="utf-8")
         css = (docs / "assets" / "site.css").read_text(encoding="utf-8")
 
-        self.assertIn("FPTR：截止时间约束下的联合波束与资源调度", home)
-        self.assertIn("Feasibility-Preserving Transactional Refinement", home)
+        self.assertIn('<h1 data-i18n="paperTitle">FPTR Scheduler</h1>', home)
+        self.assertIn("截止时间约束下的联合波束与资源调度", home)
+        self.assertIn("保留可行解，隔离细化，验证后提交。", home)
+        self.assertEqual(home.count('class="summary-card '), 3)
+        self.assertNotIn('class="reading-grid"', home)
         for route in ("problem", "method", "evidence", "reproduce", "demo"):
             self.assertIn(f'href="./{route}/"', home)
-        for cutoff in (
-            '<mi>B</mi><mo>=</mo><mn>87</mn>',
-            '<mi>D</mi><mo>=</mo><mn>100</mn>',
-            'data-i18n-aria="budgetBAria"',
-            'data-i18n-aria="budgetDAria"',
-        ):
-            self.assertIn(cutoff, home)
 
         for cutoff in (
             '<mo>≤</mo><mn>45</mn>',

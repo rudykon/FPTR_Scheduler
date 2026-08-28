@@ -161,20 +161,37 @@ def render_page(template: str, relative: Path, locale: str, strings: dict[str, s
 
 
 def referenced_keys(source: str) -> set[str]:
-    return set(re.findall(r'data-i18n(?:-alt|-aria)?="([^"]+)"', source))
+    keys = set(re.findall(r'data-i18n(?:-alt|-aria)?="([^"]+)"', source))
+    keys.add(metadata_key(source, "title", "title"))
+    keys.add(metadata_key(source, "description", "description"))
+    return keys
 
 
-def build(source_dir: Path, output_dir: Path) -> None:
+def build(source_dir: Path, output_dir: Path, prune_unused: bool = False) -> None:
+    content_paths = {locale: source_dir / "content" / f"{locale}.json" for locale in ("zh", "en")}
     content = {
-        locale: json.loads((source_dir / "content" / f"{locale}.json").read_text(encoding="utf-8"))
-        for locale in ("zh", "en")
+        locale: json.loads(path.read_text(encoding="utf-8"))
+        for locale, path in content_paths.items()
     }
     templates = {relative: (source_dir / relative).read_text(encoding="utf-8") for relative in PAGES}
     keys = set().union(*(referenced_keys(source) for source in templates.values()))
+    if prune_unused:
+        for locale, strings in content.items():
+            content[locale] = {key: value for key, value in strings.items() if key in keys}
+            content_paths[locale].write_text(
+                json.dumps(content[locale], ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
     for locale, strings in content.items():
         missing = sorted(keys - strings.keys())
         if missing:
             raise SystemExit(f"{locale}.json is missing translation keys: {', '.join(missing)}")
+        unused = sorted(strings.keys() - keys)
+        if unused:
+            raise SystemExit(
+                f"{locale}.json has unused translation keys: {', '.join(unused)}. "
+                "Run build_pages.py once with --prune-unused."
+            )
 
     for relative, template in templates.items():
         root_destination = output_dir / relative
@@ -197,9 +214,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, default=Path("docs"))
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--prune-unused",
+        action="store_true",
+        help="remove translation entries that no checked-in page references",
+    )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    build(args.source.resolve(), args.output.resolve())
+    build(args.source.resolve(), args.output.resolve(), prune_unused=args.prune_unused)

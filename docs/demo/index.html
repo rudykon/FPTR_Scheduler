@@ -41,11 +41,11 @@
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
 
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
-          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">论文概览</span></a>
-          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">问题建模</span></a>
-          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">FPTR 方法</span></a>
-          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">实验结果</span></a>
-          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">代码与复现</span></a>
+          <a href="../"><i class="nav-icon" data-nav-icon="overview" aria-hidden="true"></i><span data-i18n="navOverview">概览</span></a>
+          <a href="../problem/"><i class="nav-icon" data-nav-icon="problem" aria-hidden="true"></i><span data-i18n="navProblem">模型</span></a>
+          <a href="../method/"><i class="nav-icon" data-nav-icon="method" aria-hidden="true"></i><span data-i18n="navMethod">方法</span></a>
+          <a href="../evidence/"><i class="nav-icon" data-nav-icon="evidence" aria-hidden="true"></i><span data-i18n="navEvidence">结果</span></a>
+          <a href="../reproduce/"><i class="nav-icon" data-nav-icon="reproduce" aria-hidden="true"></i><span data-i18n="navReproduce">复现</span></a>
           <a href="../demo/" aria-current="page"><i class="nav-icon" data-nav-icon="demo" aria-hidden="true"></i><span data-i18n="navDemo">Demo</span></a>
         </nav>
 
@@ -67,23 +67,15 @@
       <main id="main" class="demo-app">
         <section class="demo-hero section-wrap">
           <div class="demo-hero-copy">
-            <p class="demo-eyebrow" data-i18n="eyebrow">交互式调度器导览</p>
-            <h1 data-i18n="demoHeroTitle">直观看见联合波束与资源调度如何成形。</h1>
+            <p class="demo-eyebrow" data-i18n="eyebrow">REAL C++17 · WASM</p>
+            <h1 data-i18n="demoHeroTitle">在线调度 Demo</h1>
             <p class="demo-intro" data-i18n="intro">
-              实时运行 FPTR 与 7 个参考方法：BeamFirst，以及 ALNS、Tabu、GA、SA、ILS、GRASP 六种匹配搜索基线。
+              同一输入、同一预算，实时运行 FPTR 与 7 个参考方法。
             </p>
             <div class="hero-badges" aria-label="Demo properties">
               <span><i class="dot green"></i><span data-i18n="realSnapshots">实时 C++17 WebAssembly</span></span>
               <span><i class="dot blue"></i><span data-i18n="audit">独立验证器</span></span>
               <span><i class="dot violet"></i><span data-i18n="freeStatic">在本地浏览器运行</span></span>
-            </div>
-          </div>
-          <div class="demo-hero-visual" aria-hidden="true">
-            <img src="../assets/brand/hero-light-1280x720.webp" alt="" />
-            <div class="runtime-card">
-              <span>WASM</span>
-              <strong>C++17</strong>
-              <small>Browser runtime</small>
             </div>
           </div>
         </section>
@@ -98,7 +90,7 @@
               <div>
                 <span class="step-number">01</span>
                 <div>
-                  <h2 id="controlsTitle" data-i18n="configure">配置真实运行</h2>
+                  <h2 id="controlsTitle" data-i18n="configure">选择输入</h2>
                   <p data-i18n="configureHint">选择输入，然后启动一次受截止时间约束的真实运行。</p>
                 </div>
               </div>
@@ -122,7 +114,7 @@
             </div>
 
             <details class="advanced-controls">
-              <summary data-i18n="advancedSettings">高级设置：停止阶段与自定义输入</summary>
+              <summary data-i18n="advancedSettings">高级设置</summary>
               <div class="advanced-controls-body">
                 <fieldset class="control-field stage-field">
                   <legend data-i18n="stopStage">FPTR 停止阶段</legend>
@@ -145,7 +137,7 @@
                 <div><b id="inputSourceLabel" data-i18n="presetInput">预设输入</b><small id="inputSourceDetail">—</small></div>
               </div>
               <button id="runButton" class="run-button" type="button" disabled>
-                <span class="run-icon">▶</span><span data-i18n="runReal">运行实时对比</span>
+                <span class="run-icon">▶</span><span data-i18n="runReal">开始运行</span>
               </button>
             </div>
             <p id="executionNote" class="execution-note" data-i18n="executionNote">
@@ -158,12 +150,12 @@
               <div>
                 <span class="step-number">02</span>
                 <div>
-                  <h2 id="resultTitle" data-i18n="inspect">检查真实运行结果</h2>
+                  <h2 id="resultTitle" data-i18n="inspect">运行结果</h2>
                   <p id="instanceSummary">—</p>
                 </div>
               </div>
               <button id="downloadButton" class="primary-button" type="button" disabled>
-                <span data-i18n="download">下载运行记录</span> ↓
+                <span data-i18n="download">导出 JSON</span> ↓
               </button>
             </div>
 
@@ -172,8 +164,8 @@
             <article class="panel comparison-panel" aria-labelledby="comparisonTitle">
               <div class="panel-heading comparison-heading">
                 <div>
-                  <span class="panel-kicker" data-i18n="liveComparison">实时算法对比</span>
-                  <h3 id="comparisonTitle" data-i18n="comparisonTitle">FPTR 与 7 个参考方法在同一实例和预算下实时运行。</h3>
+                  <span class="panel-kicker" data-i18n="liveComparison">8 METHODS · LIVE</span>
+                  <h3 id="comparisonTitle" data-i18n="comparisonTitle">算法对比</h3>
                   <p data-i18n="comparisonHint">BeamFirst 与六种匹配搜索基线的输出均由同一独立验证器重算得分并检查约束。</p>
                 </div>
                 <span id="comparisonStatus" class="comparison-status">8 C++ / WASM</span>
@@ -199,14 +191,14 @@
                 </div>
               </details>
               <p class="comparison-note" data-i18n="comparisonNote">随机搜索方法使用固定种子；计时与得分来自本次浏览器运行，不读取预计算结果。</p>
-              <aside class="demo-boundary">
-                <strong data-i18n="demoBoundaryTitle">Demo 与论文计时的边界</strong>
+              <details class="demo-boundary">
+                <summary data-i18n="demoBoundaryTitle">Demo 与论文计时的边界</summary>
                 <p data-i18n="demoBoundary">浏览器 Demo 解释单个实例的算法行为；论文的时延分布与统计结论来自原生 C++ 独立进程实验，不能由一次 WebAssembly 计时替代。</p>
-              </aside>
+              </details>
             </article>
 
             <details class="advanced-results">
-              <summary data-i18n="advancedResults">展开分配图、阶段轨迹与需求细节</summary>
+              <summary data-i18n="advancedResults">查看详细结果</summary>
               <div class="dashboard-grid">
               <article class="panel panel-wide">
                 <div class="panel-heading">
@@ -278,12 +270,12 @@
           </section>
 
           <details class="detail-section advanced-detail">
-            <summary data-i18n="verificationDetails">展开审计、用户明细与原始输出</summary>
+            <summary data-i18n="verificationDetails">查看运行审计与原始输出</summary>
             <div class="section-heading">
               <div>
                 <span class="step-number">03</span>
                 <div>
-                  <h2 id="detailTitle" data-i18n="verify">核验详细结果</h2>
+                  <h2 id="detailTitle" data-i18n="verify">运行审计</h2>
                   <p data-i18n="verifyHint">追踪每个接受阶段以及每位用户的服务流量。</p>
                 </div>
               </div>
@@ -315,7 +307,7 @@
 
       <footer class="site-footer">
         <div><img src="../assets/brand/logo-horizontal.png" alt="FPTR Scheduler" /><p data-i18n="footer">可行性保持事务式细化 · 面向截止时间约束的无线调度</p></div>
-        <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">rudykon/FPTR_Scheduler</a>
+        <nav class="footer-links" aria-label="项目链接" data-i18n-aria="footerLinksAria"><a href="../reproduce/" data-i18n="navReproduce">复现</a><a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
       </footer>
     </div>
   </body>
