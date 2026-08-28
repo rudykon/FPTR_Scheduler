@@ -298,8 +298,8 @@ async function assertEquations(page, route) {
   assert.deepEqual(result.errors, [], `${route.name} equation errors: ${result.errors.join("; ")}`);
 }
 
-async function runLiveDemo(browser, origin, { path: routePath, status, screenshot }) {
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+async function runLiveDemo(browser, origin, { path: routePath, screenshot, viewport = { width: 390, height: 844 } }) {
+  const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", (error) => errors.push(`page: ${error.message}`));
@@ -316,7 +316,7 @@ async function runLiveDemo(browser, origin, { path: routePath, status, screensho
   assert.equal(await page.locator("#scenarioSelect").inputValue(), "small-balanced", `${routePath} must recommend the small balanced scenario`);
   assert.equal(await page.locator("#deepAnalysis").count(), 1, `${routePath} must have one deep-analysis disclosure`);
   await page.locator("#runButton").click();
-  await page.waitForFunction((expected) => document.querySelector("#dataStatus")?.textContent.includes(expected), status, { timeout: 60000 });
+  await page.waitForFunction(() => !document.querySelector("#results")?.hidden && document.querySelectorAll("#comparisonBars .comparison-bar").length === 8, null, { timeout: 60000 });
   await page.waitForFunction(() => document.activeElement?.id === "resultTitle", null, { timeout: 5000 });
   assert.equal(await visible(page.locator("#results")), true, `${routePath} did not reveal results after a successful run`);
   assert.equal(await page.locator("#kpiGrid .kpi").count(), 3, `${routePath} does not show exactly three result summaries`);
@@ -408,16 +408,19 @@ async function runLiveDemo(browser, origin, { path: routePath, status, screensho
 
     await runLiveDemo(browser, origin, {
       path: "/demo/",
-      status: "全部实时运行与验证通过",
       screenshot: "demo-live-mobile.png"
     });
     await runLiveDemo(browser, origin, {
       path: "/en/demo/",
-      status: "All live runs validated",
       screenshot: "demo-live-mobile-en.png"
     });
+    await runLiveDemo(browser, origin, {
+      path: "/demo/",
+      screenshot: "demo-live-desktop.png",
+      viewport: { width: 1440, height: 1000 }
+    });
 
-    process.stdout.write(`Browser layout checks passed for ${routeChecks} route/viewport combinations, no-JS navigation, and both eight-method live Demos.\n`);
+    process.stdout.write(`Browser layout checks passed for ${routeChecks} route/viewport combinations, no-JS navigation, and three eight-method live Demo runs.\n`);
   } finally {
     await browser.close();
     await new Promise((resolve) => server.close(resolve));

@@ -881,7 +881,7 @@ canvas { display: block; max-width: none; }
     border-top: 1px solid var(--line);
     border-right: 0;
   }
-  .comparison-bar { grid-template-columns: 72px minmax(0, 1fr) 58px; gap: .4rem; }
+  .comparison-bar { grid-template-columns: 84px minmax(0, 1fr) 56px; gap: .4rem; }
   .result-boundary a,
   .method-note a { display: block; margin: .25rem 0 0; }
   .analysis-body { padding: 0 .7rem .7rem; }

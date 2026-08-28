@@ -587,7 +587,8 @@ class PagesContractTests(unittest.TestCase):
             "image.naturalWidth === 0",
             "response.status() >= 400",
             "javaScriptEnabled: false",
-            "All live runs validated",
+            'document.activeElement?.id === "resultTitle"',
+            'screenshot: "demo-live-desktop.png"',
         ):
             self.assertIn(required, browser_test)
 

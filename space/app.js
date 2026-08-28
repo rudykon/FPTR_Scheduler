@@ -82,7 +82,7 @@ const COPY = {
     runPrompt: "Choose a scenario and budget, then run all eight methods.",
     resultValidated: "All 8 methods passed independent validation",
     staleNotice: "Parameters changed. These are still the previous run's results.", rerun: "Run again with new parameters",
-    recommended: "recommended", paperDefault: "paper default",
+    recommended: "recommended", paperDefault: "paper", paperDefaultTitle: "paper default",
     demandDelivery: "Demand delivery", browserAlgorithmTime: "Browser algorithm time", budgetUsed: "of budget",
     scoreComparison: "Scores on the same input and budget",
     comparisonBoundary: "Browser timing explains one instance; paper statistics come from native C++ subprocess experiments.",
@@ -145,7 +145,7 @@ const COPY = {
     runPrompt: "选择场景和预算，然后运行 8 种方法。",
     resultValidated: "8 种方法均通过独立验证",
     staleNotice: "参数已经改变，当前显示的是上一次运行结果。", rerun: "使用新参数重新运行",
-    recommended: "推荐", paperDefault: "论文默认",
+    recommended: "推荐", paperDefault: "默认", paperDefaultTitle: "论文默认",
     demandDelivery: "需求交付", browserAlgorithmTime: "浏览器算法时间", budgetUsed: "预算占用",
     scoreComparison: "同一输入与预算下的得分",
     comparisonBoundary: "浏览器计时用于解释单个实例；论文统计来自原生 C++ 独立进程实验。",
@@ -252,7 +252,8 @@ function populateBudgetButtons() {
   if (!container || !state.data) return;
   container.innerHTML = state.data.budgets.map((value, index) => {
     const note = value === 87 ? `<span>${escapeHtml(t("paperDefault"))}</span>` : "";
-    return `<button type="button" data-budget-index="${index}" aria-pressed="${index === state.budgetIndex ? "true" : "false"}"><b>${value}</b> ms${note}</button>`;
+    const title = value === 87 ? ` title="${escapeHtml(t("paperDefaultTitle"))}" aria-label="${value} ms · ${escapeHtml(t("paperDefaultTitle"))}"` : ` aria-label="${value} ms"`;
+    return `<button type="button" data-budget-index="${index}" aria-pressed="${index === state.budgetIndex ? "true" : "false"}${title}><b>${value}</b> ms${note}</button>`;
   }).join("");
   container.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
     state.budgetIndex = Number(button.dataset.budgetIndex);
@@ -562,7 +563,7 @@ async function runDemo(){
     await announce(2,"BeamFirst");
     const baseline=executeOne(input,"beamfirst",budgetMs);
     const comparisons=[
-      {id:"fptr",label:selectedLabel,primary:true,result:comparisonResult(selected)},
+      {id:"fptr",label:"FPTR",primary:true,result:comparisonResult(selected)},
       {id:"beamfirst",label:"BeamFirst",primary:false,result:comparisonResult(baseline)}
     ];
     let totalWallMs=selected.wallMs+baseline.wallMs;
@@ -601,7 +602,7 @@ async function runDemo(){
     render();
     if($("#rawDetails").open)populateRawOutput();
     $("#downloadButton").disabled=false;
-    setStatus("ready","runPassed",`#${state.runSerial} · ${fmt.format(selected.score)}`);
+    setStatus("ready","engineReady");
     await new Promise((resolve)=>requestAnimationFrame(()=>resolve()));
     $("#resultTitle").focus({preventScroll:true});
     results.scrollIntoView({behavior:"smooth",block:"start"});
