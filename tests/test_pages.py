@@ -392,12 +392,15 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn('html[lang="en"] .page-hero p:last-of-type', site_css)
         self.assertIn("--muted: #506f89", site_css)
         self.assertNotIn('html[lang="en"] .home-hero .hero-actions .button:last-child', site_css)
+        self.assertNotIn(".nav-icon", site_css)
 
         site_js = (DOCS / "assets/site.js").read_text(encoding="utf-8")
         for behavior in ("nav-toggle", "rq-toggle", "copy-code", "dataset.scrollRegion"):
             self.assertIn(behavior, site_js)
         for behavior in ("restoreNavFocus", "restoreRqFocus", "navToggle.focus()", "rqToggle.focus()"):
             self.assertIn(behavior, site_js)
+        self.assertNotIn("navIcons", site_js)
+        self.assertNotIn("[data-nav-icon]", site_js)
 
         pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
@@ -406,6 +409,8 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn('class="nav-toggle"', source)
             self.assertIn('id="mainNav"', source)
             self.assertNotIn('/zh/', source)
+            self.assertNotIn('class="nav-icon"', source)
+            self.assertNotIn('data-nav-icon=', source)
         evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
         self.assertIn('class="rq-toggle"', evidence)
         self.assertIn('id="rqNav"', evidence)
