@@ -429,6 +429,13 @@ class PagesContractTests(unittest.TestCase):
         self.assertNotRegex(site_css + demo_css, r"body\s*\{[^}]*overflow(?:-x)?\s*:\s*hidden")
         self.assertIn("--demo-body: 1rem", demo_css)
         self.assertIn("--demo-meta: .875rem", demo_css)
+        self.assertIn("scroll-margin-top: 6.5rem", demo_css)
+        self.assertNotRegex(
+            compact_demo,
+            r"\.results-section\.is-stale[^}]*opacity\s*:",
+        )
+        self.assertIn(".share-legend .share-0", demo_css)
+        self.assertIn(".share-legend .share-3", demo_css)
         self.assertIn("padding: 1.6rem 0 1.5rem", site_css)
         self.assertIn("clamp(2.1rem, 3.4vw, 3rem)", site_css)
         self.assertIn(".js .main-nav.is-open", site_css)
@@ -469,6 +476,46 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn('$("#results").classList.add("is-stale")', demo_js)
         self.assertIn('results.scrollIntoView', demo_js)
         self.assertNotIn('await runDemo();', demo_js)
+
+    def test_demo_runtime_copy_contains_only_dynamic_text(self) -> None:
+        source = (ROOT / "space/app.js").read_text(encoding="utf-8")
+        match = re.search(
+            r"const COPY = (\{.*?\n\});\n\nconst TRACE_LABELS",
+            source,
+            flags=re.DOTALL,
+        )
+        self.assertIsNotNone(match)
+        node_source = (
+            f"const COPY = {match.group(1)};"
+            "process.stdout.write(JSON.stringify(Object.fromEntries("
+            "Object.entries(COPY).map(([locale, values]) => "
+            "[locale, Object.keys(values).sort()]))));"
+        )
+        result = subprocess.run(
+            ["node", "-e", node_source],
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        catalog_keys = json.loads(result.stdout)
+        dynamic_keys = set(
+            re.findall(r'(?<![\w.])t\("([^"]+)"', source)
+        )
+        dynamic_keys.update(
+            re.findall(r'setStatus\("[^"]+",\s*"([^"]+)"', source)
+        )
+        self.assertEqual(set(catalog_keys), {"en", "zh"})
+        for locale, keys in catalog_keys.items():
+            self.assertEqual(
+                set(keys),
+                dynamic_keys,
+                f"{locale} runtime COPY has missing or unused keys",
+            )
+        self.assertNotIn("applyLanguage", source)
+        self.assertNotIn("runPrompt", source)
+        self.assertNotIn('font-size="8"', source)
+        self.assertNotIn('font-size="10"', source)
+        self.assertEqual(source.count('ctx.font = "12px system-ui"'), 2)
 
         pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
         for page in pages:

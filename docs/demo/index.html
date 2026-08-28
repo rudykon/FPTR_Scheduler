@@ -144,10 +144,6 @@
             </p>
           </section>
 
-          <p id="runPrompt" class="run-prompt" data-i18n="runPrompt">
-            选择场景和预算，然后运行 8 种方法。
-          </p>
-
           <section id="results" class="results-section" aria-labelledby="resultTitle" hidden>
             <header class="result-header">
               <p class="result-validation">
@@ -206,7 +202,10 @@
                   <div class="analysis-heading">
                     <h3 data-i18n="allocationAnalysisTitle">资源分配</h3>
                     <div class="share-legend">
-                      <span data-i18n="none">未用</span><i></i><i></i><i></i><i></i><span data-i18n="shared">共享</span>
+                      <span><i class="share-0" aria-hidden="true"></i><span data-i18n="shareNone">未用</span></span>
+                      <span><i class="share-1" aria-hidden="true"></i><span data-i18n="shareOne">1 人</span></span>
+                      <span><i class="share-2" aria-hidden="true"></i><span data-i18n="shareTwo">2 人</span></span>
+                      <span><i class="share-3" aria-hidden="true"></i><span data-i18n="shareThreePlus">3+ 人</span></span>
                     </div>
                   </div>
                   <h4 data-i18n="allocationTitle">每个资源块由谁使用？</h4>

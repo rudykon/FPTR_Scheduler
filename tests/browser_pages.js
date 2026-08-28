@@ -298,8 +298,13 @@ async function assertEquations(page, route) {
   assert.deepEqual(result.errors, [], `${route.name} equation errors: ${result.errors.join("; ")}`);
 }
 
-async function runLiveDemo(browser, origin, { path: routePath, screenshot, viewport = { width: 390, height: 844 } }) {
-  const context = await browser.newContext({ viewport });
+async function runLiveDemo(browser, origin, {
+  path: routePath,
+  screenshot,
+  viewport = { width: 390, height: 844 },
+  stageId = "full"
+}) {
+  const context = await browser.newContext({ viewport, reducedMotion: "reduce" });
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", (error) => errors.push(`page: ${error.message}`));
@@ -311,10 +316,22 @@ async function runLiveDemo(browser, origin, { path: routePath, screenshot, viewp
   await page.locator("#runButton").waitFor({ state: "visible", timeout: 30000 });
   await assert.doesNotReject(() => page.waitForFunction(() => !document.querySelector("#runButton").disabled, null, { timeout: 30000 }));
   assert.equal(await page.locator("#results").isHidden(), true, `${routePath} exposes results before a run`);
-  assert.equal(await visible(page.locator("#runPrompt")), true, `${routePath} has no pre-run guidance`);
   assert.equal(await page.locator(".run-button:visible").count(), 1, `${routePath} must have one primary run action before results`);
   assert.equal(await page.locator("#scenarioSelect").inputValue(), "small-balanced", `${routePath} must recommend the small balanced scenario`);
   assert.equal(await page.locator("#deepAnalysis").count(), 1, `${routePath} must have one deep-analysis disclosure`);
+  const initialBudgetStates = await page.locator("#budgetButtons button").evaluateAll(
+    (buttons) => buttons.map((button) => button.getAttribute("aria-pressed"))
+  );
+  assert.deepEqual(initialBudgetStates, ["false", "false", "true", "false", "false"], `${routePath} has invalid initial budget states`);
+  assert.ok(await page.locator('#budgetButtons button[data-budget-index="2"]').getAttribute("title"), `${routePath} does not label the paper-default budget`);
+
+  const stageButton = page.locator(`#stageButtons button[data-stage="${stageId}"]`);
+  const stageLabel = (await stageButton.textContent()).trim();
+  if (stageId !== "full") {
+    await page.locator(".advanced-controls > summary").click();
+    await stageButton.click();
+    await page.locator(".advanced-controls > summary").click();
+  }
   await page.locator("#runButton").click();
   await page.waitForFunction(() => !document.querySelector("#results")?.hidden && document.querySelectorAll("#comparisonBars .comparison-bar").length === 8, null, { timeout: 60000 });
   await page.waitForFunction(() => document.activeElement?.id === "resultTitle", null, { timeout: 5000 });
@@ -322,12 +339,29 @@ async function runLiveDemo(browser, origin, { path: routePath, screenshot, viewp
   assert.equal(await page.locator("#kpiGrid .kpi").count(), 3, `${routePath} does not show exactly three result summaries`);
   assert.equal(await page.locator("#comparisonBars .comparison-bar").count(), 8, `${routePath} does not show eight comparison bars`);
   assert.equal(await page.locator("#comparisonBody tr").count(), 8);
+  assert.ok((await page.locator("#instanceSummary").textContent()).includes(stageLabel), `${routePath} omits the executed FPTR stage from its result summary`);
+  const primaryLabel = (await page.locator("#comparisonBars .comparison-bar.primary .comparison-bar-label").textContent()).trim();
+  assert.equal(primaryLabel, stageId === "full" ? "FPTR" : `FPTR · ${stageLabel}`, `${routePath} mislabels the selected FPTR stage`);
+  const positions = await page.evaluate(() => {
+    const header = document.querySelector(".site-header").getBoundingClientRect();
+    const results = document.querySelector("#results").getBoundingClientRect();
+    return { headerBottom: header.bottom, resultsTop: results.top };
+  });
+  assert.ok(positions.resultsTop >= positions.headerBottom + 8, `${routePath} results are hidden behind the sticky header`);
   assert.equal(await page.locator("#deepAnalysis").getAttribute("open"), null, `${routePath} opens deep analysis by default`);
   assert.equal(await page.locator(".analysis-tabs .tab").count(), 4, `${routePath} must provide four analysis views`);
   assert.equal(await page.locator("#rawOutput").textContent(), "", `${routePath} eagerly renders raw stdout`);
   await assertLoadedResources(page, { name: routePath }, errors);
   await page.screenshot({ path: path.join(screenshots, screenshot), fullPage: true });
   await page.locator("#deepAnalysis > summary").click();
+  const stageChart = page.locator("#stageChart svg");
+  assert.ok(await stageChart.getAttribute("aria-label"), `${routePath} stage chart has no localized accessible name`);
+  const stageFontSizes = await stageChart.locator("text").evaluateAll(
+    (nodes) => nodes.map((node) => Number.parseFloat(getComputedStyle(node).fontSize))
+  );
+  assert.ok(Math.min(...stageFontSizes) >= 11, `${routePath} stage chart text is smaller than 11px`);
+  await page.locator("#allocationTabButton").click();
+  assert.equal(await page.locator(".share-legend > span").count(), 4, `${routePath} does not label all four sharing levels`);
   await page.locator("#recordTabButton").click();
   assert.equal(await page.locator("#rawOutput").textContent(), "", `${routePath} renders raw stdout before its disclosure opens`);
   await page.locator("#rawDetails > summary").click();
@@ -335,9 +369,14 @@ async function runLiveDemo(browser, origin, { path: routePath, screenshot, viewp
   const postRunWidth = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
   assert.ok(postRunWidth.scroll <= postRunWidth.client + 1, `${routePath} overflows after run: ${postRunWidth.scroll} > ${postRunWidth.client}`);
   await page.locator('#budgetButtons button[data-budget-index="1"]').click();
+  const changedBudgetStates = await page.locator("#budgetButtons button").evaluateAll(
+    (buttons) => buttons.map((button) => button.getAttribute("aria-pressed"))
+  );
+  assert.deepEqual(changedBudgetStates, ["false", "true", "false", "false", "false"], `${routePath} does not expose exactly one selected budget`);
   assert.equal(await page.locator("#results").getAttribute("class").then((value) => value.includes("is-stale")), true, `${routePath} does not mark old results as stale`);
   assert.equal(await visible(page.locator("#staleBanner")), true, `${routePath} does not expose the stale-result warning`);
   assert.equal(await page.locator("#downloadButton").isDisabled(), true, `${routePath} permits exporting stale results`);
+  await assertLayout(page, { name: `${routePath}-stale`, demo: true }, viewport);
   await context.close();
 }
 
@@ -412,7 +451,8 @@ async function runLiveDemo(browser, origin, { path: routePath, screenshot, viewp
     });
     await runLiveDemo(browser, origin, {
       path: "/en/demo/",
-      screenshot: "demo-live-mobile-en.png"
+      screenshot: "demo-live-mobile-en.png",
+      stageId: "base"
     });
     await runLiveDemo(browser, origin, {
       path: "/demo/",
