@@ -228,12 +228,16 @@ async function assertEquations(page, route) {
     const details = [...document.querySelectorAll("details")].filter((node) => node.querySelector(".formula-block"));
     const previous = details.map((node) => node.open);
     details.forEach((node) => { node.open = true; });
+    const mathRoots = [...document.querySelectorAll("math")];
+    if (mathRoots.length > 0) {
+      await document.fonts.load('16px "FPTR Latin Modern Math"', "F(α,G)∑{}");
+    }
     await document.fonts.ready;
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     const viewportWidth = document.documentElement.clientWidth;
     const blocks = [...document.querySelectorAll(".formula-block")];
     const errors = [];
-    if (!document.fonts.check('16px "FPTR Latin Modern Math"')) {
+    if (mathRoots.length > 0 && !document.fonts.check('16px "FPTR Latin Modern Math"')) {
       errors.push("bundled math font did not load");
     }
     const inconsistentMathTokens = [
