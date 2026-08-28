@@ -259,11 +259,12 @@ canvas { display: block; max-width: none; }
   .provenance-card { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 560px) {
-  .demo-hero { min-height: 0; padding: 1.15rem 1rem; border-radius: 22px; }
-  .demo-hero h1 { font-size: clamp(2rem, 10vw, 2.45rem); }
-  .hero-badges { margin-top: .8rem; }
-  .hero-badges > span { padding: 0; border: 0; background: transparent; }
-  .hero-badges > span { padding: .35rem .5rem; }
+  .demo-hero { min-height: 0; padding: .9rem 1rem; border-radius: 22px; }
+  .demo-eyebrow { display: none; }
+  .demo-hero h1 { margin: 0 0 .3rem; font-size: clamp(1.85rem, 9vw, 2.2rem); }
+  .demo-intro { font-size: .9375rem; line-height: 1.45; }
+  .hero-badges { gap: .3rem .75rem; margin-top: .55rem; }
+  .hero-badges > span { padding: 0; border: 0; background: transparent; font-size: .8125rem; }
   .demo-app .section-heading { flex-direction: column; gap: .7rem; }
   .demo-app .section-heading > div { width: 100%; }
   .status-pill { margin-left: 3rem; white-space: normal; }
