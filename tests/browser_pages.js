@@ -172,6 +172,12 @@ async function assertEquations(page, route) {
       if (getComputedStyle(math).whiteSpace !== "nowrap") {
         errors.push(`inline-${index + 1}: inline MathML may break across lines`);
       }
+      const tokens = [...math.children]
+        .map((token) => token.getBoundingClientRect())
+        .filter((rect) => rect.width > 0 || rect.height > 0);
+      if (tokens.length > 1 && tokens.every((rect) => Math.abs(rect.left - tokens[0].left) < 1)) {
+        errors.push(`inline-${index + 1}: inline MathML tokens collapsed into a vertical stack`);
+      }
     });
     details.forEach((node, index) => { node.open = previous[index]; });
     return { count: blocks.length, errors };

@@ -416,7 +416,8 @@ html[lang="en"] .home-hero h1 {
 }
 .inline-math {
   display: inline-block;
-  width: max-content;
+  width: auto;
+  max-width: none;
   white-space: nowrap;
   margin-inline: .1em;
   font-size: 1.04em;

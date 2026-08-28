@@ -305,6 +305,10 @@ class PagesContractTests(unittest.TestCase):
             'overflow-x: auto',
         ):
             self.assertIn(required, site_css)
+        inline_rule = re.search(r'\.inline-math\s*\{(?P<body>[^}]*)\}', site_css)
+        self.assertIsNotNone(inline_rule)
+        self.assertIn('width: auto;', inline_rule.group('body'))
+        self.assertNotIn('width: max-content;', inline_rule.group('body'))
 
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
