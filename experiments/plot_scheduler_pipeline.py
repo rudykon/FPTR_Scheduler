@@ -17,6 +17,11 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 from PIL import Image
 
+try:
+    from .visual_palette import PALETTE
+except ImportError:  # Direct script execution from the repository root.
+    from visual_palette import PALETTE
+
 
 plt.rcParams["font.family"] = "sans-serif"
 plt.rcParams["font.sans-serif"] = ["Arial", "DejaVu Sans", "Liberation Sans"]
@@ -28,26 +33,26 @@ BODY_FONT_PT = 5.75
 HEADER_FONT_PT = 6.6
 
 COLORS = {
-    "ink": "#263238",
-    "line": "#51636D",
-    "white": "#FFFFFF",
-    "model_bg": "#F5F8FB",
-    "model_fill": "#E8F1FA",
-    "model_edge": "#4D789F",
-    "base_bg": "#F8F6FC",
-    "base_fill": "#EEEAF7",
-    "base_edge": "#7161A4",
-    "search_bg": "#FFF9F1",
-    "search_fill": "#FFF0DE",
-    "search_edge": "#B87528",
-    "gate_fill": "#F9E7E4",
-    "gate_edge": "#B65049",
-    "safe_bg": "#F3FAF5",
-    "safe_fill": "#E1F2E6",
-    "safe_edge": "#378253",
-    "deadline_fill": "#FFF4D9",
-    "deadline_edge": "#B88326",
-    "header": "#334D5C",
+    "ink": PALETTE["structure"],
+    "line": PALETTE["chart-axis"],
+    "white": PALETTE["white"],
+    "model_bg": PALETTE["ice"],
+    "model_fill": PALETTE["blue-soft"],
+    "model_edge": PALETTE["method-cg"],
+    "base_bg": PALETTE["violet-soft"],
+    "base_fill": PALETTE["chart-unmet"],
+    "base_edge": PALETTE["signal"],
+    "search_bg": PALETTE["blue-soft"],
+    "search_fill": PALETTE["chart-share-1"],
+    "search_edge": PALETTE["method-full"],
+    "gate_fill": PALETTE["surface-soft"],
+    "gate_edge": PALETTE["refinement"],
+    "safe_bg": PALETTE["green-soft"],
+    "safe_fill": PALETTE["green-soft"],
+    "safe_edge": PALETTE["feasible"],
+    "deadline_fill": PALETTE["amber-soft"],
+    "deadline_edge": PALETTE["deadline"],
+    "header": PALETTE["structure"],
 }
 
 

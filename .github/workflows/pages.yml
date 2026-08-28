@@ -7,9 +7,13 @@ on:
     paths:
       - "docs/**"
       - "space/**"
+      - "config/visual_palette.json"
       - "tools/build_pages.py"
+      - "tools/build_visual_palette.py"
       - "tools/build_web_figure_fallbacks.py"
       - "experiments/plot_paper_results.py"
+      - "experiments/plot_scheduler_pipeline.py"
+      - "experiments/visual_palette.py"
       - "tests/test_pages.py"
       - "tests/browser_pages.js"
       - ".github/workflows/pages.yml"
@@ -41,7 +45,8 @@ jobs:
           node --check space/app.js
           node --check space/runtime.js
           node --check tests/browser_pages.js
-          python3 -m py_compile tools/build_pages.py experiments/plot_paper_results.py
+          python3 -m py_compile tools/build_pages.py tools/build_visual_palette.py experiments/visual_palette.py experiments/plot_paper_results.py experiments/plot_scheduler_pipeline.py
+          python3 tools/build_visual_palette.py --check
           python3 tools/build_web_figure_fallbacks.py --check
           python3 -m unittest discover -s tests -p 'test_pages.py' -v
           python3 -m unittest discover -s space/tests -p 'test_*.py'

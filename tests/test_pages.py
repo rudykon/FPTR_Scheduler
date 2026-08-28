@@ -148,6 +148,7 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn('hreflang="zh-CN" href="https://rudykon.github.io/FPTR_Scheduler/"', root_html)
             self.assertIn('hreflang="x-default" href="https://rudykon.github.io/FPTR_Scheduler/"', root_html)
             self.assertIn('href="/FPTR_Scheduler/" data-locale="zh"', en_html)
+            self.assertIn('href="../../assets/palette.css"', (output / "en/method/index.html").read_text(encoding="utf-8"))
             self.assertIn('href="../../assets/site.css"', (output / "en/method/index.html").read_text(encoding="utf-8"))
             demo_en = (output / "en/demo/index.html").read_text(encoding="utf-8")
             self.assertIn('src="../../demo/app.js"', demo_en)
@@ -364,6 +365,7 @@ class PagesContractTests(unittest.TestCase):
 
     def test_mobile_and_demo_css_contract(self) -> None:
         site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")
+        palette_css = (DOCS / "assets/palette.css").read_text(encoding="utf-8")
         demo_css = (DOCS / "demo/demo.css").read_text(encoding="utf-8")
         compact_demo = re.sub(r"\s+", " ", demo_css)
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", compact_demo)
@@ -390,7 +392,7 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn('html[lang="en"] .home-hero h1', site_css)
         self.assertIn('html[lang="en"] .page-hero h1', site_css)
         self.assertIn('html[lang="en"] .page-hero p:last-of-type', site_css)
-        self.assertIn("--muted: #506f89", site_css)
+        self.assertIn("--muted: #506f89", palette_css)
         self.assertNotIn('html[lang="en"] .home-hero .hero-actions .button:last-child', site_css)
         self.assertNotIn(".nav-icon", site_css)
 
@@ -401,6 +403,19 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn(behavior, site_js)
         self.assertNotIn("navIcons", site_js)
         self.assertNotIn("[data-nav-icon]", site_js)
+
+        demo_js = (ROOT / "space/app.js").read_text(encoding="utf-8")
+        self.assertIn("getComputedStyle(document.documentElement)", demo_js)
+        for role in (
+            "--signal",
+            "--chart-baseline",
+            "--chart-grid",
+            "--chart-share-0",
+            "--chart-share-3",
+            "--chart-unmet",
+        ):
+            self.assertIn(f'cssColor("{role}")', demo_js)
+        self.assertNotRegex(demo_js, r"#[0-9A-Fa-f]{3,8}\b")
 
         pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
@@ -414,6 +429,49 @@ class PagesContractTests(unittest.TestCase):
         evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
         self.assertIn('class="rq-toggle"', evidence)
         self.assertIn('id="rqNav"', evidence)
+
+    def test_visual_palette_is_single_source(self) -> None:
+        subprocess.run(
+            ["python3", str(ROOT / "tools/build_visual_palette.py"), "--check"],
+            check=True,
+        )
+        palette = json.loads((ROOT / "config/visual_palette.json").read_text(encoding="utf-8"))
+        expected = {
+            "signal": "#3F6F94",
+            "routing": "#4D7474",
+            "feasible": "#4F795B",
+            "deadline": "#8C642E",
+            "refinement": "#5D6F7F",
+            "red": "#985560",
+            "ice": "#F6F8FA",
+            "method-beam-first": "#60666D",
+            "method-full": "#365F7E",
+        }
+        for role, value in expected.items():
+            self.assertEqual(palette[role], value)
+
+        site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")
+        demo_css = (DOCS / "demo/demo.css").read_text(encoding="utf-8")
+        self.assertNotRegex(site_css + demo_css, r"#[0-9A-Fa-f]{3,8}\b")
+        self.assertNotIn("saturate(145%)", site_css)
+        self.assertNotIn("var(--refinement)", demo_css)
+        self.assertIn(".comparison-bar-fill", demo_css)
+        self.assertIn("background: var(--chart-baseline)", demo_css)
+        self.assertIn("background: var(--method-full)", demo_css)
+
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        for page in pages:
+            source = page.read_text(encoding="utf-8")
+            self.assertIn("assets/palette.css", source)
+            self.assertLess(source.index("assets/palette.css"), source.index("assets/site.css"))
+
+        for script in (
+            ROOT / "experiments/plot_paper_results.py",
+            ROOT / "experiments/plot_scheduler_pipeline.py",
+        ):
+            source = script.read_text(encoding="utf-8")
+            self.assertIn("PALETTE", source)
+            self.assertNotRegex(source, r"#[0-9A-Fa-f]{6}\b")
 
     def test_web_figure_manifest_is_current(self) -> None:
         subprocess.run(

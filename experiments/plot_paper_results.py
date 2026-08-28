@@ -32,6 +32,11 @@ import numpy as np
 from matplotlib.lines import Line2D
 from PIL import Image
 
+try:
+    from .visual_palette import PALETTE
+except ImportError:  # Direct script execution from the repository root.
+    from visual_palette import PALETTE
+
 
 # Mandatory publication settings: labels remain editable in SVG/PDF.
 mpl.rcParams.update({
@@ -75,12 +80,12 @@ SCENARIO_LABELS = {
 }
 
 METHOD_COLORS = {
-    "BeamFirst": "#262626",
-    "Base": "#494A73",
-    "Global": "#6F7FA6",
-    "CG": "#3F817F",
-    "Remask": "#9A6B80",
-    "Full": "#A63D38",
+    "BeamFirst": PALETTE["method-beam-first"],
+    "Base": PALETTE["method-base"],
+    "Global": PALETTE["method-global"],
+    "CG": PALETTE["method-cg"],
+    "Remask": PALETTE["method-remask"],
+    "Full": PALETTE["method-full"],
 }
 METHOD_MARKERS = {
     "BeamFirst": "o",
@@ -98,13 +103,13 @@ METHOD_LINESTYLES = {
     "Remask": (0, (6.0, 1.4)),
     "Full": "-",
 }
-INK = "#202020"
-AXIS = "#2F2F2F"
-NEUTRAL = "#707070"
-LIGHT_NEUTRAL = "#D2D2D2"
-GRID = "#D0D0D0"
-GAIN = "#347A4A"
-WIDE_CASE = "#B86A08"
+INK = PALETTE["structure"]
+AXIS = PALETTE["chart-axis"]
+NEUTRAL = PALETTE["chart-baseline"]
+LIGHT_NEUTRAL = PALETTE["chart-grid"]
+GRID = PALETTE["chart-grid"]
+GAIN = PALETTE["feasible"]
+WIDE_CASE = PALETTE["deadline"]
 ACTIVE_PROFILE = "paper"
 
 

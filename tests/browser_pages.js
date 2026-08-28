@@ -96,6 +96,9 @@ async function assertLayout(page, route, viewport) {
     const parseColor = (value) => {
       const channels = value.match(/[\d.]+/g)?.map(Number);
       if (!channels || channels.length < 3) return null;
+      if (value.startsWith("color(srgb")) {
+        return { r: channels[0] * 255, g: channels[1] * 255, b: channels[2] * 255, a: channels[3] ?? 1 };
+      }
       return { r: channels[0], g: channels[1], b: channels[2], a: channels[3] ?? 1 };
     };
     const composite = (foreground, background) => {
@@ -129,27 +132,32 @@ async function assertLayout(page, route, viewport) {
       const darker = Math.min(luminance(left), luminance(right));
       return (lighter + 0.05) / (darker + 0.05);
     };
-    const mutedProbe = document.createElement("span");
-    mutedProbe.style.color = "var(--muted)";
-    document.body.append(mutedProbe);
-    const muted = parseColor(getComputedStyle(mutedProbe).color);
-    mutedProbe.remove();
-    const sameRgb = (left, right) => left && right
-      && Math.abs(left.r - right.r) < 1
-      && Math.abs(left.g - right.g) < 1
-      && Math.abs(left.b - right.b) < 1;
     const contrastIssues = [...document.querySelectorAll("body *")]
       .filter((node) => {
         const hasDirectText = [...node.childNodes].some(
           (child) => child.nodeType === Node.TEXT_NODE && child.textContent.trim()
         );
-        return hasDirectText && isVisible(node) && sameRgb(parseColor(getComputedStyle(node).color), muted);
+        return hasDirectText
+          && isVisible(node)
+          && !node.closest("svg, pre, code, [aria-hidden='true']");
       })
       .map((node) => {
-        const ratio = contrast(muted, effectiveBackground(node));
-        return { text: node.textContent.trim().slice(0, 60), ratio: Number(ratio.toFixed(2)) };
+        const style = getComputedStyle(node);
+        const foreground = parseColor(style.color);
+        const background = effectiveBackground(node);
+        const ratio = foreground ? contrast(foreground, background) : 0;
+        const size = parseFloat(style.fontSize);
+        const weight = Number.parseInt(style.fontWeight, 10) || 400;
+        const large = size >= 24 || (size >= 18.66 && weight >= 700);
+        return {
+          text: node.textContent.trim().slice(0, 60),
+          ratio: Number(ratio.toFixed(2)),
+          threshold: large ? 3 : 4.5,
+          color: style.color,
+          background: style.backgroundColor,
+        };
       })
-      .filter((item) => item.ratio < 4.5);
+      .filter((item) => item.ratio + 0.01 < item.threshold);
     return {
       clientWidth: document.documentElement.clientWidth,
       scrollWidth: document.documentElement.scrollWidth,
@@ -176,7 +184,7 @@ async function assertLayout(page, route, viewport) {
   });
   assert.ok(metrics.scrollWidth <= metrics.clientWidth + 1, `${route.name} overflows at ${viewport.width}px: ${metrics.scrollWidth} > ${metrics.clientWidth}`);
   assert.deepEqual(metrics.smallText, [], `${route.name} contains semantic text below 14px: ${JSON.stringify(metrics.smallText)}`);
-  assert.deepEqual(metrics.contrastIssues, [], `${route.name} contains muted text below 4.5:1 contrast: ${JSON.stringify(metrics.contrastIssues)}`);
+  assert.deepEqual(metrics.contrastIssues, [], `${route.name} contains visible text below WCAG AA contrast: ${JSON.stringify(metrics.contrastIssues)}`);
   assert.deepEqual(metrics.unfocusableScrollRegions, [], `${route.name} has an unfocusable scroll region`);
   if (route.interior) assert.ok(metrics.heroHeight <= 360, `${route.name} hero is ${metrics.heroHeight}px high`);
   if (route.demo) assert.ok(metrics.demoHeroHeight <= 240, `${route.name} Demo hero is ${metrics.demoHeroHeight}px high`);

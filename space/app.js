@@ -3,6 +3,30 @@
 const APP_SCRIPT = [...document.scripts].find((script) => /\/app\.js(?:\?|$)/.test(script.src));
 const DEMO_BASE_URL = new URL(".", APP_SCRIPT ? APP_SCRIPT.src : window.location.href);
 const demoAssetUrl = (path) => new URL(path, DEMO_BASE_URL).href;
+const rootStyle = getComputedStyle(document.documentElement);
+const cssColor = (name) => {
+  const value = rootStyle.getPropertyValue(name).trim();
+  if (!value) throw new Error(`Missing registered visual color: ${name}`);
+  return value;
+};
+const DEMO_COLORS = Object.freeze({
+  primary: cssColor("--signal"),
+  baseline: cssColor("--chart-baseline"),
+  grid: cssColor("--chart-grid"),
+  axis: cssColor("--chart-axis"),
+  structure: cssColor("--structure"),
+  inkSoft: cssColor("--ink-soft"),
+  muted: cssColor("--muted"),
+  white: cssColor("--white"),
+  share: [
+    cssColor("--chart-share-0"),
+    cssColor("--chart-share-1"),
+    cssColor("--chart-share-2"),
+    cssColor("--chart-share-3"),
+  ],
+  delivered: cssColor("--signal"),
+  unmet: cssColor("--chart-unmet"),
+});
 
 const COPY = {
   en: {
@@ -267,16 +291,16 @@ function renderStageChart(current) {
   const grid = [0, .25, .5, .75, 1].map((fraction) => {
     const value = low + (high - low) * fraction;
     const yy = y(value);
-    return `<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#e4ecf4"/><text x="${left-10}" y="${yy+4}" text-anchor="end" fill="#8190a2" font-size="10">${escapeHtml(fmt.format(Math.round(value)))}</text>`;
+    return `<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="${DEMO_COLORS.grid}"/><text x="${left-10}" y="${yy+4}" text-anchor="end" fill="${DEMO_COLORS.axis}" font-size="10">${escapeHtml(fmt.format(Math.round(value)))}</text>`;
   }).join("");
   const path = trace.map((item, i) => `${i ? "L" : "M"}${x(i)},${y(item.score)}`).join(" ");
   const baselineY = y(current.baselineScore);
   const points = trace.map((item, i) => {
     const traceLabel = TRACE_LABELS[item.stage] || [item.stage, item.stage];
     const label = traceLabel[state.language === "zh" ? 1 : 0];
-    return `<g><circle cx="${x(i)}" cy="${y(item.score)}" r="6" fill="#2587ff" stroke="#fff" stroke-width="3"/><text x="${x(i)}" y="${y(item.score)-13}" text-anchor="middle" fill="#17324d" font-size="10" font-weight="800">${escapeHtml(fmt.format(item.score))}</text><text x="${x(i)}" y="${H-31}" text-anchor="middle" fill="#52677e" font-size="10" font-weight="700">${escapeHtml(label)}</text><text x="${x(i)}" y="${H-17}" text-anchor="middle" fill="#8a99aa" font-size="8">${item.elapsedMs.toFixed(2)} ms</text></g>`;
+    return `<g><circle cx="${x(i)}" cy="${y(item.score)}" r="6" fill="${DEMO_COLORS.primary}" stroke="${DEMO_COLORS.white}" stroke-width="3"/><text x="${x(i)}" y="${y(item.score)-13}" text-anchor="middle" fill="${DEMO_COLORS.structure}" font-size="10" font-weight="800">${escapeHtml(fmt.format(item.score))}</text><text x="${x(i)}" y="${H-31}" text-anchor="middle" fill="${DEMO_COLORS.inkSoft}" font-size="10" font-weight="700">${escapeHtml(label)}</text><text x="${x(i)}" y="${H-17}" text-anchor="middle" fill="${DEMO_COLORS.muted}" font-size="8">${item.elapsedMs.toFixed(2)} ms</text></g>`;
   }).join("");
-  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="FPTR cumulative score chart">${grid}<line x1="${left}" y1="${baselineY}" x2="${W-right}" y2="${baselineY}" stroke="#ffad2f" stroke-width="2" stroke-dasharray="6 6"/><text x="${W-right}" y="${baselineY-7}" text-anchor="end" fill="#d68810" font-size="10" font-weight="800">BeamFirst · ${escapeHtml(fmt.format(current.baselineScore))}</text><path d="${path}" fill="none" stroke="#2587ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${points}</svg>`;
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="FPTR cumulative score chart">${grid}<line x1="${left}" y1="${baselineY}" x2="${W-right}" y2="${baselineY}" stroke="${DEMO_COLORS.baseline}" stroke-width="2" stroke-dasharray="6 6"/><text x="${W-right}" y="${baselineY-7}" text-anchor="end" fill="${DEMO_COLORS.baseline}" font-size="10" font-weight="800">BeamFirst · ${escapeHtml(fmt.format(current.baselineScore))}</text><path d="${path}" fill="none" stroke="${DEMO_COLORS.primary}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${points}</svg>`;
 }
 
 function setupCanvas(canvas, logicalWidth, logicalHeight) {
@@ -311,16 +335,16 @@ function renderAllocation(item, current) {
   const width = Math.max(canvas.parentElement.clientWidth - 2, left + K * cellW + 10);
   const height = top + N * cellH + 20;
   const ctx = setupCanvas(canvas, width, height);
-  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = DEMO_COLORS.white; ctx.fillRect(0, 0, width, height);
   const resourceUsers = current.resourceUsers;
   for (let user = 0; user < N; user += 1) {
     for (let resource = 0; resource < K; resource += 1) {
       const share = resourceUsers[resource].includes(user + 1) ? resourceUsers[resource].length : 0;
-      ctx.fillStyle = share === 0 ? "#edf3f8" : share === 1 ? "#9dd6ff" : share === 2 ? "#2587ff" : "#8d4de8";
+      ctx.fillStyle = DEMO_COLORS.share[Math.min(share, DEMO_COLORS.share.length - 1)];
       ctx.fillRect(left + resource * cellW + .5, top + user * cellH + .5, Math.max(1, cellW - 1), Math.max(1, cellH - 1));
     }
   }
-  ctx.fillStyle = "#718399"; ctx.font = "9px system-ui"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  ctx.fillStyle = DEMO_COLORS.axis; ctx.font = "9px system-ui"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
   const userStep = N <= 20 ? 2 : N <= 50 ? 5 : 10;
   for (let user = 0; user < N; user += userStep) ctx.fillText(`U${user+1}`, left - 6, top + user * cellH + cellH / 2);
   ctx.textAlign = "center"; ctx.textBaseline = "bottom";
@@ -343,15 +367,15 @@ function renderDemand(item, current) {
   const width = Math.max(canvas.parentElement.clientWidth - 2, left + N * (barW + gap) + 10), height = 320;
   const ctx = setupCanvas(canvas, width, height);
   const maxValue = Math.max(...requested, 1), plotH = height - top - bottom;
-  ctx.fillStyle = "#fff"; ctx.fillRect(0,0,width,height);
-  ctx.strokeStyle = "#e4ecf4"; ctx.fillStyle = "#8190a2"; ctx.font = "9px system-ui"; ctx.textAlign = "right";
+  ctx.fillStyle = DEMO_COLORS.white; ctx.fillRect(0,0,width,height);
+  ctx.strokeStyle = DEMO_COLORS.grid; ctx.fillStyle = DEMO_COLORS.axis; ctx.font = "9px system-ui"; ctx.textAlign = "right";
   [0,.25,.5,.75,1].forEach((fraction) => { const yy = top + plotH * (1-fraction); ctx.beginPath(); ctx.moveTo(left,yy);ctx.lineTo(width-5,yy);ctx.stroke();ctx.fillText(fmt.format(Math.round(maxValue*fraction)),left-6,yy+3); });
   for (let i=0;i<N;i+=1) {
     const x = left+i*(barW+gap), deliveredH = delivered[i]/maxValue*plotH, unmetH = (requested[i]-delivered[i])/maxValue*plotH;
-    ctx.fillStyle="#2fc66d";ctx.fillRect(x,top+plotH-deliveredH,barW,deliveredH);
-    ctx.fillStyle="#dce6ef";ctx.fillRect(x,top+plotH-deliveredH-unmetH,barW,unmetH);
+    ctx.fillStyle=DEMO_COLORS.delivered;ctx.fillRect(x,top+plotH-deliveredH,barW,deliveredH);
+    ctx.fillStyle=DEMO_COLORS.unmet;ctx.fillRect(x,top+plotH-deliveredH-unmetH,barW,unmetH);
   }
-  ctx.fillStyle="#718399";ctx.textAlign="center";const step=N<=20?2:N<=50?5:10;
+  ctx.fillStyle=DEMO_COLORS.axis;ctx.textAlign="center";const step=N<=20?2:N<=50?5:10;
   for(let i=0;i<N;i+=step)ctx.fillText(`U${i+1}`,left+i*(barW+gap)+barW/2,height-12);
   bindTooltip(canvas,tooltip,(mx,my)=>{const user=Math.floor((mx-left)/(barW+gap));return user>=0&&user<N&&my>=top&&my<=top+plotH?{user}:null;},({user})=>`<b>U${user+1}</b><br>${t("delivered")}: ${fmt.format(delivered[user])}<br>${t("unmet")}: ${fmt.format(Math.max(0,requested[user]-delivered[user]))}<br>${t("requested")}: ${fmt.format(requested[user])}`);
 }
