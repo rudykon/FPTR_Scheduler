@@ -2,6 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
+    <script>document.documentElement.classList.add("js");</script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f5faff" />
     <meta name="description" content="FPTR 的阶段增益、运行时间、压力测试、外部基线比较与精确校准。" />
@@ -50,13 +51,25 @@
 
         <section class="detail-section">
           <div class="section-wrap">
-            <div class="terms" aria-label="Experiment terminology">
+            <div class="terms terms-desktop" aria-label="Experiment terminology">
               <span><b>Full</b> <span data-i18n="termFull">全部累计阶段后的 FPTR 配置</span></span>
               <span><b>CG</b> <span data-i18n="termCg">Compatibility Group，兼容组共享</span></span>
               <span><b>BeamFirst</b> <span data-i18n="termBeamFirst">独立的先选波束参考方法</span></span>
               <span><b>W/T/L</b> <span data-i18n="termWtl">胜 / 平 / 负实例数</span></span>
               <span><b>p50 / p95</b> <span data-i18n="termPercentile">墙钟时间的中位数 / 第 95 百分位</span></span>
             </div>
+            <details class="terms-mobile">
+              <summary data-i18n="termsSummary">术语说明：Full、CG、BeamFirst、W/T/L、p50 / p95</summary>
+              <div class="details-body">
+                <div class="terms" aria-label="Experiment terminology">
+                  <span><b>Full</b> <span data-i18n="termFull">全部累计阶段后的 FPTR 配置</span></span>
+                  <span><b>CG</b> <span data-i18n="termCg">Compatibility Group，兼容组共享</span></span>
+                  <span><b>BeamFirst</b> <span data-i18n="termBeamFirst">独立的先选波束参考方法</span></span>
+                  <span><b>W/T/L</b> <span data-i18n="termWtl">胜 / 平 / 负实例数</span></span>
+                  <span><b>p50 / p95</b> <span data-i18n="termPercentile">墙钟时间的中位数 / 第 95 百分位</span></span>
+                </div>
+              </div>
+            </details>
 
             <div class="rq-navigation">
               <button class="rq-toggle" type="button" aria-expanded="false" aria-controls="rqNav"><span data-i18n="rqOnThisPage">本页：</span><strong data-rq-current data-i18n="rqNavQuality">质量</strong><i aria-hidden="true">⌄</i></button>
@@ -79,13 +92,13 @@
               </div>
               <div>
                 <figure class="web-figure">
-                  <a class="figure-image-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_stage_gain.png" alt="FPTR ordered cumulative stage gain" /></a>
+                  <a class="figure-image-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_stage_gain.png" alt="FPTR 各累计细化阶段的条件增益" data-i18n-alt="stageGainAlt" /></a>
                   <figcaption><span data-i18n="stageGainCaption">固定顺序下的条件增量：Global +0.44、CG +0.49、Remask +0.59、Full · Pair +0.25 个百分点。它们不是独立模块效应。</span><a class="figure-size-link" href="../images/web_stage_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
                 <details class="secondary-figure">
                   <summary data-i18n="scenarioFigureDetails">查看五种场景中的增益</summary>
                   <div class="details-body"><figure class="web-figure">
-                    <a class="figure-image-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_scenario_gain.png" alt="Scenario-wise FPTR Full gain" /></a>
+                    <a class="figure-image-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><img src="../images/web_scenario_gain.png" alt="FPTR 在五种规模与压力场景中的平均增益" data-i18n-alt="scenarioGainAlt" /></a>
                     <figcaption><span data-i18n="scenarioGainCaption">Full 在五种规模与压力场景中的平均增益均为正。</span><a class="figure-size-link" href="../images/web_scenario_gain.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                   </figure></div>
                 </details>
@@ -101,13 +114,13 @@
               </div>
               <div>
                 <figure class="web-figure">
-                  <a class="figure-image-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><img src="../images/web_runtime_ecdf.png" alt="Runtime ECDF under the 87 millisecond internal budget" /></a>
+                  <a class="figure-image-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><img src="../images/web_runtime_ecdf.png" alt="87 毫秒内部预算下的 FPTR 运行时间经验累积分布" data-i18n-alt="runtimeAlt" /></a>
                   <figcaption><span data-i18n="runtimeCaption">87 ms 内部预算下的求解器墙钟时间 ECDF；100 ms 虚线表示外部计分截止。</span><a class="figure-size-link" href="../images/web_runtime_ecdf.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
                 <details class="secondary-figure">
                   <summary data-i18n="budgetFigureDetails">查看预算扫描</summary>
                   <div class="details-body"><figure class="web-figure">
-                    <a class="figure-image-link" href="../images/web_budget_quality.png" target="_blank" rel="noreferrer"><img src="../images/web_budget_quality.png" alt="FPTR budget and quality trade-off" /></a>
+                    <a class="figure-image-link" href="../images/web_budget_quality.png" target="_blank" rel="noreferrer"><img src="../images/web_budget_quality.png" alt="FPTR 内部预算与调度质量的关系" data-i18n-alt="budgetAlt" /></a>
                     <figcaption><span data-i18n="budgetCaption">预算从 60 ms 增至 87 ms 时，平均增益从 1.60% 增至 1.65%，显示边际收益已开始趋平。</span><a class="figure-size-link" href="../images/web_budget_quality.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                   </figure></div>
                 </details>
@@ -123,7 +136,7 @@
               </div>
               <div>
                 <figure class="web-figure">
-                  <a class="figure-image-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><img src="../images/web_cg_stress.png" alt="Compatibility group size stress test" /></a>
+                  <a class="figure-image-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><img src="../images/web_cg_stress.png" alt="兼容组规模压力测试中的质量与运行时间" data-i18n-alt="cgStressAlt" /></a>
                   <figcaption><span data-i18n="cgStressCaption">兼容组大小与覆盖率共同变化；图中同时标出 Full 的 p95 墙钟时间。</span><a class="figure-size-link" href="../images/web_cg_stress.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
               </div>
@@ -173,7 +186,7 @@
                   <article><strong>25%</strong><span data-i18n="exactMax">最大差距</span></article>
                 </div>
                 <figure class="web-figure">
-                  <a class="figure-image-link" href="../images/web_optimality_gap.png" target="_blank" rel="noreferrer"><img src="../images/web_optimality_gap.png" alt="Exact optimality gaps on twelve small cases" /></a>
+                  <a class="figure-image-link" href="../images/web_optimality_gap.png" target="_blank" rel="noreferrer"><img src="../images/web_optimality_gap.png" alt="十二个可精确求解小案例上的 FPTR 最优性差距" data-i18n-alt="optimalityAlt" /></a>
                   <figcaption><span data-i18n="optimalityCaption">事务门保证可行与严格改进，但不保证接近全局最优；较宽案例揭示了这一边界。</span><a class="figure-size-link" href="../images/web_optimality_gap.png" target="_blank" rel="noreferrer"><span data-i18n="viewFullFigure">查看原尺寸图</span>&nbsp;↗</a></figcaption>
                 </figure>
               </div>
@@ -192,7 +205,7 @@
                 <p><strong>150</strong> <span data-i18n="protocolInstances">固定实例</span> · <strong>5 × 30</strong> <span data-i18n="protocolRegimes">五种规模与压力场景</span> · <strong>5</strong> <span data-i18n="protocolRepeats">每实例独立重复</span> · <strong>15,360</strong> <span data-i18n="protocolLaunches">内部与外部正式启动总数</span></p>
               </div>
             </details>
-            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。所有性能主张应由重新生成的工件或单独提供的证据复核。</span></p></div>
+            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。当前实验图为经审计的历史 PNG 回退；无面板字母、大字号的 Web 原生图与手机专用图，须在正式结果数据包公开后重新生成。所有性能主张仍应由重生成工件或单独提供的证据复核。</span></p></div>
           </div>
         </section>
       </main>

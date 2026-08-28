@@ -2,6 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
+    <script>document.documentElement.classList.add("js");</script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f5faff" />
     <meta name="description" content="FPTR：面向截止时间约束的联合波束与资源调度器，以可行性保持的事务式细化持续提升传输量。" />
@@ -68,17 +69,17 @@
             </div>
             <div class="summary-grid">
               <article class="summary-card problem-card">
-                <span>01 · PROBLEM</span><strong>6</strong>
+                <span>01 · PROBLEM</span><strong>6<small data-i18n="constraintCountLabel">类耦合约束</small></strong>
                 <h3 data-i18n="snapshotProblemTitle">先保证按时交付</h3>
                 <p data-i18n="snapshotProblemBody">每个控制周期都必须完成波束与资源联合分配；迟到或违反任一约束的输出，在当前周期中的效用为零。</p>
               </article>
               <article class="summary-card method-card">
-                <span>02 · METHOD</span><strong>4</strong>
+                <span>02 · METHOD</span><strong>4<small data-i18n="gateCountLabel">项提交检查</small></strong>
                 <h3 data-i18n="snapshotMethodTitle">候选只能整体提交</h3>
                 <p data-i18n="snapshotMethodBody">候选在隔离状态中构造，只有完整、及时、可行且严格更优时才替换 incumbent；否则直接丢弃。</p>
               </article>
               <article class="summary-card evidence-card">
-                <span>03 · EVIDENCE</span><strong>+3.83%</strong>
+                <span>03 · EVIDENCE</span><strong>+3.83%<small data-i18n="beamFirstGainLabel">vs BeamFirst</small></strong>
                 <h3 data-i18n="snapshotResultTitle">把剩余时间换成增益</h3>
                 <p data-i18n="snapshotResultBody">在 150 个固定实例上，Full 相对 BeamFirst 平均提升 3.83%，750 次 Full 启动全部合法且均未超过 100 ms。</p>
               </article>
@@ -103,7 +104,7 @@
               <a href="./reproduce/"><span data-i18n="navReproduce">代码与复现</span><b aria-hidden="true">↗</b></a>
               <a href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer">GitHub<b aria-hidden="true">↗</b></a>
             </div>
-            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。所有性能主张应由重新生成的工件或单独提供的证据复核。</span></p></div>
+            <div class="release-note"><p><strong data-i18n="release">Code-only public release</strong><span data-i18n="evidenceNote">这是 code-only 公开版本。当前实验图为经审计的历史 PNG 回退；无面板字母、大字号的 Web 原生图与手机专用图，须在正式结果数据包公开后重新生成。所有性能主张仍应由重生成工件或单独提供的证据复核。</span></p></div>
           </div>
         </section>
       </main>

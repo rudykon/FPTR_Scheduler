@@ -163,6 +163,8 @@ class PagesContractTests(unittest.TestCase):
             self.assertNotIn(forbidden, home)
         self.assertEqual(home.count('class="summary-card '), 3)
         self.assertEqual(home.count('class="reading-grid"'), 1)
+        for key in ("constraintCountLabel", "gateCountLabel", "beamFirstGainLabel"):
+            self.assertIn(f'data-i18n="{key}"', home)
 
         evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
         for rq in ("RQ1", "RQ2", "RQ3", "RQ4", "RQ5"):
@@ -171,6 +173,18 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn(f'id="{anchor}"', evidence)
         self.assertEqual(evidence.count('class="secondary-figure"'), 2)
         self.assertEqual(evidence.count('class="figure-size-link"'), 6)
+        self.assertIn('class="terms terms-desktop"', evidence)
+        self.assertIn('class="terms-mobile"', evidence)
+        self.assertIn('data-i18n="termsSummary"', evidence)
+        for key in (
+            "stageGainAlt",
+            "scenarioGainAlt",
+            "runtimeAlt",
+            "budgetAlt",
+            "cgStressAlt",
+            "optimalityAlt",
+        ):
+            self.assertIn(f'data-i18n-alt="{key}"', evidence)
         self.assertNotIn(".svg", evidence)
         self.assertNotIn("<picture", evidence)
         exact = re.search(r'<div class="exact-metrics">(.*?)</div>', evidence, re.DOTALL)
@@ -191,6 +205,8 @@ class PagesContractTests(unittest.TestCase):
         compact_demo = re.sub(r"\s+", " ", demo_css)
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", compact_demo)
         self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr))", compact_demo)
+        self.assertIn(".kpi:nth-child(3) { grid-column: 1 / -1; }", compact_demo)
+        self.assertIn(".kpi span { letter-spacing: 0; text-transform: none; }", compact_demo)
         self.assertIn("min-width: 760px", compact_demo)
         self.assertRegex(
             compact_demo,
@@ -201,17 +217,23 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn("--demo-meta: .875rem", demo_css)
         self.assertIn("padding: 2.25rem 0 2rem", site_css)
         self.assertIn("clamp(2.4rem, 4.3vw, 3.75rem)", site_css)
-        self.assertIn(".main-nav.is-open", site_css)
+        self.assertIn(".js .main-nav.is-open", site_css)
+        self.assertIn(".js .nav-toggle", site_css)
+        self.assertIn(".terms-mobile", site_css)
+        self.assertIn(".terms-desktop", site_css)
         self.assertIn(".rq-nav.is-open", site_css)
         self.assertIn('html[lang="en"] .home-hero h1', site_css)
 
         site_js = (DOCS / "assets/site.js").read_text(encoding="utf-8")
         for behavior in ("nav-toggle", "rq-toggle", "copy-code", "dataset.scrollRegion"):
             self.assertIn(behavior, site_js)
+        for behavior in ("restoreNavFocus", "restoreRqFocus", "navToggle.focus()", "rqToggle.focus()"):
+            self.assertIn(behavior, site_js)
 
         pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
             source = page.read_text(encoding="utf-8")
+            self.assertIn('document.documentElement.classList.add("js")', source)
             self.assertIn('class="nav-toggle"', source)
             self.assertIn('id="mainNav"', source)
             self.assertNotIn('/zh/', source)
@@ -227,10 +249,28 @@ class PagesContractTests(unittest.TestCase):
         )
         payload = json.loads((DOCS / "evidence/figure-manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(payload["profile"], "audited-png-fallback")
+        self.assertEqual(
+            payload["pending_artifacts"],
+            [
+                "panel-label-free native web SVG/PNG",
+                "mobile-specific large-type PNG",
+            ],
+        )
         self.assertEqual(len(payload["figures"]), 6)
         for name in payload["figures"]:
             self.assertTrue((DOCS / "images" / f"{name}.png").is_file())
             self.assertFalse((DOCS / "images" / f"{name}.svg").exists())
+
+    def test_web_figure_profile_is_large_type_and_panel_label_free(self) -> None:
+        source = (ROOT / "experiments/plot_paper_results.py").read_text(encoding="utf-8")
+        self.assertIn("FIGURE_WIDTH_IN = 8.5", source)
+        self.assertIn("BODY_FONT_PT = 11.5", source)
+        self.assertIn("SMALL_FONT_PT = 11.0", source)
+        self.assertIn('if ACTIVE_PROFILE != "paper":', source)
+        self.assertIn('"panel_labels": False', source)
+        self.assertIn('"shared_legend": False', source)
+        web_builder = source[source.index("def build_web_figures("):source.index("def split_main()")]
+        self.assertNotIn("panel_label(", web_builder)
 
     def test_svg_integrity_rejects_raster_wrappers(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -250,6 +290,18 @@ class PagesContractTests(unittest.TestCase):
             "npx playwright install --with-deps chromium",
         ):
             self.assertIn(required, workflow)
+        browser_test = (ROOT / "tests/browser_pages.js").read_text(encoding="utf-8")
+        for required in (
+            "{ width: 360, height: 800 }",
+            "{ width: 375, height: 812 }",
+            'path: "/en/problem/"',
+            'path: "/en/demo/"',
+            "image.naturalWidth === 0",
+            "response.status() >= 400",
+            "javaScriptEnabled: false",
+            "All live runs validated",
+        ):
+            self.assertIn(required, browser_test)
 
 
 if __name__ == "__main__":

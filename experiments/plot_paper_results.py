@@ -105,16 +105,25 @@ LIGHT_NEUTRAL = "#D2D2D2"
 GRID = "#D0D0D0"
 GAIN = "#347A4A"
 WIDE_CASE = "#B86A08"
+ACTIVE_PROFILE = "paper"
 
 
 def configure_style(profile: str = "paper") -> None:
+    global ACTIVE_PROFILE
     global FIGURE_WIDTH_IN, BODY_FONT_PT, SMALL_FONT_PT, TITLE_FONT_PT, PANEL_FONT_PT
+    ACTIVE_PROFILE = profile
     if profile == "web":
-        FIGURE_WIDTH_IN = 8.0
-        BODY_FONT_PT = 10.5
-        SMALL_FONT_PT = 10.0
-        TITLE_FONT_PT = 12.0
-        PANEL_FONT_PT = 12.0
+        FIGURE_WIDTH_IN = 8.5
+        BODY_FONT_PT = 11.5
+        SMALL_FONT_PT = 11.0
+        TITLE_FONT_PT = 13.0
+        PANEL_FONT_PT = 12.5
+    else:
+        FIGURE_WIDTH_IN = 4.80
+        BODY_FONT_PT = 5.25
+        SMALL_FONT_PT = 4.80
+        TITLE_FONT_PT = 5.55
+        PANEL_FONT_PT = 6.45
     mpl.rcParams.update(
         {
             "font.size": BODY_FONT_PT,
@@ -286,6 +295,14 @@ def panel_label(ax: plt.Axes, label: str) -> mpl.text.Text:
         va="bottom",
         clip_on=False,
     )
+
+
+def profile_panel_labels(
+    axes: Sequence[plt.Axes], labels: str
+) -> list[mpl.text.Text]:
+    if ACTIVE_PROFILE != "paper":
+        return []
+    return [panel_label(ax, label) for ax, label in zip(axes, labels)]
 
 
 def trace_tables(
@@ -1223,8 +1240,7 @@ def build_figure(
     annotations.extend(notes)
     summaries["f"], notes = draw_exact_gap(axes[5], exact_rows)
     annotations.extend(notes)
-    for ax, label in zip(axes, "abcdef"):
-        annotations.append(panel_label(ax, label))
+    annotations.extend(profile_panel_labels(axes, "abcdef"))
     legend = build_shared_legend(fig)
     return fig, axes, legend, annotations, summaries
 
@@ -1287,8 +1303,7 @@ def build_quality_runtime_figure(
     annotations.extend(notes)
     summaries["d"], notes = draw_runtime_ecdf(axes[3], main_run_rows)
     annotations.extend(notes)
-    for ax, label in zip(axes, "abcd"):
-        annotations.append(panel_label(ax, label))
+    annotations.extend(profile_panel_labels(axes, "abcd"))
     legend = build_shared_legend(fig)
     return fig, axes, legend, annotations, summaries
 
@@ -1331,8 +1346,7 @@ def build_stress_optimality_figure(
     annotations.extend(notes)
     summaries["b"], notes = draw_exact_gap(axes[1], exact_rows)
     annotations.extend(notes)
-    for ax, label in zip(axes, "ab"):
-        annotations.append(panel_label(ax, label))
+    annotations.extend(profile_panel_labels(axes, "ab"))
     legend = build_shared_legend(fig)
     return fig, axes, legend, annotations, summaries
 
@@ -1927,29 +1941,62 @@ def build_web_figures(
     """Emit one responsive SVG/PNG per web claim without manuscript panel labels."""
     output_dir.mkdir(parents=True, exist_ok=True)
     jobs = (
-        ("web_stage_gain", lambda ax: draw_trace_ablation(
-            ax, trace_rows, trace_analysis,
-            bootstrap_samples=bootstrap_samples,
-            bootstrap_seed=bootstrap_seed,
-        )),
-        ("web_scenario_gain", lambda ax: draw_scenario_gain(ax, paired_analysis)),
-        ("web_budget_quality", lambda ax: draw_budget_tradeoff(
-            ax, budget_rows, budget_run_rows,
-            bootstrap_samples=bootstrap_samples,
-            bootstrap_seed=bootstrap_seed,
-        )),
-        ("web_runtime_ecdf", lambda ax: draw_runtime_ecdf(ax, main_run_rows)),
-        ("web_cg_stress", lambda ax: draw_cg_stress(
-            ax, stress_rows, stress_run_rows,
-            bootstrap_samples=bootstrap_samples,
-            bootstrap_seed=bootstrap_seed,
-        )),
-        ("web_optimality_gap", lambda ax: draw_exact_gap(ax, exact_rows)),
+        (
+            "web_stage_gain",
+            "Conditional gain by cumulative FPTR stage",
+            lambda ax: draw_trace_ablation(
+                ax,
+                trace_rows,
+                trace_analysis,
+                bootstrap_samples=bootstrap_samples,
+                bootstrap_seed=bootstrap_seed,
+            ),
+        ),
+        (
+            "web_scenario_gain",
+            "Full gain across five scenarios",
+            lambda ax: draw_scenario_gain(ax, paired_analysis),
+        ),
+        (
+            "web_budget_quality",
+            "Internal budget and scheduling quality",
+            lambda ax: draw_budget_tradeoff(
+                ax,
+                budget_rows,
+                budget_run_rows,
+                bootstrap_samples=bootstrap_samples,
+                bootstrap_seed=bootstrap_seed,
+            ),
+        ),
+        (
+            "web_runtime_ecdf",
+            "Runtime ECDF under the 87 ms budget",
+            lambda ax: draw_runtime_ecdf(ax, main_run_rows),
+        ),
+        (
+            "web_cg_stress",
+            "Compatibility-group size stress",
+            lambda ax: draw_cg_stress(
+                ax,
+                stress_rows,
+                stress_run_rows,
+                bootstrap_samples=bootstrap_samples,
+                bootstrap_seed=bootstrap_seed,
+            ),
+        ),
+        (
+            "web_optimality_gap",
+            "Optimality gaps on 12 exactly solved cases",
+            lambda ax: draw_exact_gap(ax, exact_rows),
+        ),
     )
     outputs: dict[str, object] = {}
-    for name, draw in jobs:
-        fig, ax = plt.subplots(figsize=(8.0, 4.8), constrained_layout=True)
+    for name, title, draw in jobs:
+        fig, ax = plt.subplots(
+            figsize=(FIGURE_WIDTH_IN, 5.2), constrained_layout=True
+        )
         panel_data, _annotations = draw(ax)
+        ax.set_title(title, pad=4.0)
         stem = output_dir / name
         fig.savefig(stem.with_suffix(".svg"), metadata={"Creator": "FPTR web profile"})
         fig.savefig(stem.with_suffix(".png"), dpi=180)
@@ -1966,6 +2013,12 @@ def build_web_figures(
                 "schema_version": 1,
                 "profile": "web",
                 "generator": "experiments/plot_paper_results.py --profile web",
+                "rendering": {
+                    "panel_labels": False,
+                    "shared_legend": False,
+                    "minimum_font_pt": SMALL_FONT_PT,
+                    "width_in": FIGURE_WIDTH_IN,
+                },
                 "source_data": source_data,
                 "outputs": outputs,
             },

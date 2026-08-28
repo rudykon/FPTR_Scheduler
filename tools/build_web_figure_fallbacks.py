@@ -55,7 +55,11 @@ def fallback_manifest(images_dir: Path) -> dict[str, object]:
         "profile": "audited-png-fallback",
         "native_generator": "python3 experiments/plot_paper_results.py --profile web",
         "fallback_auditor": "python3 tools/build_web_figure_fallbacks.py",
-        "note": "The code-only release currently publishes audited PNG exports. No SVG is advertised until the formal result bundle can regenerate native vector paths and editable text.",
+        "note": "The code-only release currently publishes audited legacy PNG exports, which may retain manuscript panel letters. The formal result bundle is required to regenerate panel-label-free, large-type web and mobile assets; no SVG is advertised until it can contain native vector paths and editable text.",
+        "pending_artifacts": [
+            "panel-label-free native web SVG/PNG",
+            "mobile-specific large-type PNG",
+        ],
         "figures": records,
     }
 

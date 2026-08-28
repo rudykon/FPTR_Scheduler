@@ -72,8 +72,16 @@
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
-    if (navToggle && mainNav) setExpanded(navToggle, mainNav, false);
-    if (rqToggle && rqNav) setExpanded(rqToggle, rqNav, false);
+    if (navToggle && mainNav) {
+      const restoreNavFocus = mainNav.contains(document.activeElement);
+      setExpanded(navToggle, mainNav, false);
+      if (restoreNavFocus) navToggle.focus();
+    }
+    if (rqToggle && rqNav) {
+      const restoreRqFocus = rqNav.contains(document.activeElement);
+      setExpanded(rqToggle, rqNav, false);
+      if (restoreRqFocus) rqToggle.focus();
+    }
   });
 
   document.querySelectorAll(".copy-code").forEach((button) => {

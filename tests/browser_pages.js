@@ -10,6 +10,8 @@ const siteRoot = path.resolve(process.argv[2] || "_site");
 const screenshots = path.resolve(process.argv[3] || "artifacts/browser");
 const basePath = "/FPTR_Scheduler";
 const viewports = [
+  { width: 360, height: 800 },
+  { width: 375, height: 812 },
   { width: 390, height: 844 },
   { width: 768, height: 1024 },
   { width: 1440, height: 1000 }
@@ -18,10 +20,17 @@ const routes = [
   { path: "/", name: "home-zh", home: "zh" },
   { path: "/problem/", name: "problem", interior: true },
   { path: "/method/", name: "method", interior: true },
-  { path: "/evidence/", name: "evidence", interior: true },
+  { path: "/evidence/", name: "evidence", interior: true, evidence: true },
   { path: "/reproduce/", name: "reproduce", interior: true },
-  { path: "/demo/", name: "demo" },
+  { path: "/demo/", name: "demo", demo: true },
   { path: "/en/", name: "home-en", home: "en" }
+];
+const englishSubpageRoutes = [
+  { path: "/en/problem/", name: "problem-en", interior: true },
+  { path: "/en/method/", name: "method-en", interior: true },
+  { path: "/en/evidence/", name: "evidence-en", interior: true, evidence: true },
+  { path: "/en/reproduce/", name: "reproduce-en", interior: true },
+  { path: "/en/demo/", name: "demo-en", demo: true }
 ];
 const mime = {
   ".css": "text/css; charset=utf-8",
@@ -99,8 +108,8 @@ async function assertLayout(page, route, viewport) {
   assert.deepEqual(metrics.smallText, [], `${route.name} contains semantic text below 14px: ${JSON.stringify(metrics.smallText)}`);
   assert.deepEqual(metrics.unfocusableScrollRegions, [], `${route.name} has an unfocusable scroll region`);
   if (route.interior) assert.ok(metrics.heroHeight <= 360, `${route.name} hero is ${metrics.heroHeight}px high`);
-  if (viewport.width === 390 && route.home === "zh") assert.ok(metrics.heroHeight <= 680, `Chinese mobile hero is ${metrics.heroHeight}px high`);
-  if (viewport.width === 390 && route.home === "en") assert.ok(metrics.heroHeight <= 720, `English mobile hero is ${metrics.heroHeight}px high`);
+  if (viewport.width <= 390 && route.home === "zh") assert.ok(metrics.heroHeight <= 680, `Chinese mobile hero is ${metrics.heroHeight}px high`);
+  if (viewport.width <= 390 && route.home === "en") assert.ok(metrics.heroHeight <= 720, `English mobile hero is ${metrics.heroHeight}px high`);
 }
 
 async function assertMobileNavigation(page, route) {
@@ -113,8 +122,42 @@ async function assertMobileNavigation(page, route) {
   const current = page.locator("#mainNav a[aria-current='page']");
   assert.equal(await current.count(), 1, `${route.name} has no current navigation link`);
   assert.equal(await visible(current), true, `${route.name} current navigation link is hidden`);
+  await current.focus();
   await page.keyboard.press("Escape");
   assert.equal(await toggle.getAttribute("aria-expanded"), "false");
+  assert.equal(await toggle.evaluate((node) => document.activeElement === node), true, `${route.name} did not restore focus to its menu button`);
+}
+
+async function assertLoadedResources(page, route, responseErrors) {
+  const brokenImages = await page.evaluate(() =>
+    [...document.images]
+      .filter((image) => image.complete && image.naturalWidth === 0)
+      .map((image) => image.currentSrc || image.src)
+  );
+  assert.deepEqual(brokenImages, [], `${route.name} has broken images: ${brokenImages.join(", ")}`);
+  assert.deepEqual(responseErrors, [], `${route.name} has failed resources: ${responseErrors.join("; ")}`);
+}
+
+async function runLiveDemo(browser, origin, { path: routePath, status, screenshot }) {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(`page: ${error.message}`));
+  page.on("response", (response) => {
+    if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`);
+  });
+  page.on("requestfailed", (request) => errors.push(`request: ${request.url()} ${request.failure()?.errorText || "failed"}`));
+  await page.goto(`${origin}${routePath}`, { waitUntil: "load" });
+  await page.locator("#runButton").waitFor({ state: "visible", timeout: 30000 });
+  await assert.doesNotReject(() => page.waitForFunction(() => !document.querySelector("#runButton").disabled, null, { timeout: 30000 }));
+  await page.locator("#runButton").click();
+  await page.waitForFunction((expected) => document.querySelector("#dataStatus")?.textContent.includes(expected), status, { timeout: 60000 });
+  assert.equal(await page.locator("#comparisonBody tr").count(), 8);
+  const postRunWidth = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+  assert.ok(postRunWidth.scroll <= postRunWidth.client + 1, `${routePath} overflows after run: ${postRunWidth.scroll} > ${postRunWidth.client}`);
+  await assertLoadedResources(page, { name: routePath }, errors);
+  await page.screenshot({ path: path.join(screenshots, screenshot) });
+  await context.close();
 }
 
 (async () => {
@@ -129,47 +172,70 @@ async function assertMobileNavigation(page, route) {
     assert.equal(missingZh.status(), 404, "duplicate /zh/ route must not be published");
     await requestContext.close();
 
+    const noJsContext = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 844 }
+    });
+    const noJsPage = await noJsContext.newPage();
+    await noJsPage.goto(`${origin}/`, { waitUntil: "load" });
+    assert.equal(await visible(noJsPage.locator("#mainNav")), true, "navigation must remain visible without JavaScript");
+    assert.equal(await noJsPage.locator("#mainNav a").count(), 6);
+    assert.equal(await visible(noJsPage.locator(".nav-toggle")), false, "inactive menu toggle must be hidden without JavaScript");
+    await noJsContext.close();
+
+    let routeChecks = 0;
     for (const viewport of viewports) {
       const context = await browser.newContext({ viewport });
-      const page = await context.newPage();
-      const pageErrors = [];
-      page.on("pageerror", (error) => pageErrors.push(error.message));
-      for (const route of routes) {
+      const viewportRoutes = (viewport.width === 390 || viewport.width === 1440)
+        ? [...routes, ...englishSubpageRoutes]
+        : routes;
+      for (const route of viewportRoutes) {
+        const page = await context.newPage();
+        const pageErrors = [];
+        const responseErrors = [];
+        page.on("pageerror", (error) => pageErrors.push(error.message));
+        page.on("response", (response) => {
+          if (response.status() >= 400) responseErrors.push(`${response.status()} ${response.url()}`);
+        });
+        page.on("requestfailed", (request) => responseErrors.push(`request failed: ${request.url()} ${request.failure()?.errorText || "failed"}`));
         const response = await page.goto(`${origin}${route.path}`, { waitUntil: "load" });
         assert.ok(response && response.ok(), `${route.path} returned ${response?.status()}`);
         await page.evaluate(() => document.fonts?.ready);
         await assertLayout(page, route, viewport);
-        if (viewport.width === 390) await assertMobileNavigation(page, route);
-        if (viewport.width === 390 && route.name === "evidence") {
+        if (viewport.width <= 390) await assertMobileNavigation(page, route);
+        if (viewport.width <= 390 && route.evidence) {
           const toggle = page.locator(".rq-toggle");
           assert.equal(await visible(toggle), true);
           await toggle.click();
           assert.equal(await page.locator("#rqNav a").count(), 6);
           assert.equal(await visible(page.locator("#rqNav")), true);
+          await page.locator("#rqNav a").first().focus();
           await page.keyboard.press("Escape");
+          assert.equal(await toggle.evaluate((node) => document.activeElement === node), true, `${route.name} did not restore focus to the RQ menu button`);
         }
+        await assertLoadedResources(page, route, responseErrors);
         const folder = path.join(screenshots, `${viewport.width}x${viewport.height}`);
         await fs.promises.mkdir(folder, { recursive: true });
         await page.screenshot({ path: path.join(folder, `${route.name}.png`) });
+        assert.deepEqual(pageErrors, [], `browser errors on ${route.name} at ${viewport.width}px: ${pageErrors.join("; ")}`);
+        await page.close();
+        routeChecks += 1;
       }
-      assert.deepEqual(pageErrors, [], `browser errors at ${viewport.width}px: ${pageErrors.join("; ")}`);
       await context.close();
     }
 
-    const demoContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
-    const demo = await demoContext.newPage();
-    await demo.goto(`${origin}/demo/`, { waitUntil: "load" });
-    await demo.locator("#runButton").waitFor({ state: "visible", timeout: 30000 });
-    await assert.doesNotReject(() => demo.waitForFunction(() => !document.querySelector("#runButton").disabled, null, { timeout: 30000 }));
-    await demo.locator("#runButton").click();
-    await demo.waitForFunction(() => document.querySelector("#dataStatus")?.textContent.includes("全部实时运行与验证通过"), null, { timeout: 60000 });
-    assert.equal(await demo.locator("#comparisonBody tr").count(), 8);
-    const postRunWidth = await demo.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
-    assert.ok(postRunWidth.scroll <= postRunWidth.client + 1, `Demo overflows after run: ${postRunWidth.scroll} > ${postRunWidth.client}`);
-    await demo.screenshot({ path: path.join(screenshots, "demo-live-mobile.png") });
-    await demoContext.close();
+    await runLiveDemo(browser, origin, {
+      path: "/demo/",
+      status: "全部实时运行与验证通过",
+      screenshot: "demo-live-mobile.png"
+    });
+    await runLiveDemo(browser, origin, {
+      path: "/en/demo/",
+      status: "All live runs validated",
+      screenshot: "demo-live-mobile-en.png"
+    });
 
-    process.stdout.write(`Browser layout checks passed for ${routes.length} routes at ${viewports.length} viewports, including the eight-method live Demo.\n`);
+    process.stdout.write(`Browser layout checks passed for ${routeChecks} route/viewport combinations, no-JS navigation, and both eight-method live Demos.\n`);
   } finally {
     await browser.close();
     await new Promise((resolve) => server.close(resolve));

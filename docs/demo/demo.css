@@ -296,8 +296,10 @@ canvas { display: block; max-width: none; }
   .execution-bar { flex-wrap: wrap; align-items: stretch; }
   .input-source { width: 100%; flex-basis: 100%; }
   .run-button { width: 100%; justify-content: center; }
-  .kpi-grid { gap: .45rem; }
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
+  .kpi:nth-child(3) { grid-column: 1 / -1; }
   .kpi { padding: .7rem .55rem; }
+  .kpi span { letter-spacing: 0; text-transform: none; }
   .kpi span, .kpi small { overflow-wrap: anywhere; }
   .comparison-panel { padding: .85rem; }
   .comparison-bar { grid-template-columns: 76px minmax(0, 1fr) 58px; gap: .4rem; }
@@ -309,4 +311,3 @@ canvas { display: block; max-width: none; }
 @media (prefers-reduced-motion: reduce) {
   .demo-app * { scroll-behavior: auto !important; animation: none !important; }
 }
-
