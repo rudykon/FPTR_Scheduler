@@ -1,7 +1,15 @@
+@font-face {
+  font-family: "FPTR Latin Modern Math";
+  src: url("./fonts/latinmodern-math.otf") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --display: "Arial Rounded MT Bold", "Noto Sans SC", system-ui, sans-serif;
   --ui: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --math: "Libertinus Math", "STIX Two Math", "Cambria Math", "Noto Serif Math", "DejaVu Math TeX Gyre", serif;
+  --math: "FPTR Latin Modern Math", "Latin Modern Math", serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --text-body: 1rem;
   --text-lead: 1.0625rem;
@@ -364,6 +372,15 @@ html[lang="en"] .home-hero h1 {
   color: var(--deep);
   font-family: var(--math);
   font-weight: 400;
+}
+math,
+math mi,
+math mn,
+math mo,
+math mtext,
+math ms {
+  font-family: var(--math);
+  font-synthesis: none;
 }
 .inline-math {
   white-space: nowrap;

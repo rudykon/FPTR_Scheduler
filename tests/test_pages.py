@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import re
@@ -367,6 +368,10 @@ class PagesContractTests(unittest.TestCase):
 
         site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")
         for required in (
+            '@font-face',
+            'font-family: "FPTR Latin Modern Math"',
+            'url("./fonts/latinmodern-math.otf")',
+            '--math: "FPTR Latin Modern Math", "Latin Modern Math", serif',
             '--math:',
             '.formula-block math',
             '.equation-row',
@@ -379,6 +384,18 @@ class PagesContractTests(unittest.TestCase):
         self.assertIsNotNone(inline_rule)
         self.assertNotRegex(inline_rule.group('body'), r'\bdisplay\s*:')
         self.assertNotRegex(inline_rule.group('body'), r'\b(?:min-|max-)?width\s*:')
+
+        font_path = DOCS / "assets/fonts/latinmodern-math.otf"
+        self.assertTrue(font_path.is_file())
+        self.assertEqual(font_path.stat().st_size, 733736)
+        self.assertEqual(
+            hashlib.sha256(font_path.read_bytes()).hexdigest(),
+            "6075562b771f8b82f0c179e363389684f2dd09de30038269e2628e504bd7be0f",
+        )
+        font_license = (DOCS / "assets/fonts/GUST-FONT-LICENSE.txt").read_text(encoding="utf-8")
+        font_manifest = (DOCS / "assets/fonts/MANIFEST-Latin-Modern-Math.txt").read_text(encoding="utf-8")
+        self.assertIn("GUST Font License", font_license)
+        self.assertIn("Latin Modern Math", font_manifest)
 
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
