@@ -183,7 +183,12 @@ class BrowserDemoTests(unittest.TestCase):
             self.assertFalse((docs / "images" / svg).exists(), svg)
 
         self.assertIn('class="advanced-controls"', demo)
-        self.assertIn('class="advanced-results"', demo)
+        self.assertIn('id="results" class="results-section" aria-labelledby="resultTitle" hidden', demo)
+        self.assertEqual(demo.count('id="deepAnalysis"'), 1)
+        self.assertEqual(demo.count('role="tab"'), 4)
+        self.assertNotIn('class="advanced-results"', demo)
+        self.assertNotIn('class="advanced-detail"', demo)
+        self.assertNotIn('class="step-number"', demo)
         self.assertIn('id="comparisonBars"', demo)
         self.assertIn('id="comparisonBody"', demo)
         self.assertIn('src="./wasm/fptr_baselines.js"', demo)

@@ -291,11 +291,11 @@ class PagesContractTests(unittest.TestCase):
             (DOCS / "method/index.html", "transactionDiagramAria"),
             (DOCS / "evidence/index.html", "keyResultsAria"),
             (DOCS / "evidence/index.html", "evidenceSectionsAria"),
-            (DOCS / "demo/index.html", "demoPropertiesAria"),
+            (DOCS / "demo/index.html", "budgetOptionsAria"),
             (DOCS / "demo/index.html", "liveComparisonAria"),
             (DOCS / "demo/index.html", "allocationHeatmapAria"),
             (DOCS / "demo/index.html", "demandChartAria"),
-            (DOCS / "demo/index.html", "detailedViewsAria"),
+            (DOCS / "demo/index.html", "analysisViewsAria"),
         ):
             self.assertIn(f'data-i18n-aria="{key}"', page.read_text(encoding="utf-8"))
 
@@ -417,13 +417,15 @@ class PagesContractTests(unittest.TestCase):
         compact_demo = re.sub(r"\s+", " ", demo_css)
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", compact_demo)
         self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr))", compact_demo)
-        self.assertIn(".kpi:nth-child(3) { grid-column: 1 / -1; }", compact_demo)
-        self.assertIn(".kpi span { letter-spacing: 0; text-transform: none; }", compact_demo)
+        self.assertRegex(compact_demo, r"\.kpi:nth-child\(3\) \{[^}]*grid-column: 1 / -1;")
+        self.assertIn(".result-summary", compact_demo)
         self.assertIn("min-width: 760px", compact_demo)
         self.assertRegex(
             compact_demo,
-            r"main, \.demo-app, \.demo-workspace, \.control-panel, \.results-section, \.comparison-panel, \.advanced-results, \.advanced-detail \{ min-width: 0; max-width: 100%; \}",
+            r"main, \.demo-app, \.demo-workspace, \.control-panel, \.results-section, \.comparison-panel, \.deep-analysis, \.analysis-body \{ min-width: 0; max-width: 100%; \}",
         )
+        self.assertNotIn("chart-empty", demo_css)
+        self.assertNotIn("shimmer", demo_css)
         self.assertNotRegex(site_css + demo_css, r"body\s*\{[^}]*overflow(?:-x)?\s*:\s*hidden")
         self.assertIn("--demo-body: 1rem", demo_css)
         self.assertIn("--demo-meta: .875rem", demo_css)
@@ -463,6 +465,10 @@ class PagesContractTests(unittest.TestCase):
         ):
             self.assertIn(f'cssColor("{role}")', demo_js)
         self.assertNotRegex(demo_js, r"#[0-9A-Fa-f]{3,8}\b")
+        self.assertIn('scenarioId: "small-balanced"', demo_js)
+        self.assertIn('$("#results").classList.add("is-stale")', demo_js)
+        self.assertIn('results.scrollIntoView', demo_js)
+        self.assertNotIn('await runDemo();', demo_js)
 
         pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
         for page in pages:

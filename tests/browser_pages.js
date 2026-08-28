@@ -310,13 +310,34 @@ async function runLiveDemo(browser, origin, { path: routePath, status, screensho
   await page.goto(`${origin}${routePath}`, { waitUntil: "load" });
   await page.locator("#runButton").waitFor({ state: "visible", timeout: 30000 });
   await assert.doesNotReject(() => page.waitForFunction(() => !document.querySelector("#runButton").disabled, null, { timeout: 30000 }));
+  assert.equal(await page.locator("#results").isHidden(), true, `${routePath} exposes results before a run`);
+  assert.equal(await visible(page.locator("#runPrompt")), true, `${routePath} has no pre-run guidance`);
+  assert.equal(await page.locator(".run-button:visible").count(), 1, `${routePath} must have one primary run action before results`);
+  assert.equal(await page.locator("#scenarioSelect").inputValue(), "small-balanced", `${routePath} must recommend the small balanced scenario`);
+  assert.equal(await page.locator("#deepAnalysis").count(), 1, `${routePath} must have one deep-analysis disclosure`);
   await page.locator("#runButton").click();
   await page.waitForFunction((expected) => document.querySelector("#dataStatus")?.textContent.includes(expected), status, { timeout: 60000 });
+  await page.waitForFunction(() => document.activeElement?.id === "resultTitle", null, { timeout: 5000 });
+  assert.equal(await visible(page.locator("#results")), true, `${routePath} did not reveal results after a successful run`);
+  assert.equal(await page.locator("#kpiGrid .kpi").count(), 3, `${routePath} does not show exactly three result summaries`);
+  assert.equal(await page.locator("#comparisonBars .comparison-bar").count(), 8, `${routePath} does not show eight comparison bars`);
   assert.equal(await page.locator("#comparisonBody tr").count(), 8);
-  const postRunWidth = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
-  assert.ok(postRunWidth.scroll <= postRunWidth.client + 1, `${routePath} overflows after run: ${postRunWidth.scroll} > ${postRunWidth.client}`);
+  assert.equal(await page.locator("#deepAnalysis").getAttribute("open"), null, `${routePath} opens deep analysis by default`);
+  assert.equal(await page.locator(".analysis-tabs .tab").count(), 4, `${routePath} must provide four analysis views`);
+  assert.equal(await page.locator("#rawOutput").textContent(), "", `${routePath} eagerly renders raw stdout`);
   await assertLoadedResources(page, { name: routePath }, errors);
   await page.screenshot({ path: path.join(screenshots, screenshot), fullPage: true });
+  await page.locator("#deepAnalysis > summary").click();
+  await page.locator("#recordTabButton").click();
+  assert.equal(await page.locator("#rawOutput").textContent(), "", `${routePath} renders raw stdout before its disclosure opens`);
+  await page.locator("#rawDetails > summary").click();
+  assert.ok((await page.locator("#rawOutput").textContent()).length > 0, `${routePath} does not render raw stdout on demand`);
+  const postRunWidth = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+  assert.ok(postRunWidth.scroll <= postRunWidth.client + 1, `${routePath} overflows after run: ${postRunWidth.scroll} > ${postRunWidth.client}`);
+  await page.locator('#budgetButtons button[data-budget-index="1"]').click();
+  assert.equal(await page.locator("#results").getAttribute("class").then((value) => value.includes("is-stale")), true, `${routePath} does not mark old results as stale`);
+  assert.equal(await visible(page.locator("#staleBanner")), true, `${routePath} does not expose the stale-result warning`);
+  assert.equal(await page.locator("#downloadButton").isDisabled(), true, `${routePath} permits exporting stale results`);
   await context.close();
 }
 

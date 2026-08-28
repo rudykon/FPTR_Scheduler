@@ -67,19 +67,14 @@
       </header>
 
       <main id="main" class="demo-app">
-        <section class="demo-hero section-wrap">
-          <div class="demo-hero-copy">
-            <p class="demo-eyebrow" data-i18n="eyebrow">REAL C++17 · WASM</p>
-            <h1 data-i18n="demoHeroTitle">在线调度 Demo</h1>
-            <p class="demo-intro" data-i18n="intro">
-              同一输入、同一预算，实时运行 FPTR 与 7 个参考方法。
-            </p>
-            <div class="hero-badges" aria-label="Demo 特性" data-i18n-aria="demoPropertiesAria">
-              <span><i class="dot green"></i><span data-i18n="realSnapshots">实时 C++17 WebAssembly</span></span>
-              <span><i class="dot blue"></i><span data-i18n="audit">独立验证器</span></span>
-              <span><i class="dot violet"></i><span data-i18n="freeStatic">在本地浏览器运行</span></span>
-            </div>
-          </div>
+        <section class="demo-hero section-wrap" aria-labelledby="demoTitle">
+          <h1 id="demoTitle" data-i18n="demoHeroTitle">在线调度 Demo</h1>
+          <p class="demo-intro" data-i18n="intro">
+            同一输入、同一预算，实时运行 FPTR 与 7 个参考方法。
+          </p>
+          <p class="demo-runtime-line" data-i18n="demoRuntimeLine">
+            C++17 / WASM · 本地运行 · 独立验证
+          </p>
         </section>
 
         <div class="demo-workspace section-wrap">
@@ -90,220 +85,188 @@
           <section id="demoControls" class="control-panel" aria-labelledby="controlsTitle">
             <div class="section-heading compact">
               <div>
-                <span class="step-number">01</span>
                 <div>
-                  <h2 id="controlsTitle" data-i18n="configure">选择输入</h2>
-                  <p data-i18n="configureHint">选择输入，然后启动一次受截止时间约束的真实运行。</p>
+                  <h2 id="controlsTitle" data-i18n="configure">运行设置</h2>
+                  <p data-i18n="configureHint">选择场景与预算，再运行 8 种方法。</p>
                 </div>
               </div>
-              <span id="dataStatus" class="status-pill loading" data-i18n="engineLoading">正在加载 C++ WebAssembly…</span>
             </div>
 
-            <div class="controls-grid">
-              <label class="control-field">
+            <div class="control-toolbar">
+              <label class="toolbar-field scenario-field">
                 <span data-i18n="scenario">流量场景</span>
                 <select id="scenarioSelect" disabled></select>
-                <small id="scenarioNote"></small>
               </label>
 
-              <div class="control-field">
-                <span><span data-i18n="deadline">截止时间预算</span> <b id="budgetValue">87 ms</b></span>
-                <input id="budgetSlider" type="range" min="0" max="4" step="1" value="2" disabled />
-                <div id="budgetTicks" class="range-ticks" aria-hidden="true"></div>
-                <small data-i18n="deadlineHint">所有对比方法使用相同的时间截止条件。</small>
-              </div>
+              <fieldset class="toolbar-field budget-field">
+                <legend data-i18n="deadline">截止时间预算</legend>
+                <div
+                  id="budgetButtons"
+                  class="budget-buttons"
+                  aria-label="截止时间预算选项"
+                  data-i18n-aria="budgetOptionsAria"
+                ></div>
+              </fieldset>
 
+              <div class="run-cluster">
+                <span id="dataStatus" class="status-pill loading" data-i18n="engineLoading">正在加载 C++ WebAssembly…</span>
+                <button id="runButton" class="run-button" type="button" disabled>
+                  <span class="run-icon" aria-hidden="true">▶</span><span data-i18n="runEight">运行 8 种方法</span>
+                </button>
+              </div>
             </div>
 
-            <details class="advanced-controls">
-              <summary data-i18n="advancedSettings">高级设置</summary>
-              <div class="advanced-controls-body">
-                <fieldset class="control-field stage-field">
-                  <legend data-i18n="stopStage">FPTR 停止阶段</legend>
-                  <div id="stageButtons" class="stage-buttons"></div>
-                  <small data-i18n="stageHint">后续阶段只能提交完整且可行的改进。</small>
-                </fieldset>
-                <div class="custom-input-row">
-                  <label class="file-button">
-                    <span data-i18n="customInput">使用自定义 .in 文件</span>
-                    <input id="customInput" type="file" accept=".in,.txt,text/plain" />
-                  </label>
-                  <button id="clearCustomButton" class="secondary-button" type="button" hidden data-i18n="clearCustom">恢复预设</button>
-                </div>
-              </div>
-            </details>
-
-            <div class="execution-bar">
-              <div class="input-source">
+            <div class="control-meta">
+              <div class="input-source" aria-live="polite">
                 <span class="live-mark" aria-hidden="true"></span>
-                <div><b id="inputSourceLabel" data-i18n="presetInput">预设输入</b><small id="inputSourceDetail">—</small></div>
+                <div><b id="inputSourceLabel">—</b><small id="inputSourceDetail">—</small></div>
               </div>
-              <button id="runButton" class="run-button" type="button" disabled>
-                <span class="run-icon" aria-hidden="true">▶</span><span data-i18n="runReal">开始运行</span>
-              </button>
+              <details class="advanced-controls">
+                <summary data-i18n="advancedSettings">高级设置</summary>
+                <div class="advanced-controls-body">
+                  <fieldset class="control-field stage-field">
+                    <legend data-i18n="stopStage">FPTR 停止阶段</legend>
+                    <div id="stageButtons" class="stage-buttons"></div>
+                    <small data-i18n="stageHint">后续阶段只能提交完整且可行的改进。</small>
+                  </fieldset>
+                  <div class="custom-input-row">
+                    <label class="file-button">
+                      <span data-i18n="customInput">使用自定义 .in 文件</span>
+                      <input id="customInput" type="file" accept=".in,.txt,text/plain" />
+                    </label>
+                    <button id="clearCustomButton" class="secondary-button" type="button" hidden data-i18n="clearCustom">恢复预设</button>
+                  </div>
+                </div>
+              </details>
             </div>
             <p id="executionNote" class="execution-note" data-i18n="executionNote">
-              输入只留在当前浏览器。所有方法使用同一实例与所选时间预算。
+              输入不会上传；8 种方法使用同一实例和预算。
             </p>
           </section>
 
-          <section id="results" class="results-section" aria-labelledby="resultTitle">
-            <div class="section-heading">
-              <div>
-                <span class="step-number">02</span>
-                <div>
-                  <h2 id="resultTitle" data-i18n="inspect">运行结果</h2>
-                  <p id="instanceSummary">—</p>
-                </div>
-              </div>
-              <button id="downloadButton" class="primary-button" type="button" disabled>
-                <span data-i18n="download">导出 JSON</span> ↓
-              </button>
+          <p id="runPrompt" class="run-prompt" data-i18n="runPrompt">
+            选择场景和预算，然后运行 8 种方法。
+          </p>
+
+          <section id="results" class="results-section" aria-labelledby="resultTitle" hidden>
+            <header class="result-header">
+              <p class="result-validation">
+                <span aria-hidden="true">✓</span>
+                <strong data-i18n="resultValidated">8 种方法均通过独立验证</strong>
+              </p>
+              <h2 id="resultTitle" tabindex="-1" data-i18n="inspect">本次结果</h2>
+              <p id="instanceSummary">—</p>
+            </header>
+
+            <div id="staleBanner" class="stale-banner" role="status" hidden>
+              <span data-i18n="staleNotice">参数已经改变，当前显示的是上一次运行结果。</span>
+              <button id="rerunButton" type="button" data-i18n="rerun">使用新参数重新运行</button>
             </div>
 
-            <div id="kpiGrid" class="kpi-grid" aria-live="polite"></div>
+            <div id="kpiGrid" class="result-summary" aria-live="polite"></div>
 
             <article class="panel comparison-panel" aria-labelledby="comparisonTitle">
               <div class="panel-heading comparison-heading">
-                <div>
-                  <span class="panel-kicker" data-i18n="liveComparison">8 METHODS · LIVE</span>
-                  <h3 id="comparisonTitle" data-i18n="comparisonTitle">算法对比</h3>
-                  <p data-i18n="comparisonHint">BeamFirst 与六种匹配搜索基线的输出均由同一独立验证器重算得分并检查约束。</p>
-                </div>
-                <span id="comparisonStatus" class="comparison-status">8 C++ / WASM</span>
+                <h3 id="comparisonTitle" data-i18n="scoreComparison">同一输入与预算下的得分</h3>
               </div>
-              <div id="comparisonBars" class="comparison-bars chart-empty" aria-label="实时算法得分比较" data-i18n-aria="liveComparisonAria"></div>
-              <details class="comparison-table-details">
-                <summary data-i18n="comparisonTableDetails">展开完整算法比较表</summary>
-                <div class="table-scroll comparison-table-wrap">
-                  <table class="comparison-table">
-                    <thead>
-                      <tr>
-                        <th data-i18n="method">算法</th>
-                        <th data-i18n="score">得分</th>
-                        <th data-i18n="demandServed">需求满足率</th>
-                        <th data-i18n="versusFptr">相对所选 FPTR</th>
-                        <th data-i18n="algorithmTime">算法时间</th>
-                        <th data-i18n="searchWork">搜索工作量</th>
-                        <th data-i18n="validation">验证</th>
-                      </tr>
-                    </thead>
-                    <tbody id="comparisonBody"></tbody>
-                  </table>
-                </div>
-              </details>
-              <p class="comparison-note" data-i18n="comparisonNote">随机搜索方法使用固定种子；计时与得分来自本次浏览器运行，不读取预计算结果。</p>
-              <details class="demo-boundary">
-                <summary data-i18n="demoBoundaryTitle">Demo 与论文计时的边界</summary>
-                <p data-i18n="demoBoundary">浏览器 Demo 解释单个实例的算法行为；论文的时延分布与统计结论来自原生 C++ 独立进程实验，不能由一次 WebAssembly 计时替代。</p>
-              </details>
+              <div id="comparisonBars" class="comparison-bars" aria-label="实时算法得分比较" data-i18n-aria="liveComparisonAria"></div>
+              <p class="result-boundary">
+                <span data-i18n="comparisonBoundary">浏览器计时用于解释单个实例；论文统计来自原生 C++ 独立进程实验。</span>
+                <a href="../evidence/" data-i18n="paperResultsLink">查看实验结果 →</a>
+              </p>
             </article>
 
-            <details class="advanced-results">
-              <summary data-i18n="advancedResults">查看详细结果</summary>
-              <div class="dashboard-grid">
-              <article class="panel panel-wide">
-                <div class="panel-heading">
-                  <div>
-                    <span class="panel-kicker" data-i18n="transactional">事务式细化</span>
-                    <h3 data-i18n="pipelineTitle">累计最优解得分</h3>
-                  </div>
-                  <div class="legend-inline">
-                    <span><i class="legend-line blue-line"></i>FPTR</span>
-                    <span><i class="legend-line orange-line"></i>BeamFirst</span>
-                  </div>
+            <details id="deepAnalysis" class="deep-analysis">
+              <summary data-i18n="deepAnalysis">深入分析</summary>
+              <div class="analysis-body">
+                <div class="tabs analysis-tabs" role="tablist" aria-label="深入分析视图" data-i18n-aria="analysisViewsAria">
+                  <button id="stageTabButton" class="tab active" data-tab="stage" role="tab" aria-selected="true" aria-controls="stageTab" data-i18n="analysisStage">阶段</button>
+                  <button id="allocationTabButton" class="tab" data-tab="allocation" role="tab" aria-selected="false" aria-controls="allocationTab" tabindex="-1" data-i18n="analysisAllocation">分配</button>
+                  <button id="usersTabButton" class="tab" data-tab="users" role="tab" aria-selected="false" aria-controls="usersTab" tabindex="-1" data-i18n="analysisUsers">用户</button>
+                  <button id="recordTabButton" class="tab" data-tab="record" role="tab" aria-selected="false" aria-controls="recordTab" tabindex="-1" data-i18n="analysisRecord">记录</button>
                 </div>
-                <div id="stageChart" class="stage-chart chart-empty"></div>
-                <p class="chart-note" data-i18n="pipelineNote">
-                  候选方案通过完整可行性契约后，阶段结果才会被接受。
-                </p>
-              </article>
 
-              <article class="panel explainer-panel">
-                <span class="panel-kicker" data-i18n="readChart">图表说明</span>
-                <h3 data-i18n="whyTransactional">为何称为“事务式”？</h3>
-                <ol class="explain-list">
-                  <li><b data-i18n="propose">提出</b><span data-i18n="proposeText">修改波束或资源分配</span></li>
-                  <li><b data-i18n="validate">验证</b><span data-i18n="validateText">检查预算、共享与子带约束</span></li>
-                  <li><b data-i18n="demoCommit">提交</b><span data-i18n="commitText">仅保留完整有效的得分提升</span></li>
-                </ol>
-                <div class="audit-callout">
-                  <span aria-hidden="true">✓</span>
-                  <div><b data-i18n="auditPass">审计通过</b><small data-i18n="auditPassText">得分、截止时间与可行性一致</small></div>
-                </div>
-              </article>
+                <section id="stageTab" class="tab-panel active" role="tabpanel" aria-labelledby="stageTabButton">
+                  <div class="analysis-heading">
+                    <h3 data-i18n="stageAuditTitle">阶段得分与审计</h3>
+                    <div class="legend-inline">
+                      <span><i class="legend-line blue-line"></i>FPTR</span>
+                      <span><i class="legend-line orange-line"></i>BeamFirst</span>
+                    </div>
+                  </div>
+                  <div id="stageChart" class="stage-chart" data-scroll-region="true" tabindex="0"></div>
+                  <div class="table-scroll" data-scroll-region="true" tabindex="0"><table><thead id="auditHead"></thead><tbody id="auditBody"></tbody></table></div>
+                  <p class="method-note">
+                    <span data-i18n="methodGateSummary">候选只有通过完整、及时、合法和更优四项检查才会提交。</span>
+                    <a href="../method/" data-i18n="methodLink">了解 FPTR 方法 →</a>
+                  </p>
+                </section>
 
-              <article class="panel panel-wide allocation-panel">
-                <div class="panel-heading">
-                  <div>
-                    <span class="panel-kicker" data-i18n="jointAllocation">联合分配</span>
-                    <h3 data-i18n="allocationTitle">每个资源块由谁使用？</h3>
+                <section id="allocationTab" class="tab-panel" role="tabpanel" aria-labelledby="allocationTabButton" hidden>
+                  <div class="analysis-heading">
+                    <h3 data-i18n="allocationAnalysisTitle">资源分配</h3>
+                    <div class="share-legend">
+                      <span data-i18n="none">未用</span><i></i><i></i><i></i><i></i><span data-i18n="shared">共享</span>
+                    </div>
                   </div>
-                  <div class="share-legend">
-                    <span data-i18n="none">未用</span><i></i><i></i><i></i><i></i><span data-i18n="shared">共享</span>
+                  <h4 data-i18n="allocationTitle">每个资源块由谁使用？</h4>
+                  <div class="visual-region">
+                    <div class="canvas-scroll" data-scroll-region="true" tabindex="0"><canvas id="allocationCanvas" aria-label="用户与资源分配热力图" data-i18n-aria="allocationHeatmapAria"></canvas></div>
+                    <div id="allocationTooltip" class="chart-tooltip" role="status"></div>
                   </div>
-                </div>
-                <div class="canvas-scroll"><canvas id="allocationCanvas" aria-label="用户与资源分配热力图" data-i18n-aria="allocationHeatmapAria"></canvas></div>
-                <div id="allocationTooltip" class="chart-tooltip" role="status"></div>
-              </article>
+                  <h4 data-i18n="beamTitle">各子带激活波束</h4>
+                  <div id="beamGrid" class="beam-grid" data-scroll-region="true" tabindex="0"></div>
+                </section>
 
-              <article class="panel demand-panel">
-                <div class="panel-heading">
-                  <div>
-                    <span class="panel-kicker" data-i18n="trafficCoverage">流量覆盖</span>
-                    <h3 data-i18n="demandTitle">已传输与未满足需求</h3>
+                <section id="usersTab" class="tab-panel" role="tabpanel" aria-labelledby="usersTabButton" hidden>
+                  <div class="analysis-heading"><h3 data-i18n="userAnalysisTitle">用户需求</h3></div>
+                  <div class="visual-region">
+                    <div class="canvas-scroll" data-scroll-region="true" tabindex="0"><canvas id="demandCanvas" aria-label="各用户已传输量与未满足需求图" data-i18n-aria="demandChartAria"></canvas></div>
+                    <div id="demandTooltip" class="chart-tooltip" role="status"></div>
                   </div>
-                </div>
-                <div class="canvas-scroll"><canvas id="demandCanvas" aria-label="各用户已传输量与未满足需求图" data-i18n-aria="demandChartAria"></canvas></div>
-                <div id="demandTooltip" class="chart-tooltip" role="status"></div>
-              </article>
+                  <div class="table-scroll" data-scroll-region="true" tabindex="0"><table><thead id="usersHead"></thead><tbody id="usersBody"></tbody></table></div>
+                </section>
 
-              <article class="panel beam-panel">
-                <div class="panel-heading">
-                  <div>
-                    <span class="panel-kicker" data-i18n="maskDesign">掩码设计</span>
-                    <h3 data-i18n="beamTitle">各子带激活波束</h3>
+                <section id="recordTab" class="tab-panel" role="tabpanel" aria-labelledby="recordTabButton" hidden>
+                  <div class="analysis-heading record-heading">
+                    <div><h3 data-i18n="recordAnalysisTitle">运行记录</h3><p data-i18n="recordHint">完整比较、运行身份与可导出记录。</p></div>
+                    <button id="downloadButton" class="primary-button" type="button" disabled>
+                      <span data-i18n="download">导出 JSON</span> ↓
+                    </button>
                   </div>
-                </div>
-                <div id="beamGrid" class="beam-grid"></div>
-              </article>
+
+                  <h4 data-i18n="completeComparison">完整算法比较</h4>
+                  <div class="table-scroll comparison-table-wrap" data-scroll-region="true" tabindex="0">
+                    <table class="comparison-table">
+                      <thead>
+                        <tr>
+                          <th data-i18n="method">算法</th>
+                          <th data-i18n="score">得分</th>
+                          <th data-i18n="demandServed">需求满足率</th>
+                          <th data-i18n="versusFptr">相对所选 FPTR</th>
+                          <th data-i18n="algorithmTime">算法时间</th>
+                          <th data-i18n="searchWork">搜索工作量</th>
+                          <th data-i18n="validation">验证</th>
+                        </tr>
+                      </thead>
+                      <tbody id="comparisonBody"></tbody>
+                    </table>
+                  </div>
+
+                  <h4 data-i18n="runProvenance">运行身份</h4>
+                  <div id="provenanceCard" class="provenance-card"></div>
+
+                  <details id="rawDetails" class="raw-details">
+                    <summary data-i18n="rawDetails">查看原始 stdout 与 trace</summary>
+                    <div class="raw-grid">
+                      <article><h4 data-i18n="solverStdout">调度器 stdout</h4><pre id="rawOutput" data-scroll-region="true" tabindex="0"></pre></article>
+                      <article><h4 data-i18n="solverTrace">调度器 trace</h4><pre id="rawTrace" data-scroll-region="true" tabindex="0"></pre></article>
+                    </div>
+                  </details>
+                </section>
               </div>
             </details>
           </section>
-
-          <details class="detail-section advanced-detail">
-            <summary data-i18n="verificationDetails">查看运行审计与原始输出</summary>
-            <div class="section-heading">
-              <div>
-                <span class="step-number">03</span>
-                <div>
-                  <h2 id="detailTitle" data-i18n="verify">运行审计</h2>
-                  <p data-i18n="verifyHint">追踪每个接受阶段以及每位用户的服务流量。</p>
-                </div>
-              </div>
-            </div>
-            <div class="tabs" role="tablist" aria-label="详细结果视图" data-i18n-aria="detailedViewsAria">
-              <button class="tab active" data-tab="audit" role="tab" aria-selected="true" data-i18n="auditTrail">阶段审计</button>
-              <button class="tab" data-tab="users" role="tab" aria-selected="false" data-i18n="userDetail">用户明细</button>
-              <button class="tab" data-tab="raw" role="tab" aria-selected="false" data-i18n="rawOutput">原始输出</button>
-              <button class="tab" data-tab="provenance" role="tab" aria-selected="false" data-i18n="provenance">结果来源</button>
-            </div>
-            <div id="auditTab" class="tab-panel active" role="tabpanel">
-              <div class="table-scroll"><table><thead id="auditHead"></thead><tbody id="auditBody"></tbody></table></div>
-            </div>
-            <div id="usersTab" class="tab-panel" role="tabpanel">
-              <div class="table-scroll"><table><thead id="usersHead"></thead><tbody id="usersBody"></tbody></table></div>
-            </div>
-            <div id="rawTab" class="tab-panel" role="tabpanel">
-              <div class="raw-grid">
-                <article><h3 data-i18n="solverStdout">调度器 stdout</h3><pre id="rawOutput"></pre></article>
-                <article><h3 data-i18n="solverTrace">调度器 trace</h3><pre id="rawTrace"></pre></article>
-              </div>
-            </div>
-            <div id="provenanceTab" class="tab-panel" role="tabpanel">
-              <div id="provenanceCard" class="provenance-card"></div>
-            </div>
-          </details>
         </div>
       </main>
 

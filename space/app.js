@@ -34,11 +34,12 @@ const COPY = {
     demoCommit: "Commit",
     eyebrow: "REAL C++17 · WASM",
     intro: "Run FPTR and seven references on the same input and budget.",
+    demoRuntimeLine: "C++17 / WASM · local execution · independent validation",
     realSnapshots: "Live C++17 WebAssembly", audit: "Independent validator", freeStatic: "Runs locally in your browser",
-    configure: "Choose Input", configureHint: "Choose an input, then launch a real deadline-bounded run.",
+    configure: "Run Settings", configureHint: "Choose a scenario and budget, then run all eight methods.",
     scenario: "Traffic scenario", deadline: "Deadline budget", deadlineHint: "The same cutoff controls every compared method.",
     stopStage: "FPTR stopping stage", stageHint: "Later stages may only commit complete, feasible improvements.",
-    inspect: "Run Results", download: "Export JSON", transactional: "TRANSACTIONAL REFINEMENT",
+    inspect: "This Run", download: "Export JSON", transactional: "TRANSACTIONAL REFINEMENT",
     pipelineTitle: "Cumulative incumbent score", pipelineNote: "A stage is accepted only after the candidate passes the full feasibility contract.",
     readChart: "HOW TO READ THIS", whyTransactional: "Why “transactional”?", propose: "Propose", proposeText: "change beams or assignments",
     validate: "Validate", validateText: "check budget, sharing, and subbands", commit: "Commit", commitText: "keep only a complete score gain",
@@ -60,11 +61,11 @@ const COPY = {
     resource: "Resource", shareSize: "Share size", unmet: "Unmet", active: "active", inactive: "off",
     engineLoading: "Loading C++ WebAssembly…", engineReady: "FPTR and baseline WebAssembly ready", stale: "Configuration changed · run again",
     running: "Running the live comparison…", runningComparison: "Running comparison", runPassed: "All live runs validated", runError: "Run failed",
-    customInput: "Use custom .in file", clearCustom: "Use preset", runReal: "Start Run",
+    customInput: "Use custom .in file", clearCustom: "Use preset", runReal: "Start Run", runEight: "Run 8 methods",
     advancedSettings: "Advanced Settings",
     advancedResults: "View Detailed Results",
     verificationDetails: "View Run Audit and Raw Output",
-    executionNote: "The input stays in this browser. Every method receives the same instance and selected budget.",
+    executionNote: "The input is never uploaded; all eight methods use the same instance and budget.",
     presetInput: "Preset input", customInputLabel: "Custom local input", rawOutput: "Raw output",
     solverStdout: "Scheduler stdout", solverTrace: "Scheduler trace", executionMode: "Execution mode",
     runIdentity: "Live run", browserWall: "Browser wall time", liveExecution: "Live C++17 WebAssembly in this browser",
@@ -77,17 +78,31 @@ const COPY = {
     comparisonCount: "validated C++ / WASM runs",
     comparisonTableDetails: "Open the complete algorithm table",
     demoBoundaryTitle: "Boundary between the Demo and paper timing",
-    demoBoundary: "The browser Demo explains one instance. The paper's timing distributions and statistics come from native C++ subprocess experiments and cannot be replaced by one WebAssembly timing."
+    demoBoundary: "The browser Demo explains one instance. The paper's timing distributions and statistics come from native C++ subprocess experiments and cannot be replaced by one WebAssembly timing.",
+    runPrompt: "Choose a scenario and budget, then run all eight methods.",
+    resultValidated: "All 8 methods passed independent validation",
+    staleNotice: "Parameters changed. These are still the previous run's results.", rerun: "Run again with new parameters",
+    recommended: "recommended", paperDefault: "paper default",
+    demandDelivery: "Demand delivery", browserAlgorithmTime: "Browser algorithm time", budgetUsed: "of budget",
+    scoreComparison: "Scores on the same input and budget",
+    comparisonBoundary: "Browser timing explains one instance; paper statistics come from native C++ subprocess experiments.",
+    paperResultsLink: "View experimental results →", deepAnalysis: "Deep analysis",
+    analysisStage: "Stages", analysisAllocation: "Allocation", analysisUsers: "Users", analysisRecord: "Record",
+    stageAuditTitle: "Stage scores and audit", methodGateSummary: "A candidate commits only after completeness, timeliness, legality, and improvement checks pass.",
+    methodLink: "Understand the FPTR method →", allocationAnalysisTitle: "Resource allocation", userAnalysisTitle: "User demand",
+    recordAnalysisTitle: "Run record", recordHint: "Complete comparison, run identity, and exportable evidence.",
+    completeComparison: "Complete algorithm comparison", runProvenance: "Run identity", rawDetails: "View raw stdout and trace"
   },
   zh: {
     demoHeroTitle: "在线调度 Demo", demoCommit: "提交",
     eyebrow: "REAL C++17 · WASM",
     intro: "同一输入、同一预算，实时运行 FPTR 与 7 个参考方法。",
+    demoRuntimeLine: "C++17 / WASM · 本地运行 · 独立验证",
     realSnapshots: "实时 C++17 WebAssembly", audit: "独立验证器", freeStatic: "在本地浏览器运行",
-    configure: "选择输入", configureHint: "选择输入，然后启动一次受截止时间约束的真实运行。",
+    configure: "运行设置", configureHint: "选择场景与预算，再运行 8 种方法。",
     scenario: "流量场景", deadline: "截止时间预算", deadlineHint: "所有对比方法使用相同的时间截止条件。",
     stopStage: "FPTR 停止阶段", stageHint: "后续阶段只能提交完整且可行的改进。",
-    inspect: "运行结果", download: "导出 JSON", transactional: "事务式细化",
+    inspect: "本次结果", download: "导出 JSON", transactional: "事务式细化",
     pipelineTitle: "累计最优解得分", pipelineNote: "候选方案通过完整可行性契约后，阶段结果才会被接受。",
     readChart: "图表说明", whyTransactional: "为何称为“事务式”？", propose: "提出", proposeText: "修改波束或资源分配",
     validate: "验证", validateText: "检查预算、共享与子带约束", commit: "提交", commitText: "仅保留完整有效的得分提升",
@@ -109,11 +124,11 @@ const COPY = {
     resource: "资源", shareSize: "共享人数", unmet: "未满足", active: "激活", inactive: "关闭",
     engineLoading: "正在加载 C++ WebAssembly…", engineReady: "FPTR 与基线 WebAssembly 已就绪", stale: "配置已修改 · 请重新运行",
     running: "正在运行实时算法对比…", runningComparison: "正在对比", runPassed: "全部实时运行与验证通过", runError: "运行失败",
-    customInput: "使用自定义 .in 文件", clearCustom: "恢复预设", runReal: "开始运行",
+    customInput: "使用自定义 .in 文件", clearCustom: "恢复预设", runReal: "开始运行", runEight: "运行 8 种方法",
     advancedSettings: "高级设置",
     advancedResults: "查看详细结果",
     verificationDetails: "查看运行审计与原始输出",
-    executionNote: "输入只留在当前浏览器。所有方法使用同一实例与所选时间预算。",
+    executionNote: "输入不会上传；8 种方法使用同一实例和预算。",
     presetInput: "预设输入", customInputLabel: "本地自定义输入", rawOutput: "原始输出",
     solverStdout: "调度器 stdout", solverTrace: "调度器 trace", executionMode: "执行方式",
     runIdentity: "实时运行", browserWall: "浏览器总耗时", liveExecution: "当前浏览器内实时执行 C++17 WebAssembly",
@@ -126,7 +141,20 @@ const COPY = {
     comparisonCount: "个已验证 C++ / WASM 运行",
     comparisonTableDetails: "展开完整算法比较表",
     demoBoundaryTitle: "Demo 与论文计时的边界",
-    demoBoundary: "浏览器 Demo 解释单个实例的算法行为；论文的时延分布与统计结论来自原生 C++ 独立进程实验，不能由一次 WebAssembly 计时替代。"
+    demoBoundary: "浏览器 Demo 解释单个实例的算法行为；论文的时延分布与统计结论来自原生 C++ 独立进程实验，不能由一次 WebAssembly 计时替代。",
+    runPrompt: "选择场景和预算，然后运行 8 种方法。",
+    resultValidated: "8 种方法均通过独立验证",
+    staleNotice: "参数已经改变，当前显示的是上一次运行结果。", rerun: "使用新参数重新运行",
+    recommended: "推荐", paperDefault: "论文默认",
+    demandDelivery: "需求交付", browserAlgorithmTime: "浏览器算法时间", budgetUsed: "预算占用",
+    scoreComparison: "同一输入与预算下的得分",
+    comparisonBoundary: "浏览器计时用于解释单个实例；论文统计来自原生 C++ 独立进程实验。",
+    paperResultsLink: "查看实验结果 →", deepAnalysis: "深入分析",
+    analysisStage: "阶段", analysisAllocation: "分配", analysisUsers: "用户", analysisRecord: "记录",
+    stageAuditTitle: "阶段得分与审计", methodGateSummary: "候选只有通过完整、及时、合法和更优四项检查才会提交。",
+    methodLink: "了解 FPTR 方法 →", allocationAnalysisTitle: "资源分配", userAnalysisTitle: "用户需求",
+    recordAnalysisTitle: "运行记录", recordHint: "完整比较、运行身份与可导出记录。",
+    completeComparison: "完整算法比较", runProvenance: "运行身份", rawDetails: "查看原始 stdout 与 trace"
   }
 };
 
@@ -147,9 +175,9 @@ const EXTERNAL_METHODS = [
 const state = {
   data: null, module: null, baselineModule: null, comparisonEnabled: false,
   language: document.documentElement.lang.toLowerCase().startsWith("zh") ? "zh" : "en",
-  scenarioId: "medium-tight", budgetIndex: 2,
+  scenarioId: "small-balanced", budgetIndex: 2,
   stageId: "full", customText: null, customName: null, result: null, currentMeta: null,
-  currentInput: null, currentHash: null, runSerial: 0,
+  currentInput: null, currentHash: null, runSerial: 0, rawOutputRun: 0,
   status: { kind: "loading", key: "engineLoading", detail: "" }
 };
 const presetCache = new Map();
@@ -174,18 +202,23 @@ function setStatus(kind, key, detail = "") {
 
 function updateInputSource() {
   const selected = scenario();
-  $("#inputSourceLabel").textContent = state.customText ? t("customInputLabel") : t("presetInput");
+  const dimensions = selected.dimensions || {};
+  $("#inputSourceLabel").textContent = state.customText ? state.customName : labelFor(selected);
   $("#inputSourceDetail").textContent = state.customText
-    ? `${state.customName} · ${(new Blob([state.customText]).size / 1024).toFixed(1)} KiB · ${t("executionNote")}`
-    : `${labelFor(selected)} · ${selected.path}`;
+    ? `${t("customInputLabel")} · ${(new Blob([state.customText]).size / 1024).toFixed(1)} KiB`
+    : `${dimensions.users} ${t("users")} · ${dimensions.resources} ${t("resources")} · ${dimensions.beams} ${t("beams")} · ${dimensions.subbands} ${t("subbands")}`;
   $("#scenarioSelect").disabled = Boolean(state.customText) || !enginesReady();
   $("#clearCustomButton").hidden = !state.customText;
 }
 
 function markStale() {
-  if (state.result) setStatus("stale", "stale");
+  if (state.result) {
+    setStatus("stale", "stale");
+    $("#results").classList.add("is-stale");
+    $("#staleBanner").hidden = false;
+  }
   updateInputSource();
-  $("#budgetValue").textContent = `${budget()} ms`;
+  populateBudgetButtons();
   $("#downloadButton").disabled = true;
 }
 
@@ -198,6 +231,7 @@ function applyLanguage() {
   setStatus(state.status.kind, state.status.key, state.status.detail);
   if (state.data) {
     populateScenarioOptions();
+    populateBudgetButtons();
     populateStageButtons();
     updateInputSource();
     if (state.result) render();
@@ -206,8 +240,24 @@ function applyLanguage() {
 
 function populateScenarioOptions() {
   const select = $("#scenarioSelect");
-  select.innerHTML = state.data.scenarios.map((item) => `<option value="${item.id}">${escapeHtml(labelFor(item))}</option>`).join("");
+  select.innerHTML = state.data.scenarios.map((item) => {
+    const suffix = item.id === "small-balanced" ? ` (${t("recommended")})` : "";
+    return `<option value="${item.id}">${escapeHtml(labelFor(item) + suffix)}</option>`;
+  }).join("");
   select.value = state.scenarioId;
+}
+
+function populateBudgetButtons() {
+  const container = $("#budgetButtons");
+  if (!container || !state.data) return;
+  container.innerHTML = state.data.budgets.map((value, index) => {
+    const note = value === 87 ? `<span>${escapeHtml(t("paperDefault"))}</span>` : "";
+    return `<button type="button" data-budget-index="${index}" aria-pressed="${index === state.budgetIndex ? "true" : "false"}"><b>${value}</b> ms${note}</button>`;
+  }).join("");
+  container.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
+    state.budgetIndex = Number(button.dataset.budgetIndex);
+    markStale();
+  }));
 }
 
 function populateStageButtons() {
@@ -223,13 +273,9 @@ function populateStageButtons() {
 
 function initializeControls() {
   populateScenarioOptions();
+  populateBudgetButtons();
   populateStageButtons();
-  const slider = $("#budgetSlider");
-  slider.max = String(state.data.budgets.length - 1);
-  slider.value = String(state.budgetIndex);
-  $("#budgetTicks").innerHTML = state.data.budgets.map((item) => `<span>${item}</span>`).join("");
   $("#scenarioSelect").disabled = !enginesReady();
-  slider.disabled = false;
   $("#runButton").disabled = !enginesReady();
   $("#downloadButton").disabled = true;
   updateInputSource();
@@ -238,22 +284,23 @@ function initializeControls() {
 function updateKpis(item, current) {
   const inst = item.instance;
   const satisfaction = inst.demand ? 100 * current.score / inst.demand : 0;
+  const deltaPercent = current.baselineScore ? 100 * current.deltaVsBaseline / current.baselineScore : 0;
+  const budgetPercent = item.budgetMs ? 100 * current.algorithmMs / item.budgetMs : 0;
   const deltaClass = current.deltaVsBaseline > 0 ? "positive" : "neutral";
   const cards = [
-    [t("transmitted"), fmt.format(current.score), `${satisfaction.toFixed(1)}% ${t("demandServed")}`, ""],
-    [t("versus"), `${current.deltaVsBaseline >= 0 ? "+" : ""}${fmt.format(current.deltaVsBaseline)}`, t("sameBudget"), deltaClass],
-    [t("algorithmTime"), `${current.algorithmMs.toFixed(2)} ms`, t("throughAudit"), ""]
+    [t("demandDelivery"), `${fmt.format(current.score)} / ${fmt.format(inst.demand)}`, `${satisfaction.toFixed(1)}%`, ""],
+    [t("versus"), `${current.deltaVsBaseline >= 0 ? "+" : ""}${fmt.format(current.deltaVsBaseline)}`, `${deltaPercent >= 0 ? "+" : ""}${deltaPercent.toFixed(1)}%`, deltaClass],
+    [t("browserAlgorithmTime"), `${current.algorithmMs.toFixed(2)} / ${item.budgetMs} ms`, `${budgetPercent.toFixed(1)}% ${t("budgetUsed")}`, ""]
   ];
   $("#kpiGrid").innerHTML = cards.map(([label, value, note, klass]) => `<article class="kpi ${klass}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(note)}</small></article>`).join("");
 }
 
 function renderComparison(item, current) {
-  const chart = $("#comparisonBars"), body = $("#comparisonBody"), status = $("#comparisonStatus");
-  if (!chart || !body || !status) return;
+  const chart = $("#comparisonBars"), body = $("#comparisonBody");
+  if (!chart || !body) return;
   const rows = current.comparisons || [];
   if (!rows.length) return;
   const maximum = Math.max(...rows.map((row) => row.result.score), 1);
-  chart.classList.remove("chart-empty");
   chart.innerHTML = rows.map((row) => {
     const width = Math.max(1, 100 * row.result.score / maximum);
     return `<div class="comparison-bar ${row.primary ? "primary" : ""}"><span class="comparison-bar-label">${escapeHtml(row.label)}</span><span class="comparison-bar-track"><i class="comparison-bar-fill" style="width:${width.toFixed(2)}%"></i></span><strong class="comparison-bar-value">${escapeHtml(fmt.format(row.result.score))}</strong></div>`;
@@ -271,12 +318,10 @@ function renderComparison(item, current) {
       : `${result.trace.length} ${t("stagesUnit")}`;
     return `<tr class="${row.primary ? "primary-row" : ""}"><td><span class="method-name"><i></i>${escapeHtml(row.label)}</span></td><td><b>${escapeHtml(fmt.format(result.score))}</b></td><td>${served.toFixed(1)}%</td><td><span class="comparison-delta ${deltaClass}">${escapeHtml(deltaText)}</span></td><td>${result.algorithmMs.toFixed(2)} ms</td><td>${escapeHtml(work)}</td><td><span class="pass-badge">✓ ${escapeHtml(t("validated"))}</span></td></tr>`;
   }).join("");
-  status.textContent = `${rows.length} ${t("comparisonCount")}`;
 }
 
 function renderStageChart(current) {
   const host = $("#stageChart");
-  host.classList.remove("chart-empty");
   const trace = current.trace;
   const scores = trace.map((item) => item.score).concat([current.baselineScore]);
   const maxScore = Math.max(...scores, 1);
@@ -404,14 +449,36 @@ function renderProvenance(item, current){
   $("#provenanceCard").innerHTML=`<article><span>${t("instanceHash")}</span><code>${escapeHtml(item.sha256)}</code></article><article><span>${t("sourceCommit")}</span><code><a href="https://github.com/rudykon/FPTR_Scheduler/commit/${state.data.schedulerSourceCommit}" target="_blank" rel="noreferrer">${escapeHtml(state.data.schedulerSourceCommit)}</a></code></article><article><span>${t("inputName")}</span><b>${escapeHtml(item.inputName)}</b></article><article><span>${t("fixedSeed")}</span><b>${escapeHtml(seed)}</b></article><article><span>${t("currentStage")}</span><b>${escapeHtml(stageLabel)} · ${item.budgetMs} ms</b></article><article><span>${t("runIdentity")}</span><b>#${item.runSerial} · ${t("browserWall")} ${current.totalWallMs.toFixed(2)} ms</b></article><article><span>${t("executionMode")}</span><b>${t("liveExecution")}</b></article><article><span>${t("snapshotContract")}</span><b>${t("validContract")}</b></article><article><span>${hostLabel}</span><b>${t("staticNote")}</b></article>`;
 }
 
+function populateRawOutput() {
+  if (!state.result || !state.currentMeta || state.rawOutputRun === state.currentMeta.runSerial) return;
+  $("#rawOutput").textContent = state.result.output;
+  $("#rawTrace").textContent = state.result.traceText;
+  state.rawOutputRun = state.currentMeta.runSerial;
+}
+
+function renderAnalysisPanel(name) {
+  if (!state.result || !state.currentMeta) return;
+  if (name === "allocation") {
+    renderAllocation(state.currentMeta, state.result);
+    renderBeams(state.currentMeta, state.result);
+  } else if (name === "users") {
+    renderDemand(state.currentMeta, state.result);
+  } else if (name === "record") {
+    renderProvenance(state.currentMeta, state.result);
+  }
+}
+
 function render(){
   if(!state.result||!state.currentMeta)return;
   const item=state.currentMeta,current=state.result;
-  $("#scenarioNote").textContent=state.language==="zh"?item.noteZh:item.note;
-  $("#instanceSummary").textContent=`${labelFor(item)} · ${item.instance.users} ${t("users")} · ${item.instance.resources} ${t("resources")} · ${item.instance.beams} ${t("beams")} · ${item.instance.subbands} ${t("subbands")} · ${item.instance.groups} ${t("groups")} · ${item.instance.dualMemberships} ${t("dual")}`;
-  updateKpis(item,current);renderComparison(item,current);renderStageChart(current);renderAllocation(item,current);renderDemand(item,current);renderBeams(item,current);renderTables(item,current);renderProvenance(item,current);
-  $("#rawOutput").textContent=current.output;
-  $("#rawTrace").textContent=current.traceText;
+  $("#instanceSummary").textContent=`${labelFor(item)} · ${item.instance.users} ${t("users")} · ${item.instance.resources} ${t("resources")} · ${item.instance.beams} ${t("beams")} · ${item.budgetMs} ms`;
+  updateKpis(item,current);
+  renderComparison(item,current);
+  renderStageChart(current);
+  renderTables(item,current);
+  renderProvenance(item,current);
+  const activeTab=$(".analysis-tabs .tab.active")?.dataset.tab;
+  if(activeTab)renderAnalysisPanel(activeTab);
 }
 
 async function sha256(text){
@@ -453,10 +520,10 @@ function executeExternal(input,method,budgetMs,seed){
 
 function controlsBusy(busy){
   $("#runButton").disabled=busy||!enginesReady();
-  $("#budgetSlider").disabled=busy||!enginesReady();
   $("#scenarioSelect").disabled=busy||Boolean(state.customText)||!enginesReady();
   $("#customInput").disabled=busy||!enginesReady();
   $("#clearCustomButton").disabled=busy;
+  $$("#budgetButtons button").forEach((button)=>{button.disabled=busy||!enginesReady();});
   $$("#stageButtons button").forEach((button)=>{button.disabled=busy;});
 }
 
@@ -484,10 +551,8 @@ async function runDemo(){
     state.activeCase=caseData;
     const budgetMs=budget();
     const totalRuns=2+(state.comparisonEnabled?EXTERNAL_METHODS.length:0);
-    const progress=$("#comparisonStatus");
     const announce=async(index,label)=>{
       setStatus("running","runningComparison",`${index}/${totalRuns} · ${label}`);
-      if(progress)progress.textContent=`${index}/${totalRuns} · ${label}`;
       await new Promise((resolve)=>requestAnimationFrame(()=>resolve()));
     };
     const selectedStage=stageMeta();
@@ -525,11 +590,24 @@ async function runDemo(){
       seed:externalSeed,inputName,sha256:digest,stageId:state.stageId,budgetMs,runSerial:state.runSerial,
       instance:FPTRRuntime.instanceView(caseData)
     };
-    state.currentInput=input;state.currentHash=digest;state.result=selected;
-    render();$("#downloadButton").disabled=false;
+    state.currentInput=input;state.currentHash=digest;state.result=selected;state.rawOutputRun=0;
+    const results=$("#results");
+    results.hidden=false;
+    results.classList.remove("is-stale");
+    $("#staleBanner").hidden=true;
+    $("#runPrompt").hidden=true;
+    $("#rawOutput").textContent="";
+    $("#rawTrace").textContent="";
+    render();
+    if($("#rawDetails").open)populateRawOutput();
+    $("#downloadButton").disabled=false;
     setStatus("ready","runPassed",`#${state.runSerial} · ${fmt.format(selected.score)}`);
+    await new Promise((resolve)=>requestAnimationFrame(()=>resolve()));
+    $("#resultTitle").focus({preventScroll:true});
+    results.scrollIntoView({behavior:"smooth",block:"start"});
   }catch(error){
-    console.error(error);$("#rawTrace").textContent=error.stack||String(error);
+    console.error(error);
+    if($("#rawTrace"))$("#rawTrace").textContent=error.stack||String(error);
     setStatus("error","runError",String(error.message||error).slice(0,120));
   }finally{controlsBusy(false);updateInputSource();}
 }
@@ -543,7 +621,36 @@ function downloadSnapshot(){
 }
 
 function setupTabs(){
-  $$(".tab").forEach((button)=>button.addEventListener("click",()=>{$$(".tab").forEach((item)=>{item.classList.toggle("active",item===button);item.setAttribute("aria-selected",item===button?"true":"false");});$$(".tab-panel").forEach((panel)=>panel.classList.remove("active"));$(`#${button.dataset.tab}Tab`).classList.add("active");}));
+  const tabs=$$(".analysis-tabs .tab");
+  const activate=(button,moveFocus=false)=>{
+    tabs.forEach((item)=>{
+      const active=item===button;
+      item.classList.toggle("active",active);
+      item.setAttribute("aria-selected",active?"true":"false");
+      item.tabIndex=active?0:-1;
+      const panel=$(`#${item.dataset.tab}Tab`);
+      panel.classList.toggle("active",active);
+      panel.hidden=!active;
+    });
+    if(moveFocus)button.focus();
+    requestAnimationFrame(()=>renderAnalysisPanel(button.dataset.tab));
+  };
+  tabs.forEach((button,index)=>{
+    button.addEventListener("click",()=>activate(button));
+    button.addEventListener("keydown",(event)=>{
+      let next=null;
+      if(event.key==="ArrowRight")next=(index+1)%tabs.length;
+      else if(event.key==="ArrowLeft")next=(index-1+tabs.length)%tabs.length;
+      else if(event.key==="Home")next=0;
+      else if(event.key==="End")next=tabs.length-1;
+      if(next===null)return;
+      event.preventDefault();activate(tabs[next],true);
+    });
+  });
+  $("#deepAnalysis").addEventListener("toggle",()=>{
+    if($("#deepAnalysis").open){const active=$(".analysis-tabs .tab.active");if(active)requestAnimationFrame(()=>renderAnalysisPanel(active.dataset.tab));}
+  });
+  $("#rawDetails").addEventListener("toggle",()=>{if($("#rawDetails").open)populateRawOutput();});
 }
 
 async function start(){
@@ -559,8 +666,8 @@ async function start(){
     }));
   }
   $("#scenarioSelect").addEventListener("change",(event)=>{state.scenarioId=event.target.value;markStale();});
-  $("#budgetSlider").addEventListener("input",(event)=>{state.budgetIndex=Number(event.target.value);markStale();});
   $("#runButton").addEventListener("click",runDemo);
+  $("#rerunButton").addEventListener("click",runDemo);
   $("#customInput").addEventListener("change",async(event)=>{
     const file=event.target.files&&event.target.files[0];if(!file)return;
     try{
@@ -580,7 +687,7 @@ async function start(){
     const [response,module,baselineModule]=await Promise.all(pending);
     if(!response.ok)throw new Error(`Manifest HTTP ${response.status}`);
     state.data=await response.json();state.module=module;state.baselineModule=baselineModule||null;
-    initializeControls();setStatus("ready","engineReady");applyLanguage();await runDemo();
+    initializeControls();setStatus("ready","engineReady");applyLanguage();
   }catch(error){console.error(error);setStatus("error","loadError",String(error.message||error).slice(0,120));}
 }
 
