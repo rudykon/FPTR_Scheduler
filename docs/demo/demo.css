@@ -147,7 +147,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue); cursor: pointer; }
 .live-mark { width: .6rem; height: .6rem; flex: 0 0 auto; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px color-mix(in srgb, var(--feasible) 12%, transparent); }
 .run-button { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1rem; border: 0; border-radius: 12px; color: var(--white); background: var(--signal); box-shadow: 0 10px 24px color-mix(in srgb, var(--signal) 22%, transparent); font-size: var(--demo-small); font-weight: 900; cursor: pointer; white-space: nowrap; }
 .run-button:disabled { opacity: .48; cursor: wait; box-shadow: none; }
-.run-icon { display: grid; width: 1.4rem; height: 1.4rem; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--white) 18%, transparent); font-size: var(--demo-meta); }
+.run-icon { display: grid; width: 1.4rem; height: 1.4rem; place-items: center; border-radius: 50%; background: transparent; font-size: var(--demo-meta); }
 .execution-note { margin: .5rem .2rem 0; color: var(--muted); font-size: var(--demo-meta); }
 
 .results-section { background: color-mix(in srgb, var(--white) 82%, transparent); }
@@ -221,7 +221,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue); cursor: pointer; }
 .explain-list b { color: var(--structure); font-size: var(--demo-small); }
 .explain-list span { display: block; color: var(--muted); font-size: var(--demo-meta); }
 .audit-callout { display: flex; gap: .6rem; align-items: center; padding: .8rem; border: 1px solid color-mix(in srgb, var(--feasible) 28%, transparent); border-radius: 13px; background: var(--green-soft); }
-.audit-callout > span { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border-radius: 50%; background: var(--green); font-weight: 900; }
+.audit-callout > span { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border-radius: 50%; color: var(--white); background: var(--green); font-weight: 900; }
 .audit-callout div { display: flex; flex-direction: column; }
 .audit-callout small { color: var(--feasible); font-size: var(--demo-meta); }
 .canvas-scroll { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; }
