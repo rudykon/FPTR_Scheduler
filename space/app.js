@@ -650,7 +650,7 @@ function setupTabs(){
   $("#deepAnalysis").addEventListener("toggle",()=>{
     if($("#deepAnalysis").open){const active=$(".analysis-tabs .tab.active");if(active)requestAnimationFrame(()=>renderAnalysisPanel(active.dataset.tab));}
   });
-  $("#rawDetails").addEventListener("toggle",()=>{if($("#rawDetails").open)populateRawOutput();});
+  $("#rawDetails > summary").addEventListener("click",populateRawOutput);
 }
 
 async function start(){
