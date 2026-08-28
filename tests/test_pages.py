@@ -291,7 +291,7 @@ class PagesContractTests(unittest.TestCase):
             (DOCS / "method/index.html", "transactionDiagramAria"),
             (DOCS / "evidence/index.html", "keyResultsAria"),
             (DOCS / "evidence/index.html", "evidenceSectionsAria"),
-            (DOCS / "demo/index.html", "budgetOptionsAria"),
+            (DOCS / "demo/index.html", "budgetSliderAria"),
             (DOCS / "demo/index.html", "liveComparisonAria"),
             (DOCS / "demo/index.html", "allocationHeatmapAria"),
             (DOCS / "demo/index.html", "demandChartAria"),
@@ -436,6 +436,9 @@ class PagesContractTests(unittest.TestCase):
         )
         self.assertIn(".share-legend .share-0", demo_css)
         self.assertIn(".share-legend .share-3", demo_css)
+        self.assertIn(".budget-slider::-webkit-slider-runnable-track", demo_css)
+        self.assertIn("--budget-progress: 41.875%", demo_css)
+        self.assertNotIn(".budget-buttons", demo_css)
         self.assertIn("padding: 1.6rem 0 1.5rem", site_css)
         self.assertIn("clamp(2.1rem, 3.4vw, 3rem)", site_css)
         self.assertIn(".js .main-nav.is-open", site_css)
@@ -461,6 +464,8 @@ class PagesContractTests(unittest.TestCase):
         self.assertNotIn("[data-nav-icon]", site_js)
 
         demo_js = (ROOT / "space/app.js").read_text(encoding="utf-8")
+        self.assertIn("budgetMs: 87", demo_js)
+        self.assertNotIn("budgetIndex", demo_js)
         self.assertIn("getComputedStyle(document.documentElement)", demo_js)
         for role in (
             "--signal",

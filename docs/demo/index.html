@@ -100,12 +100,35 @@
 
               <fieldset class="toolbar-field budget-field">
                 <legend data-i18n="deadline">截止时间预算</legend>
-                <div
-                  id="budgetButtons"
-                  class="budget-buttons"
-                  aria-label="截止时间预算选项"
-                  data-i18n-aria="budgetOptionsAria"
-                ></div>
+                <div id="budgetControl" class="budget-control">
+                  <div class="budget-readout">
+                    <output id="budgetValue" for="budgetSlider" aria-live="polite">87 ms</output>
+                    <span data-i18n="budgetLinearHint">连续调节 · 步长 1 ms</span>
+                  </div>
+                  <div class="budget-slider-wrap">
+                    <input
+                      id="budgetSlider"
+                      class="budget-slider"
+                      type="range"
+                      min="20"
+                      max="180"
+                      step="1"
+                      value="87"
+                      aria-label="截止时间预算，20 到 180 毫秒"
+                      data-i18n-aria="budgetSliderAria"
+                      disabled
+                    />
+                    <span class="budget-default-tick" aria-hidden="true"></span>
+                  </div>
+                  <div class="budget-scale" aria-hidden="true">
+                    <span id="budgetMin">20 ms</span>
+                    <span class="budget-default-label">
+                      <b id="budgetPaperDefaultValue">87 ms</b>
+                      <small data-i18n="paperDefaultShort">论文默认</small>
+                    </span>
+                    <span id="budgetMax">180 ms</span>
+                  </div>
+                </div>
               </fieldset>
 
               <div class="run-cluster">

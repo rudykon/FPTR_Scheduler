@@ -194,6 +194,9 @@ class BrowserDemoTests(unittest.TestCase):
         self.assertIn('src="./wasm/fptr_baselines.js"', demo)
         self.assertEqual(demo.count('id="customInput"'), 1)
         self.assertEqual(demo.count('id="stageButtons"'), 1)
+        self.assertIn('id="budgetSlider"', demo)
+        self.assertIn('type="range"', demo)
+        self.assertNotIn('id="budgetButtons"', demo)
         self.assertNotIn('id="runPrompt"', demo)
         for share_class in ("share-0", "share-1", "share-2", "share-3"):
             self.assertIn(f'class="{share_class}"', demo)

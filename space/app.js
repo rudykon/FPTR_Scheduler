@@ -44,7 +44,7 @@ const COPY = {
     runIdentity: "Live run", browserWall: "Browser wall time", liveExecution: "Live C++17 WebAssembly in this browser",
     inputName: "Input source", browserHost: "Browser host",
     stagesUnit: "stages", iterationsUnit: "iterations",
-    recommended: "recommended", paperDefault: "paper", paperDefaultTitle: "paper default",
+    recommended: "recommended", paperDefaultTitle: "paper default",
     demandDelivery: "Demand delivery", fptrAlgorithmTime: "FPTR algorithm time", selectedStageTime: "Selected-stage time", budgetUsed: "of budget",
     stageChartAria: "FPTR cumulative score by refinement stage"
   },
@@ -63,7 +63,7 @@ const COPY = {
     runIdentity: "实时运行", browserWall: "浏览器总耗时", liveExecution: "当前浏览器内实时执行 C++17 WebAssembly",
     inputName: "输入来源", browserHost: "浏览器主机",
     stagesUnit: "阶段", iterationsUnit: "次迭代",
-    recommended: "推荐", paperDefault: "默认", paperDefaultTitle: "论文默认",
+    recommended: "推荐", paperDefaultTitle: "论文默认",
     demandDelivery: "需求交付", fptrAlgorithmTime: "FPTR 算法时间", selectedStageTime: "所选阶段用时", budgetUsed: "预算占用",
     stageChartAria: "FPTR 各细化阶段的累计得分图"
   }
@@ -86,7 +86,7 @@ const EXTERNAL_METHODS = [
 const state = {
   data: null, module: null, baselineModule: null, comparisonEnabled: false,
   language: document.documentElement.lang.toLowerCase().startsWith("zh") ? "zh" : "en",
-  scenarioId: "small-balanced", budgetIndex: 2,
+  scenarioId: "small-balanced", budgetMs: 87,
   stageId: "full", customText: null, customName: null, result: null, currentMeta: null,
   currentInput: null, currentHash: null, runSerial: 0, rawOutputRun: 0
 };
@@ -100,7 +100,7 @@ const labelFor = (item) => state.language === "zh" ? item.labelZh : item.label;
 
 function scenario() { return state.data.scenarios.find((item) => item.id === state.scenarioId) || state.data.scenarios[0]; }
 function stageMeta() { return state.data.stages.find((item) => item.id === state.stageId); }
-function budget() { return state.data.budgets[state.budgetIndex]; }
+function budget() { return state.budgetMs; }
 function enginesReady() { return Boolean(state.module && (!state.comparisonEnabled || state.baselineModule)); }
 
 function setStatus(kind, key, detail = "") {
@@ -127,7 +127,7 @@ function markStale() {
     $("#staleBanner").hidden = false;
   }
   updateInputSource();
-  populateBudgetButtons();
+  syncBudgetControl();
   $("#downloadButton").disabled = true;
 }
 
@@ -140,29 +140,31 @@ function populateScenarioOptions() {
   select.value = state.scenarioId;
 }
 
-function populateBudgetButtons() {
-  const container = $("#budgetButtons");
-  if (!container || !state.data) return;
-  const buttons = state.data.budgets.map((value, index) => {
-    const selected = index === state.budgetIndex;
-    const paperDefault = value === 87;
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.budgetIndex = String(index);
-    button.setAttribute("aria-pressed", String(selected));
-    button.setAttribute(
-      "aria-label",
-      `${value} ms${paperDefault ? ` · ${t("paperDefaultTitle")}` : ""}`
-    );
-    if (paperDefault) button.title = t("paperDefaultTitle");
-    button.innerHTML = `<b>${value}</b> ms${paperDefault ? `<span>${escapeHtml(t("paperDefault"))}</span>` : ""}`;
-    return button;
-  });
-  container.replaceChildren(...buttons);
-  container.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
-    state.budgetIndex = Number(button.dataset.budgetIndex);
-    markStale();
-  }));
+function syncBudgetControl() {
+  const slider = $("#budgetSlider");
+  const control = $("#budgetControl");
+  if (!slider || !control || !state.data) return;
+  const minimum = Math.min(...state.data.budgets);
+  const maximum = Math.max(...state.data.budgets);
+  const paperDefault = state.data.budgets.includes(87) ? 87 : state.data.budgets[0];
+  state.budgetMs = Math.min(maximum, Math.max(minimum, Math.round(state.budgetMs)));
+  const progress = 100 * (state.budgetMs - minimum) / Math.max(1, maximum - minimum);
+  const paperPosition = 100 * (paperDefault - minimum) / Math.max(1, maximum - minimum);
+  slider.min = String(minimum);
+  slider.max = String(maximum);
+  slider.step = "1";
+  slider.value = String(state.budgetMs);
+  slider.setAttribute(
+    "aria-valuetext",
+    `${state.budgetMs} ms${state.budgetMs === paperDefault ? ` · ${t("paperDefaultTitle")}` : ""}`
+  );
+  control.style.setProperty("--budget-progress", `${progress.toFixed(3)}%`);
+  control.style.setProperty("--paper-default-position", `${paperPosition.toFixed(3)}%`);
+  $("#budgetValue").value = `${state.budgetMs} ms`;
+  $("#budgetValue").textContent = `${state.budgetMs} ms`;
+  $("#budgetMin").textContent = `${minimum} ms`;
+  $("#budgetMax").textContent = `${maximum} ms`;
+  $("#budgetPaperDefaultValue").textContent = `${paperDefault} ms`;
 }
 
 function populateStageButtons() {
@@ -178,9 +180,10 @@ function populateStageButtons() {
 
 function initializeControls() {
   populateScenarioOptions();
-  populateBudgetButtons();
+  syncBudgetControl();
   populateStageButtons();
   $("#scenarioSelect").disabled = !enginesReady();
+  $("#budgetSlider").disabled = !enginesReady();
   $("#runButton").disabled = !enginesReady();
   $("#downloadButton").disabled = true;
   updateInputSource();
@@ -431,7 +434,7 @@ function controlsBusy(busy){
   $("#scenarioSelect").disabled=busy||Boolean(state.customText)||!enginesReady();
   $("#customInput").disabled=busy||!enginesReady();
   $("#clearCustomButton").disabled=busy;
-  $$("#budgetButtons button").forEach((button)=>{button.disabled=busy||!enginesReady();});
+  $("#budgetSlider").disabled=busy||!enginesReady();
   $$("#stageButtons button").forEach((button)=>{button.disabled=busy;});
 }
 
@@ -565,6 +568,7 @@ async function start(){
   setupTabs();
   state.comparisonEnabled=Boolean($("#comparisonBody"));
   $("#scenarioSelect").addEventListener("change",(event)=>{state.scenarioId=event.target.value;markStale();});
+  $("#budgetSlider").addEventListener("input",(event)=>{state.budgetMs=Number(event.target.value);markStale();});
   $("#runButton").addEventListener("click",runDemo);
   $("#rerunButton").addEventListener("click",runDemo);
   $("#customInput").addEventListener("change",async(event)=>{

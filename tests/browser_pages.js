@@ -302,7 +302,8 @@ async function runLiveDemo(browser, origin, {
   path: routePath,
   screenshot,
   viewport = { width: 390, height: 844 },
-  stageId = "full"
+  stageId = "full",
+  verifyLinearRerun = false
 }) {
   const context = await browser.newContext({ viewport, reducedMotion: "reduce" });
   const page = await context.newPage();
@@ -319,11 +320,15 @@ async function runLiveDemo(browser, origin, {
   assert.equal(await page.locator(".run-button:visible").count(), 1, `${routePath} must have one primary run action before results`);
   assert.equal(await page.locator("#scenarioSelect").inputValue(), "small-balanced", `${routePath} must recommend the small balanced scenario`);
   assert.equal(await page.locator("#deepAnalysis").count(), 1, `${routePath} must have one deep-analysis disclosure`);
-  const initialBudgetStates = await page.locator("#budgetButtons button").evaluateAll(
-    (buttons) => buttons.map((button) => button.getAttribute("aria-pressed"))
-  );
-  assert.deepEqual(initialBudgetStates, ["false", "false", "true", "false", "false"], `${routePath} has invalid initial budget states`);
-  assert.ok(await page.locator('#budgetButtons button[data-budget-index="2"]').getAttribute("title"), `${routePath} does not label the paper-default budget`);
+  const budgetSlider = page.locator("#budgetSlider");
+  assert.equal(await budgetSlider.getAttribute("type"), "range", `${routePath} does not use a linear budget control`);
+  assert.equal(await budgetSlider.getAttribute("min"), "20", `${routePath} has the wrong minimum budget`);
+  assert.equal(await budgetSlider.getAttribute("max"), "180", `${routePath} has the wrong maximum budget`);
+  assert.equal(await budgetSlider.getAttribute("step"), "1", `${routePath} does not support 1 ms budget steps`);
+  assert.equal(await budgetSlider.inputValue(), "87", `${routePath} does not start at the paper-default budget`);
+  assert.equal((await page.locator("#budgetValue").textContent()).trim(), "87 ms", `${routePath} does not expose the current budget`);
+  assert.ok((await budgetSlider.getAttribute("aria-valuetext")).includes("87 ms"), `${routePath} has no accessible budget value`);
+  assert.equal(await page.locator("#budgetButtons").count(), 0, `${routePath} still exposes discrete budget buttons`);
 
   const stageButton = page.locator(`#stageButtons button[data-stage="${stageId}"]`);
   const stageLabel = (await stageButton.textContent()).trim();
@@ -368,15 +373,28 @@ async function runLiveDemo(browser, origin, {
   assert.ok((await page.locator("#rawOutput").textContent()).length > 0, `${routePath} does not render raw stdout on demand`);
   const postRunWidth = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
   assert.ok(postRunWidth.scroll <= postRunWidth.client + 1, `${routePath} overflows after run: ${postRunWidth.scroll} > ${postRunWidth.client}`);
-  await page.locator('#budgetButtons button[data-budget-index="1"]').click();
-  const changedBudgetStates = await page.locator("#budgetButtons button").evaluateAll(
-    (buttons) => buttons.map((button) => button.getAttribute("aria-pressed"))
-  );
-  assert.deepEqual(changedBudgetStates, ["false", "true", "false", "false", "false"], `${routePath} does not expose exactly one selected budget`);
+  await budgetSlider.evaluate((node) => {
+    node.value = "73";
+    node.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  assert.equal(await budgetSlider.inputValue(), "73", `${routePath} does not accept an intermediate linear budget`);
+  assert.equal((await page.locator("#budgetValue").textContent()).trim(), "73 ms", `${routePath} does not update the budget readout`);
+  assert.equal(await budgetSlider.getAttribute("aria-valuetext"), "73 ms", `${routePath} does not update the accessible budget value`);
   assert.equal(await page.locator("#results").getAttribute("class").then((value) => value.includes("is-stale")), true, `${routePath} does not mark old results as stale`);
   assert.equal(await visible(page.locator("#staleBanner")), true, `${routePath} does not expose the stale-result warning`);
   assert.equal(await page.locator("#downloadButton").isDisabled(), true, `${routePath} permits exporting stale results`);
   await assertLayout(page, { name: `${routePath}-stale`, demo: true }, viewport);
+  if (verifyLinearRerun) {
+    await page.locator("#rerunButton").click();
+    await page.waitForFunction(() => {
+      const results = document.querySelector("#results");
+      const summary = document.querySelector("#instanceSummary")?.textContent || "";
+      return !results?.classList.contains("is-stale") && summary.includes("73 ms");
+    }, null, { timeout: 60000 });
+    assert.equal(await visible(page.locator("#staleBanner")), false, `${routePath} keeps the stale warning after a 73 ms rerun`);
+    assert.equal(await page.locator("#downloadButton").isEnabled(), true, `${routePath} does not enable export after a 73 ms rerun`);
+    assert.ok((await page.locator("#instanceSummary").textContent()).includes("73 ms"), `${routePath} did not run all methods at the intermediate budget`);
+  }
   await context.close();
 }
 
@@ -447,7 +465,8 @@ async function runLiveDemo(browser, origin, {
 
     await runLiveDemo(browser, origin, {
       path: "/demo/",
-      screenshot: "demo-live-mobile.png"
+      screenshot: "demo-live-mobile.png",
+      verifyLinearRerun: true
     });
     await runLiveDemo(browser, origin, {
       path: "/en/demo/",
