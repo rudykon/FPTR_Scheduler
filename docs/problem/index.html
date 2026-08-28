@@ -55,7 +55,7 @@
               <div class="editorial-copy">
                 <p class="section-kicker" data-i18n="systemModelKicker">系统模型</p>
                 <h2 data-i18n="systemModelTitle">一次调度，同时决定波束掩码与每个资源上的用户集合。</h2>
-                <p data-i18n="systemModelBody">论文用 U、R、T、P 表示用户、资源、子带与波束。每个用户具有有限缓存 Bᵤ、基础链路质量 γᵤ 和波束能力 cᵤ,ₚ；每个资源显式属于一至两个子带，两个成员可以不相邻。</p>
+                <p data-i18n="systemModelBody">论文分别定义用户、资源、子带与波束集合。每个用户具有有限缓存、基础链路质量与逐波束能力；每个资源显式属于一至两个子带，两个成员可以不相邻。</p>
               </div>
               <aside class="callout">
                 <h3 data-i18n="scenarioQuestionTitle">调度器每个周期回答什么？</h3>
@@ -67,40 +67,167 @@
                   <table class="symbol-table">
                     <thead><tr><th data-i18n="symbolLabel">符号</th><th data-i18n="meaningLabel">含义</th><th data-i18n="roleLabel">在模型中的角色</th></tr></thead>
                     <tbody>
-                      <tr><th><i>U</i></th><td data-i18n="modelUsers">用户集合</td><td data-i18n="symbolUsersRole">被服务的有限缓存业务实体</td></tr>
-                      <tr><th><i>R</i></th><td data-i18n="modelResources">资源集合</td><td data-i18n="symbolResourcesRole">承载用户集合 Gᵣ 的离散资源块</td></tr>
-                      <tr><th><i>T</i></th><td data-i18n="modelSubbands">子带集合</td><td data-i18n="symbolSubbandsRole">资源显式属于一至两个子带</td></tr>
-                      <tr><th><i>P</i></th><td data-i18n="modelBeams">波束集合</td><td data-i18n="symbolBeamsRole">受全局预算与子带掩码共同约束</td></tr>
-                      <tr><th><i>B<sub>u</sub></i></th><td data-i18n="symbolBufferMeaning">用户 u 的缓存</td><td data-i18n="symbolBufferRole">限制该用户可计入目标的最大传输量</td></tr>
-                      <tr><th><i>γ<sub>u</sub></i></th><td data-i18n="symbolGammaMeaning">用户 u 的基础链路质量</td><td data-i18n="symbolGammaRole">与波束能力共同形成有效链路值</td></tr>
-                      <tr><th><i>c<sub>u,p</sub></i></th><td data-i18n="symbolCapabilityMeaning">用户—波束能力</td><td data-i18n="symbolCapabilityRole">描述用户 u 在波束 p 下的适配度</td></tr>
-                      <tr><th><i>α</i></th><td data-i18n="symbolActivationMeaning">子带—波束激活</td><td data-i18n="symbolActivationRole">决定每个子带可使用的波束掩码</td></tr>
-                      <tr><th><i>G<sub>r</sub></i></th><td data-i18n="symbolGroupMeaning">资源 r 的用户集合</td><td data-i18n="symbolGroupRole">必须满足兼容组与共享人数约束</td></tr>
-                      <tr><th><i>q(z)</i></th><td data-i18n="symbolTrafficMeaning">确定性流量映射</td><td data-i18n="symbolTrafficRole">把有效链路值映射为离散可交付流量</td></tr>
-                      <tr><th><i>D</i></th><td data-i18n="symbolDeadlineMeaning">外部截止时间</td><td data-i18n="symbolDeadlineRole">迟到、非法或失败输出均计零效用</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>U</mi></math></th><td data-i18n="modelUsers">用户集合</td><td data-i18n="symbolUsersRole">被服务的有限缓存业务实体</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>R</mi></math></th><td data-i18n="modelResources">资源集合</td><td data-i18n="symbolResourcesRole">承载用户分配的离散资源块</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>T</mi></math></th><td data-i18n="modelSubbands">子带集合</td><td data-i18n="symbolSubbandsRole">资源显式属于一至两个子带</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>P</mi></math></th><td data-i18n="modelBeams">波束集合</td><td data-i18n="symbolBeamsRole">受全局预算与子带掩码共同约束</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>T</mi><mi>r</mi></msub></math></th><td data-i18n="symbolMembershipMeaning">资源的子带成员集合</td><td data-i18n="symbolMembershipRole">包含一至两个子带，成员可以不相邻</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>d</mi><mi>r</mi></msub></math></th><td data-i18n="symbolSpanMeaning">资源成员的含端点跨度</td><td data-i18n="symbolSpanRole">归一化所选波束能力</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>L</mi></math></th><td data-i18n="symbolBudgetMeaning">全局波束预算</td><td data-i18n="symbolBudgetRole">限制所有子带上的激活总数</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>B</mi><mi>u</mi></msub></math></th><td data-i18n="symbolBufferMeaning">用户 u 的缓存</td><td data-i18n="symbolBufferRole">限制该用户可计入目标的最大传输量</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>γ</mi><mi>u</mi></msub></math></th><td data-i18n="symbolGammaMeaning">用户 u 的基础链路质量</td><td data-i18n="symbolGammaRole">与波束能力共同形成有效链路值</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>c</mi><mrow><mi>u</mi><mo>,</mo><mi>p</mi></mrow></msub></math></th><td data-i18n="symbolCapabilityMeaning">用户—波束能力</td><td data-i18n="symbolCapabilityRole">描述用户 u 在波束 p 下的适配度</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub></math></th><td data-i18n="symbolActivationMeaning">子带—波束激活</td><td data-i18n="symbolActivationRole">取二值并决定每个子带的波束掩码</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>C</mi><mi>m</mi></msub></math></th><td data-i18n="symbolCgMeaning">第 m 个兼容组</td><td data-i18n="symbolCgRole">限定合法的多用户共享集合</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>G</mi><mi>r</mi></msub></math></th><td data-i18n="symbolGroupMeaning">资源 r 的用户集合</td><td data-i18n="symbolGroupRole">必须满足兼容组与共享人数约束</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub></math></th><td data-i18n="symbolSelectedCapabilityMeaning">所选波束的归一化能力</td><td data-i18n="symbolSelectedCapabilityRole">连接激活决策与有效链路值</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub></math></th><td data-i18n="symbolLinkMeaning">用户—资源有效链路值</td><td data-i18n="symbolLinkRole">综合基础质量、共享惩罚与所选能力</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>q</mi><mo>⁡</mo><mo>(</mo><mi>z</mi><mo>)</mo></math></th><td data-i18n="symbolTrafficMeaning">确定性流量映射</td><td data-i18n="symbolTrafficRole">把有效链路值映射为离散可交付流量</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>D</mi></math></th><td data-i18n="symbolDeadlineMeaning">外部截止时间</td><td data-i18n="symbolDeadlineRole">迟到、非法或失败输出均计零效用</td></tr>
                     </tbody>
                   </table>
                 </div>
               </div>
+              <details class="formal-equations" style="grid-column: 1 / -1">
+                <summary><span data-i18n="formalModelSummary">展开完整系统模型</span><span class="equation-range" aria-hidden="true">(1)–(5)</span></summary>
+                <div class="details-body equation-stack">
+                  <div class="equation-unit">
+                    <p data-i18n="equation1Lead">资源跨度采用首个到最后一个成员的含端点距离。</p>
+                    <div class="formula-block" id="eq-1" data-equation="1" tabindex="0">
+                      <div class="equation-row">
+                        <math display="block" aria-label="式（1）：d 下标 r 等于 T 下标 r 的最大值减最小值加一" data-i18n-aria="equation1Aria">
+                          <semantics>
+                            <mrow><msub><mi>d</mi><mi>r</mi></msub><mo>=</mo><mi mathvariant="normal">max</mi><msub><mi>T</mi><mi>r</mi></msub><mo>−</mo><mi mathvariant="normal">min</mi><msub><mi>T</mi><mi>r</mi></msub><mo>+</mo><mn>1</mn><mo>.</mo></mrow>
+                            <annotation encoding="application/x-tex">d_r = \max T_r - \min T_r + 1.</annotation>
+                          </semantics>
+                        </math>
+                        <span class="equation-number" aria-hidden="true">(1)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="equation-unit">
+                    <p data-i18n="equation2Lead">总激活数受全局预算限制；非空资源必须在每个成员子带上至少激活一个波束。</p>
+                    <div class="formula-block" id="eq-2" data-equation="2" tabindex="0">
+                      <div class="equation-row">
+                        <math display="block" aria-label="式（2）：全局波束预算与资源激活约束" data-i18n-aria="equation2Aria">
+                          <semantics>
+                            <mtable columnalign="left" rowspacing=".55em">
+                              <mtr><mtd><mrow><munder><mo>∑</mo><mrow><mi>t</mi><mo>∈</mo><mi>T</mi></mrow></munder><munder><mo>∑</mo><mrow><mi>p</mi><mo>∈</mo><mi>P</mi></mrow></munder><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub><mo>≤</mo><mi>L</mi><mo>,</mo></mrow></mtd></mtr>
+                              <mtr><mtd><mrow><msub><mi>G</mi><mi>r</mi></msub><mo>≠</mo><mi>∅</mi><mo>⇒</mo><munder><mo>∑</mo><mrow><mi>p</mi><mo>∈</mo><mi>P</mi></mrow></munder><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub><mo>≥</mo><mn>1</mn><mo>,</mo><mspace width=".3em"></mspace><mo>∀</mo><mi>t</mi><mo>∈</mo><msub><mi>T</mi><mi>r</mi></msub><mo>.</mo></mrow></mtd></mtr>
+                            </mtable>
+                            <annotation encoding="application/x-tex">\sum_{t\in T}\sum_{p\in P}\alpha_{t,p}\le L,\quad G_r\ne\varnothing\Rightarrow\sum_{p\in P}\alpha_{t,p}\ge1,\ \forall t\in T_r.</annotation>
+                          </semantics>
+                        </math>
+                        <span class="equation-number" aria-hidden="true">(2)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="equation-unit">
+                    <p data-i18n="equation3Lead">空集和单用户始终合法；多用户共享必须完全位于同一兼容组内。</p>
+                    <div class="formula-block" id="eq-3" data-equation="3" tabindex="0">
+                      <div class="equation-row">
+                        <math display="block" aria-label="式（3）：资源用户集合的兼容组合法域" data-i18n-aria="equation3Aria">
+                          <semantics>
+                            <mrow>
+                              <msub><mi>G</mi><mi>r</mi></msub><mo>∈</mo><mo>{</mo><mi>∅</mi><mo>}</mo><mo>∪</mo><mo>{</mo><mo>{</mo><mi>u</mi><mo>}</mo><mo>:</mo><mi>u</mi><mo>∈</mo><mi>U</mi><mo>}</mo><mo>∪</mo>
+                              <munderover><mo>⋃</mo><mrow><mi>m</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover>
+                              <mo>{</mo><mi>G</mi><mo>:</mo><mi>G</mi><mo>⊆</mo><msub><mi>C</mi><mi>m</mi></msub><mo>,</mo><mrow><mo>|</mo><mi>G</mi><mo>|</mo></mrow><mo>≥</mo><mn>2</mn><mo>}</mo><mo>.</mo>
+                            </mrow>
+                            <annotation encoding="application/x-tex">G_r\in\{\varnothing\}\cup\{\{u\}:u\in U\}\cup\bigcup_{m=1}^{M}\{G:G\subseteq C_m,\lvert G\rvert\ge2\}.</annotation>
+                          </semantics>
+                        </math>
+                        <span class="equation-number" aria-hidden="true">(3)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="equation-unit">
+                    <p data-i18n="equation4Lead">所选能力仅累加资源成员子带上的已激活波束，并按成员跨度归一化。</p>
+                    <div class="formula-block" id="eq-4" data-equation="4" tabindex="0">
+                      <div class="equation-row">
+                        <math display="block" aria-label="式（4）：归一化的所选波束能力" data-i18n-aria="equation4Aria">
+                          <semantics>
+                            <mrow>
+                              <msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>)</mo><mo>=</mo>
+                              <mfrac><mrow><munder><mo>∑</mo><mrow><mi>t</mi><mo>∈</mo><msub><mi>T</mi><mi>r</mi></msub></mrow></munder><munder><mo>∑</mo><mrow><mi>p</mi><mo>∈</mo><mi>P</mi></mrow></munder><msub><mi>c</mi><mrow><mi>u</mi><mo>,</mo><mi>p</mi></mrow></msub><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub></mrow><msub><mi>d</mi><mi>r</mi></msub></mfrac><mo>.</mo>
+                            </mrow>
+                            <annotation encoding="application/x-tex">\bar c_{u,r}(\alpha)=\frac{\sum_{t\in T_r}\sum_{p\in P}c_{u,p}\alpha_{t,p}}{d_r}.</annotation>
+                          </semantics>
+                        </math>
+                        <span class="equation-number" aria-hidden="true">(4)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="equation-unit">
+                    <p data-i18n="equation5Lead">有效链路值同时计入基础质量、共享人数惩罚和所选能力占比。</p>
+                    <div class="formula-block" id="eq-5" data-equation="5" tabindex="0">
+                      <div class="equation-row">
+                        <math display="block" aria-label="式（5）：用户在资源上的有效链路值" data-i18n-aria="equation5Aria">
+                          <semantics>
+                            <mrow>
+                              <msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>=</mo><msub><mi>γ</mi><mi>u</mi></msub><mo>+</mo><mn>10</mn><msub><mi mathvariant="normal">log</mi><mn>10</mn></msub><mo>⁡</mo><mfrac><mn>1</mn><mrow><mo>|</mo><msub><mi>G</mi><mi>r</mi></msub><mo>|</mo></mrow></mfrac><mo>+</mo>
+                              <mn>10</mn><msub><mi mathvariant="normal">log</mi><mn>10</mn></msub><mo>⁡</mo><mfrac><mrow><msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>)</mo></mrow><mrow><munder><mo>∑</mo><mrow><mi>p</mi><mo>∈</mo><mi>P</mi></mrow></munder><msub><mi>c</mi><mrow><mi>u</mi><mo>,</mo><mi>p</mi></mrow></msub></mrow></mfrac><mo>.</mo>
+                            </mrow>
+                            <annotation encoding="application/x-tex">z_{u,r}=\gamma_u+10\log_{10}\frac{1}{\lvert G_r\rvert}+10\log_{10}\frac{\bar c_{u,r}(\alpha)}{\sum_{p\in P}c_{u,p}}.</annotation>
+                          </semantics>
+                        </math>
+                        <span class="equation-number" aria-hidden="true">(5)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
             </section>
 
             <section class="editorial-section editorial-grid">
               <div class="editorial-copy">
                 <p class="section-kicker" data-i18n="objectiveLabel">目标：最大化受缓存上限约束的传输量</p>
                 <h2 data-i18n="objectiveTitle">收益由实际可交付流量决定，而不是无限累加链路分数。</h2>
-                <div class="formula-block" aria-label="FPTR traffic objective">F(α,G) = Σ<sub>u∈U</sub> min { B<sub>u</sub>, Σ<sub>r:u∈Gᵣ</sub> q(z<sub>u,r</sub>) }</div>
-                <p data-i18n="objectiveBody">α 表示子带—波束激活，Gᵣ 表示资源 r 上的合法用户集合。只有在外部截止时间 D 前通过全部约束并完成序列化，输出才获得正效用。</p>
+                <p class="equation-lead" data-i18n="equation6Lead">受缓存截断的可交付流量目标</p>
+                <div class="formula-block" id="eq-6" data-equation="6" tabindex="0">
+                  <div class="equation-row">
+                    <math display="block" aria-label="式（6）：F 关于 alpha 和 G 等于对所有用户求和，每项取用户缓存与该用户跨资源流量总和的较小值" data-i18n-aria="equation6Aria">
+                      <semantics>
+                        <mrow>
+                          <mi>F</mi><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>,</mo><mi>G</mi><mo>)</mo><mo>=</mo>
+                          <munder><mo>∑</mo><mrow><mi>u</mi><mo>∈</mo><mi>U</mi></mrow></munder>
+                          <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo>
+                          <munder><mo>∑</mo><mrow><mi>r</mi><mo>:</mo><mi>u</mi><mo>∈</mo><msub><mi>G</mi><mi>r</mi></msub></mrow></munder>
+                          <mi>q</mi><mo>⁡</mo><mo>(</mo><msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>)</mo><mo>}</mo><mo>.</mo>
+                        </mrow>
+                        <annotation encoding="application/x-tex">F(\alpha,G)=\sum_{u\in U}\min\left\{B_u,\sum_{r:u\in G_r}q(z_{u,r})\right\}.</annotation>
+                      </semantics>
+                    </math>
+                    <span class="equation-number" aria-hidden="true">(6)</span>
+                  </div>
+                </div>
+                <p data-i18n="objectiveBody">式（6）先在用户维度进行缓存截断，再汇总实际可交付流量；只有通过全部约束并在外部截止前完成序列化的输出才获得正效用。</p>
+                <p class="equation-lead" data-i18n="equation7Lead">有限组合优化问题</p>
+                <div class="formula-block" id="eq-7" data-equation="7" tabindex="0">
+                  <div class="equation-row">
+                    <math display="block" aria-label="式（7）：在约束（2）、（3）和二值激活条件下，对 alpha 与 G 最大化 F" data-i18n-aria="equation7Aria">
+                      <semantics>
+                        <mtable columnalign="right left" columnspacing="1em" rowspacing=".45em">
+                          <mtr><mtd><munder><mi mathvariant="normal">max</mi><mrow><mi>α</mi><mo>,</mo><mi>G</mi></mrow></munder></mtd><mtd><mrow><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>,</mo><mi>G</mi><mo>)</mo></mrow></mtd></mtr>
+                          <mtr><mtd><mtext>s.t.</mtext></mtd><mtd><mrow><mo>(</mo><mn>2</mn><mo>)</mo><mo>,</mo><mspace width=".2em"></mspace><mo>(</mo><mn>3</mn><mo>)</mo><mo>,</mo><mspace width=".35em"></mspace><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub><mo>∈</mo><mo>{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>}</mo><mspace width=".35em"></mspace><mo>∀</mo><mo>(</mo><mi>t</mi><mo>,</mo><mi>p</mi><mo>)</mo><mo>.</mo></mrow></mtd></mtr>
+                        </mtable>
+                        <annotation encoding="application/x-tex">\max_{\alpha,G} F(\alpha,G)\quad\text{s.t.}\quad (2),(3),\ \alpha_{t,p}\in\{0,1\}\ \forall(t,p).</annotation>
+                      </semantics>
+                    </math>
+                    <span class="equation-number" aria-hidden="true">(7)</span>
+                  </div>
+                </div>
+                <p class="equation-note" data-i18n="equation7Note">式（7）中的约束（2）与（3）分别对应上方的激活预算和合法共享域；有限缓存与硬截止共同构成交付契约。</p>
               </div>
               <aside class="callout">
                 <h3 data-i18n="trafficMapTitle">有效链路值先经过阶梯函数，再计入传输量。</h3>
-                <p data-i18n="trafficMapBody">这个 q(z) 是单快照的确定性流量抽象，不是连续物理层速率定律。</p>
+                <p data-i18n="trafficMapBody">这个阶梯函数是单快照的确定性流量抽象，不是连续物理层速率定律。</p>
               </aside>
               <details class="traffic-details" style="grid-column: 1 / -1">
-                <summary data-i18n="trafficDetails">展开确定性阶梯映射 q(z)</summary>
+                <summary data-i18n="trafficDetails">展开确定性阶梯映射</summary>
                 <div class="traffic-table-wrap">
                   <table>
-                    <thead><tr><th>z</th><th>≤ −10</th><th>(−10, 0]</th><th>(0, 3]</th><th>(3, 10]</th><th>(10, 15]</th><th>(15, 20]</th><th>&gt; 20</th></tr></thead>
-                    <tbody><tr><th>q(z)</th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
+                    <thead><tr><th><math class="inline-math"><mi>z</mi></math></th><th><math class="inline-math"><mi>z</mi><mo>≤</mo><mo>−</mo><mn>10</mn></math></th><th><math class="inline-math"><mo>(</mo><mo>−</mo><mn>10</mn><mo>,</mo><mn>0</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>3</mn><mo>,</mo><mn>10</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>10</mn><mo>,</mo><mn>15</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>15</mn><mo>,</mo><mn>20</mn><mo>]</mo></math></th><th><math class="inline-math"><mi>z</mi><mo>&gt;</mo><mn>20</mn></math></th></tr></thead>
+                    <tbody><tr><th><math class="inline-math"><mi>q</mi><mo>⁡</mo><mo>(</mo><mi>z</mi><mo>)</mo></math></th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
                   </table>
                 </div>
               </details>

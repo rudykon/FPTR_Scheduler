@@ -48,7 +48,12 @@
             <h1 data-i18n="paperTitle">FPTR：截止时间约束下的联合波束与资源调度</h1>
             <p class="paper-title-en">Feasibility-Preserving Transactional Refinement for Deadline-Constrained Joint Beam and Resource Allocation</p>
             <p class="paper-thesis" data-i18n="paperThesis">FPTR 始终保留一个可发布的可行解，在隔离状态中细化候选，并且只提交完整、及时、合法且严格更优的结果。</p>
-            <p class="home-budget-note" data-i18n="homeBudgetNote">内部搜索与收尾预算 B=87 ms；外部端到端计分截止 D=100 ms。</p>
+            <p class="home-budget-note">
+              <span data-i18n="homeBudgetInternal">内部算法预算</span>
+              <math class="inline-math" aria-label="B 等于 87 毫秒" data-i18n-aria="budgetBAria"><mi>B</mi><mo>=</mo><mn>87</mn><mspace width=".22em"></mspace><mtext>ms</mtext></math><span aria-hidden="true">；</span>
+              <span data-i18n="homeBudgetExternal">外部端到端计分截止</span>
+              <math class="inline-math" aria-label="D 等于 100 毫秒" data-i18n-aria="budgetDAria"><mi>D</mi><mo>=</mo><mn>100</mn><mspace width=".22em"></mspace><mtext>ms</mtext></math><span aria-hidden="true">。</span>
+            </p>
             <div class="hero-actions">
               <a class="button button-primary" href="./method/"><span data-i18n="readMethod">理解核心方法</span><span aria-hidden="true">→</span></a>
               <a class="button button-secondary" href="./evidence/"><span data-i18n="viewResults">查看实验结果</span><span aria-hidden="true">→</span></a>

@@ -18,17 +18,17 @@ const viewports = [
 ];
 const routes = [
   { path: "/", name: "home-zh", home: "zh" },
-  { path: "/problem/", name: "problem", interior: true },
-  { path: "/method/", name: "method", interior: true },
-  { path: "/evidence/", name: "evidence", interior: true, evidence: true },
+  { path: "/problem/", name: "problem", interior: true, equations: 7 },
+  { path: "/method/", name: "method", interior: true, equations: 3 },
+  { path: "/evidence/", name: "evidence", interior: true, evidence: true, equations: 1 },
   { path: "/reproduce/", name: "reproduce", interior: true },
   { path: "/demo/", name: "demo", demo: true },
   { path: "/en/", name: "home-en", home: "en" }
 ];
 const englishSubpageRoutes = [
-  { path: "/en/problem/", name: "problem-en", interior: true },
-  { path: "/en/method/", name: "method-en", interior: true },
-  { path: "/en/evidence/", name: "evidence-en", interior: true, evidence: true },
+  { path: "/en/problem/", name: "problem-en", interior: true, equations: 7 },
+  { path: "/en/method/", name: "method-en", interior: true, equations: 3 },
+  { path: "/en/evidence/", name: "evidence-en", interior: true, evidence: true, equations: 1 },
   { path: "/en/reproduce/", name: "reproduce-en", interior: true },
   { path: "/en/demo/", name: "demo-en", demo: true }
 ];
@@ -138,6 +138,41 @@ async function assertLoadedResources(page, route, responseErrors) {
   assert.deepEqual(responseErrors, [], `${route.name} has failed resources: ${responseErrors.join("; ")}`);
 }
 
+async function assertEquations(page, route) {
+  const result = await page.evaluate(async () => {
+    const details = [...document.querySelectorAll("details")].filter((node) => node.querySelector(".formula-block"));
+    const previous = details.map((node) => node.open);
+    details.forEach((node) => { node.open = true; });
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const viewportWidth = document.documentElement.clientWidth;
+    const blocks = [...document.querySelectorAll(".formula-block")];
+    const errors = [];
+    if (document.documentElement.scrollWidth > viewportWidth + 1) {
+      errors.push(`expanded equations overflow page: ${document.documentElement.scrollWidth} > ${viewportWidth}`);
+    }
+    blocks.forEach((block) => {
+      const id = block.dataset.equation || block.id || "unknown";
+      const math = block.querySelector('math[display="block"]');
+      const annotation = math?.querySelector('annotation[encoding="application/x-tex"]');
+      const number = block.querySelector(".equation-number");
+      const rect = block.getBoundingClientRect();
+      const mathRect = math?.getBoundingClientRect();
+      if (!math) errors.push(`${id}: missing display MathML`);
+      if (!annotation?.textContent.trim()) errors.push(`${id}: missing TeX annotation`);
+      if (!math?.getAttribute("aria-label")) errors.push(`${id}: missing accessible label`);
+      if (!mathRect || mathRect.width <= 0 || mathRect.height <= 0) errors.push(`${id}: MathML did not render`);
+      if (math && parseFloat(getComputedStyle(math).fontSize) < 15.9) errors.push(`${id}: formula text below 16px`);
+      if (block.tabIndex < 0 || block.dataset.scrollRegion !== "true") errors.push(`${id}: scroll region is not focusable`);
+      if (rect.left < -1 || rect.right > viewportWidth + 1) errors.push(`${id}: formula container leaves viewport`);
+      if (id !== "budget" && !number) errors.push(`${id}: missing equation number`);
+    });
+    details.forEach((node, index) => { node.open = previous[index]; });
+    return { count: blocks.length, errors };
+  });
+  assert.equal(result.count, route.equations || 0, `${route.name} has an unexpected number of display equations`);
+  assert.deepEqual(result.errors, [], `${route.name} equation errors: ${result.errors.join("; ")}`);
+}
+
 async function runLiveDemo(browser, origin, { path: routePath, status, screenshot }) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
@@ -202,6 +237,7 @@ async function runLiveDemo(browser, origin, { path: routePath, status, screensho
         assert.ok(response && response.ok(), `${route.path} returned ${response?.status()}`);
         await page.evaluate(() => document.fonts?.ready);
         await assertLayout(page, route, viewport);
+        await assertEquations(page, route);
         if (viewport.width <= 390) await assertMobileNavigation(page, route);
         if (viewport.width <= 390 && route.evidence) {
           const toggle = page.locator(".rq-toggle");

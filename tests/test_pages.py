@@ -196,8 +196,83 @@ class PagesContractTests(unittest.TestCase):
         timeline = re.search(r'<div class="method-timeline">(.*?)</div>', method, re.DOTALL)
         self.assertIsNotNone(timeline)
         self.assertEqual(timeline.group(1).count('class="stage'), 6)
-        self.assertIn("B = 87 ms", method)
-        self.assertIn("D = 100 ms", method)
+        self.assertIn('data-i18n-aria="budgetBAria"', method)
+        self.assertIn('data-i18n-aria="budgetDAria"', method)
+
+    def test_acm_equation_contract(self) -> None:
+        problem = (DOCS / "problem/index.html").read_text(encoding="utf-8")
+        method = (DOCS / "method/index.html").read_text(encoding="utf-8")
+        evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
+        sources = problem + method + evidence
+
+        for number in range(1, 8):
+            self.assertEqual(problem.count(f'data-equation="{number}"'), 1)
+            self.assertEqual(problem.count(f'aria-hidden="true">({number})</span>'), 1)
+        for number in (8, 9):
+            self.assertEqual(method.count(f'data-equation="{number}"'), 1)
+            self.assertEqual(method.count(f'aria-hidden="true">({number})</span>'), 1)
+        self.assertEqual(method.count('data-equation="budget"'), 1)
+        self.assertEqual(evidence.count('data-equation="A1"'), 1)
+        self.assertIn('aria-hidden="true">(A1)</span>', evidence)
+
+        display_math_count = sources.count('<math display="block"')
+        formula_count = sources.count('class="formula-block')
+        formula_openers = re.findall(r'<div class="formula-block[^"]*"[^>]*>', sources)
+        display_openers = re.findall(r'<math display="block"[^>]*>', sources)
+        self.assertEqual(display_math_count, formula_count)
+        self.assertEqual(len(formula_openers), formula_count)
+        self.assertTrue(all('tabindex="0"' in opener for opener in formula_openers))
+        self.assertTrue(all('aria-label=' in opener and 'data-i18n-aria=' in opener for opener in display_openers))
+        self.assertEqual(sources.count('<annotation encoding="application/x-tex">'), display_math_count)
+        self.assertEqual(sources.count('data-equation='), display_math_count)
+        self.assertEqual(sources.count('class="equation-row"'), display_math_count)
+        self.assertEqual(sources.count('<math display="block" aria-label='), display_math_count)
+
+        for required in (
+            '<munder><mo>∑</mo>',
+            '<munderover><mo>⋃</mo>',
+            '<mfrac>',
+            '<mtable',
+            'mathvariant="normal">min',
+            'mathvariant="normal">max',
+            '<mtext>ms</mtext>',
+            '\\tau_{\\mathrm{done}}',
+            '\\widetilde F_{i,m}',
+        ):
+            self.assertIn(required, sources)
+        for legacy in (
+            'F(α,G) = Σ',
+            't<sub>done</sub>',
+            '<code>V(C)',
+            '<code>F(C)',
+            'B=87 ms',
+            'D=100 ms',
+        ):
+            self.assertNotIn(legacy, problem + method)
+
+        site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")
+        for required in (
+            '--math:',
+            '.formula-block math',
+            '.equation-row',
+            '.equation-number',
+            'grid-template-columns: minmax(0, 1fr) 3rem',
+            'overflow-x: auto',
+        ):
+            self.assertIn(required, site_css)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp)
+            subprocess.run(
+                ["python3", str(ROOT / "tools/build_pages.py"), "--source", str(DOCS), "--output", str(output)],
+                check=True,
+            )
+            en_problem = (output / "en/problem/index.html").read_text(encoding="utf-8")
+            en_method = (output / "en/method/index.html").read_text(encoding="utf-8")
+            self.assertIn('aria-label="Equation 6:', en_problem)
+            self.assertIn('aria-label="Equation 9:', en_method)
+            self.assertEqual(en_problem.count('<annotation encoding="application/x-tex">'), 7)
+            self.assertEqual(en_method.count('<annotation encoding="application/x-tex">'), 3)
 
     def test_mobile_and_demo_css_contract(self) -> None:
         site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")

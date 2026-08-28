@@ -150,10 +150,21 @@ class BrowserDemoTests(unittest.TestCase):
         self.assertIn("Feasibility-Preserving Transactional Refinement", home)
         for route in ("problem", "method", "evidence", "reproduce", "demo"):
             self.assertIn(f'href="./{route}/"', home)
-        for cutoff in ("B=87 ms", "D=100 ms"):
+        for cutoff in (
+            '<mi>B</mi><mo>=</mo><mn>87</mn>',
+            '<mi>D</mi><mo>=</mo><mn>100</mn>',
+            'data-i18n-aria="budgetBAria"',
+            'data-i18n-aria="budgetDAria"',
+        ):
             self.assertIn(cutoff, home)
 
-        for cutoff in ("≤ 45 ms", "≤ 84 ms", "≤ 87 ms", "B = 87 ms", "D = 100 ms"):
+        for cutoff in (
+            '<mo>≤</mo><mn>45</mn>',
+            '<mo>≤</mo><mn>84</mn>',
+            '<mo>≤</mo><mn>87</mn>',
+            '<mi>B</mi><mo>=</mo><mn>87</mn>',
+            '<mi>D</mi><mo>=</mo><mn>100</mn>',
+        ):
             self.assertIn(cutoff, method)
         self.assertIn("<h3>Pair</h3>", method)
         self.assertNotIn(

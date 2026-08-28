@@ -202,6 +202,22 @@
               <div class="details-body">
                 <h2 data-i18n="protocolTitle">同一输入、同一目标、同一验证器，并对迟到结果计零分。</h2>
                 <p data-i18n="protocolBody">单线程 C++17 调度器使用 g++ 13.3、-O2，在 Linux 6.8 与 2.30 GHz Xeon E5-2686 v4 上运行。外部墙钟时间覆盖进程启动到输出收集；非零退出、非法输出或超过 100 ms 的运行均计为零效用，Python 验证器独立重算目标值。</p>
+                <p class="equation-lead" data-i18n="metricEquationLead">实例级统计单位与相对增益</p>
+                <div class="formula-block" id="eq-a1" data-equation="A1" tabindex="0">
+                  <div class="equation-row">
+                    <math display="block" aria-label="附录式（A1）：每个实例和方法取五次流量的中位数；方法 A 相对方法 B 的实例增益等于两者中位流量之差除以方法 B 的中位流量" data-i18n-aria="metricEquationAria">
+                      <semantics>
+                        <mtable columnalign="left" rowspacing=".55em">
+                          <mtr><mtd><mrow><msub><mover accent="true"><mi>F</mi><mo>~</mo></mover><mrow><mi>i</mi><mo>,</mo><mi>m</mi></mrow></msub><mo>=</mo><munder><mi mathvariant="normal">median</mi><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mo>…</mo><mo>,</mo><mn>5</mn></mrow></munder><msub><mi>F</mi><mrow><mi>i</mi><mo>,</mo><mi>m</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>,</mo></mrow></mtd></mtr>
+                          <mtr><mtd><mrow><msub><mi>g</mi><mi>i</mi></msub><mo>⁡</mo><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo><mo>=</mo><mfrac><mrow><msub><mover accent="true"><mi>F</mi><mo>~</mo></mover><mrow><mi>i</mi><mo>,</mo><mi>A</mi></mrow></msub><mo>−</mo><msub><mover accent="true"><mi>F</mi><mo>~</mo></mover><mrow><mi>i</mi><mo>,</mo><mi>B</mi></mrow></msub></mrow><msub><mover accent="true"><mi>F</mi><mo>~</mo></mover><mrow><mi>i</mi><mo>,</mo><mi>B</mi></mrow></msub></mfrac><mo>.</mo></mrow></mtd></mtr>
+                        </mtable>
+                        <annotation encoding="application/x-tex">\widetilde F_{i,m}=\operatorname*{median}_{j=1,\ldots,5}F_{i,m,j},\quad g_i(A,B)=\frac{\widetilde F_{i,A}-\widetilde F_{i,B}}{\widetilde F_{i,B}}.</annotation>
+                      </semantics>
+                    </math>
+                    <span class="equation-number" aria-hidden="true">(A1)</span>
+                  </div>
+                </div>
+                <p class="equation-note" data-i18n="metricEquationNote">百分比先在每个场景内平均实例级增益，再对五个场景等权汇总，因此不应与总流量均值之比混用。</p>
                 <p><strong>150</strong> <span data-i18n="protocolInstances">固定实例</span> · <strong>5 × 30</strong> <span data-i18n="protocolRegimes">五种规模与压力场景</span> · <strong>5</strong> <span data-i18n="protocolRepeats">每实例独立重复</span> · <strong>15,360</strong> <span data-i18n="protocolLaunches">内部与外部正式启动总数</span></p>
               </div>
             </details>

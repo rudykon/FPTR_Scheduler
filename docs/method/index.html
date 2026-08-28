@@ -44,7 +44,7 @@
             <a class="breadcrumb" href="../"><span aria-hidden="true">←</span><span data-i18n="navOverview">论文概览</span></a>
             <p class="section-kicker" data-i18n="methodKicker">02 · 核心方法</p>
             <h1 data-i18n="methodTitle">可行性保持的事务式细化</h1>
-            <p data-i18n="methodBody">I 是始终可发布的 incumbent，C 是隔离构造的候选。四项检查全部通过才执行 I ← C；任一检查失败，I 保持不变。</p>
+            <p data-i18n="methodBody">FPTR 始终保留可发布的 incumbent，并在隔离状态中构造候选；只有四项检查全部通过才整体替换，任一失败都不改变当前可行解。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />
         </section>
@@ -60,49 +60,81 @@
               <div class="transaction-diagram" aria-label="FPTR incumbent and candidate channels">
                 <div class="transaction-lane incumbent-lane">
                   <span class="lane-label" data-i18n="incumbentTitle">Incumbent</span>
-                  <article><strong>I</strong><p data-i18n="incumbentBody">已经完整验证、随时可以序列化的当前最好可行解。</p></article>
+                  <article><strong><math class="inline-math"><mi>I</mi></math></strong><p data-i18n="incumbentBody">已经完整验证、随时可以序列化的当前最好可行解。</p></article>
                   <i aria-hidden="true" data-i18n="incumbentPersist">保持可发布 →</i>
-                  <article><strong>I</strong><p data-i18n="publishableBody">探索期间不被原地修改；截止时可立即返回。</p></article>
+                  <article><strong><math class="inline-math"><mi>I</mi></math></strong><p data-i18n="publishableBody">探索期间不被原地修改；截止时可立即返回。</p></article>
                 </div>
                 <div class="transaction-lane candidate-lane">
                   <span class="lane-label" data-i18n="candidateTitle">Candidate</span>
-                  <article><strong>I → C</strong><p data-i18n="candidateIsolation">复制后隔离构造候选</p></article>
+                  <article><strong><math class="inline-math"><mi>I</mi><mo>→</mo><mi>C</mi></math></strong><p data-i18n="candidateIsolation">复制后隔离构造候选</p></article>
                   <i aria-hidden="true" data-i18n="refineArrow">细化 →</i>
-                  <article><strong>gate(C)</strong><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
+                  <article><strong><math class="inline-math"><mi mathvariant="normal">gate</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math></strong><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
                 </div>
                 <div class="gate-checks">
-                  <div><code>complete(C)</code><p data-i18n="checkComplete">候选解完整</p></div>
-                  <div><code>t<sub>done</sub>(C) &lt; t<sub>j</sub></code><p data-i18n="checkTime">阶段截止前完成</p></div>
-                  <div><code>V(C) = 1</code><p data-i18n="checkValid">结构验证通过</p></div>
-                  <div><code>F(C) &gt; F(I)</code><p data-i18n="checkImprove">传输量严格提升</p></div>
+                  <div><math class="inline-math"><mi mathvariant="normal">complete</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math><p data-i18n="checkComplete">候选解完整</p></div>
+                  <div><math class="inline-math"><msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub></math><p data-i18n="checkTime">阶段截止前完成</p></div>
+                  <div><math class="inline-math"><mi>V</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>=</mo><mn>1</mn></math><p data-i18n="checkValid">结构验证通过</p></div>
+                  <div><math class="inline-math"><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>I</mi><mo>)</mo></math><p data-i18n="checkImprove">传输量严格提升</p></div>
                 </div>
                 <div class="gate-branches">
-                  <strong><span data-i18n="pass">全部通过</span> → <span data-i18n="commit">COMMIT · 更新 I ← C</span></strong>
-                  <em><span data-i18n="fail">任一失败</span> → <span data-i18n="discard">DISCARD · 保留 I</span></em>
+                  <strong><span data-i18n="pass">全部通过</span> <span aria-hidden="true">→</span> <span data-i18n="commit">COMMIT · 更新</span> <math class="inline-math"><mi>I</mi><mo>←</mo><mi>C</mi></math></strong>
+                  <em><span data-i18n="fail">任一失败</span> <span aria-hidden="true">→</span> <span data-i18n="discard">DISCARD · 保留</span> <math class="inline-math"><mi>I</mi></math></em>
                 </div>
               </div>
-              <div class="formula-block">I ← C ⇔ complete(C) ∧ t<sub>done</sub>(C) &lt; t<sub>j</sub> ∧ V(C)=1 ∧ F(C)&gt;F(I)</div>
+              <p class="equation-lead" data-i18n="equation9Lead">共同事务提交门</p>
+              <div class="formula-block" id="eq-9" data-equation="9" tabindex="0">
+                <div class="equation-row">
+                  <math display="block" aria-label="式（9）：当且仅当候选完整、验证完成时间早于阶段截止、验证通过且目标严格改善时，用候选替换 incumbent" data-i18n-aria="equation9Aria">
+                    <semantics>
+                      <mrow>
+                        <mi>I</mi><mo>←</mo><mi>C</mi><mspace width=".6em"></mspace><mo>⇔</mo><mspace width=".6em"></mspace>
+                        <mi mathvariant="normal">complete</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>∧</mo>
+                        <msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub><mo>∧</mo>
+                        <mi>V</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>=</mo><mn>1</mn><mo>∧</mo>
+                        <mi>F</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>I</mi><mo>)</mo><mo>.</mo>
+                      </mrow>
+                      <annotation encoding="application/x-tex">I\leftarrow C\iff\operatorname{complete}(C)\land\tau_{\mathrm{done}}(C)&lt;t_j\land V(C)=1\land F(C)&gt;F(I).</annotation>
+                    </semantics>
+                  </math>
+                  <span class="equation-number" aria-hidden="true">(9)</span>
+                </div>
+              </div>
+              <p class="equation-note" data-i18n="equation9Note">完成候选构造并不充分：独立验证也必须在阶段截止点之前返回。式（9）统一排除部分、过期、非法和不增益的候选。</p>
             </section>
 
             <section class="editorial-section">
               <div class="section-heading">
                 <p class="section-kicker" data-i18n="timelineKicker">累计细化链</p>
                 <h2 data-i18n="methodMilestoneTitle">六个等宽里程碑使用绝对截止点。</h2>
-                <p data-i18n="methodMilestoneBody">Base ≤45 → Global ≤60 → CG ≤70 → Remask ≤78 → Pair ≤84 → 验证与序列化 ≤87 ms。</p>
+                <p data-i18n="methodMilestoneBody">五个细化阶段依次在 45、60、70、78 与 84 ms 截止；最终验证和序列化在 87 ms 内完成。</p>
               </div>
               <div class="method-timeline">
-                <article class="stage"><time>≤ 45 ms</time><h3>Base</h3><p data-i18n="stageBase">多样化掩码构造首个可行解</p></article>
-                <article class="stage"><time>≤ 60 ms</time><h3>Global</h3><p data-i18n="stageGlobal">按缓存感知的边际收益全局重定价</p></article>
-                <article class="stage"><time>≤ 70 ms</time><h3>CG</h3><p data-i18n="stageCg">在兼容组内进行合法多用户共享</p></article>
-                <article class="stage"><time>≤ 78 ms</time><h3>Remask</h3><p data-i18n="stageRemask">根据剩余需求修复掩码与单资源分配</p></article>
-                <article class="stage"><time>≤ 84 ms</time><h3>Pair</h3><p data-i18n="stagePair">双资源 ruin-and-refill，完成 Full 配置</p></article>
-                <article class="stage finalize-stage"><time>≤ 87 ms</time><h3>Validate</h3><p data-i18n="stageFinalizeShort">验证与序列化</p></article>
+                <article class="stage"><time datetime="PT0.045S"><math class="inline-math"><mo>≤</mo><mn>45</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Base</h3><p data-i18n="stageBase">多样化掩码构造首个可行解</p></article>
+                <article class="stage"><time datetime="PT0.060S"><math class="inline-math"><mo>≤</mo><mn>60</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Global</h3><p data-i18n="stageGlobal">按缓存感知的边际收益全局重定价</p></article>
+                <article class="stage"><time datetime="PT0.070S"><math class="inline-math"><mo>≤</mo><mn>70</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>CG</h3><p data-i18n="stageCg">在兼容组内进行合法多用户共享</p></article>
+                <article class="stage"><time datetime="PT0.078S"><math class="inline-math"><mo>≤</mo><mn>78</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Remask</h3><p data-i18n="stageRemask">根据剩余需求修复掩码与单资源分配</p></article>
+                <article class="stage"><time datetime="PT0.084S"><math class="inline-math"><mo>≤</mo><mn>84</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Pair</h3><p data-i18n="stagePair">双资源 ruin-and-refill，完成 Full 配置</p></article>
+                <article class="stage finalize-stage"><time datetime="PT0.087S"><math class="inline-math"><mo>≤</mo><mn>87</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></time><h3>Validate</h3><p data-i18n="stageFinalizeShort">验证与序列化</p></article>
+              </div>
+              <p class="equation-lead" data-i18n="budgetRuleLead">任意内部预算下的阶段截止缩放规则</p>
+              <div class="formula-block unnumbered compact-equation" id="budget-rule" data-equation="budget" tabindex="0">
+                <div class="equation-row">
+                  <math display="block" aria-label="阶段比例 rho 等于 45、60、70、78、84；尾部预留时间等于 3 毫秒；阶段 j 的截止时间等于 B 减尾部预留时间，再乘 rho 下标 j 并除以 84" data-i18n-aria="budgetRuleAria">
+                    <semantics>
+                      <mtable columnalign="left" rowspacing=".45em">
+                        <mtr><mtd><mrow><mi>ρ</mi><mo>=</mo><mo>(</mo><mn>45</mn><mo>,</mo><mn>60</mn><mo>,</mo><mn>70</mn><mo>,</mo><mn>78</mn><mo>,</mo><mn>84</mn><mo>)</mo><mo>,</mo><mspace width=".5em"></mspace><msub><mi>τ</mi><mtext>tail</mtext></msub><mo>=</mo><mn>3</mn><mspace width=".2em"></mspace><mtext>ms</mtext><mo>,</mo></mrow></mtd></mtr>
+                        <mtr><mtd><mrow><msub><mi>t</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><mo>(</mo><mi>B</mi><mo>−</mo><msub><mi>τ</mi><mtext>tail</mtext></msub><mo>)</mo><msub><mi>ρ</mi><mi>j</mi></msub></mrow><mn>84</mn></mfrac><mo>.</mo></mrow></mtd></mtr>
+                      </mtable>
+                      <annotation encoding="application/x-tex">\rho=(45,60,70,78,84),\quad\tau_{\mathrm{tail}}=3\,\mathrm{ms},\quad t_j=\frac{(B-\tau_{\mathrm{tail}})\rho_j}{84}.</annotation>
+                    </semantics>
+                  </math>
+                </div>
               </div>
               <div class="deadline-contract">
-                <div><strong>B = 87 ms</strong><span data-i18n="internalBudget">算法内部预算</span></div>
+                <div><strong><math class="inline-math" aria-label="B 等于 87 毫秒" data-i18n-aria="budgetBAria"><mi>B</mi><mo>=</mo><mn>87</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></strong><span data-i18n="internalBudget">算法内部预算</span></div>
                 <i aria-hidden="true">→</i>
-                <div><strong>D = 100 ms</strong><span data-i18n="externalDeadline">外部计分截止</span></div>
-                <p data-i18n="externalClockBody">内部预算 B=87 ms；外部截止 D=100 ms 还包含进程启动、输入输出与结果收集。</p>
+                <div><strong><math class="inline-math" aria-label="D 等于 100 毫秒" data-i18n-aria="budgetDAria"><mi>D</mi><mo>=</mo><mn>100</mn><mspace width=".2em"></mspace><mtext>ms</mtext></math></strong><span data-i18n="externalDeadline">外部计分截止</span></div>
+                <p data-i18n="externalClockBody">外部截止还覆盖进程启动、输入输出与结果收集，因此不能与算法内部预算混为一谈。</p>
               </div>
               <p><span data-i18n="reference">BeamFirst 是独立参考方法，不进入这条累积链。</span></p>
             </section>
@@ -113,9 +145,31 @@
                 <h2 data-i18n="theoryTitle">事务门保证可行与单调改进，不承诺全局最优。</h2>
               </div>
               <div class="theory-list">
-                <article class="theory-item"><span>LEMMA 1</span><h3 data-i18n="invariantTitle">可行 incumbent 不变量</h3><p data-i18n="invariantBody">只要空回退 I₀ 可行且验证器可靠，拒绝候选不会改变 incumbent，接受候选又要求 V(C)=1；因此每次提交后和序列化前，I 始终可行。</p></article>
-                <article class="theory-item"><span>PROP. 1</span><h3 data-i18n="topSTitle">固定基数 CG 的精确原语</h3><p data-i18n="topSBody">当波束掩码、资源、保留容量和共享人数 s 固定时，共享惩罚只由 s 决定；选择边际增益最大的 s 个用户即可精确求解该局部查询。</p></article>
-                <article class="theory-item"><span>SCOPE</span><h3 data-i18n="methodLimitTitle">保证不等于近似比</h3><p data-i18n="methodLimitBody">FPTR 的理论契约是“始终能发布可行解，并只接受严格改进”。它不为最终方案提供全局最优或固定近似比保证。</p></article>
+                <article class="theory-item"><span>LEMMA 1</span><h3 data-i18n="invariantTitle">可行 incumbent 不变量</h3><div class="theory-copy"><p data-i18n="invariantBody">只要空回退可行且验证器可靠，拒绝不会改变 incumbent，接受又必须通过独立验证；因此每次提交后和序列化前，当前解始终可行。</p></div></article>
+                <article class="theory-item">
+                  <span>PROP. 1</span>
+                  <h3 data-i18n="topSTitle">固定基数 CG 的精确原语</h3>
+                  <div class="theory-copy">
+                    <p data-i18n="topSBody">当波束掩码、资源、保留容量和共享人数固定时，共享惩罚只由人数决定；选择边际增益最大的用户即可精确求解该局部查询。</p>
+                    <div class="formula-block compact-equation" id="eq-8" data-equation="8" tabindex="0">
+                      <div class="equation-row">
+                        <math display="block" aria-label="式（8）：固定共享人数 s 时，用户 u 在资源 r 上的边际增益等于加入该资源后的截断流量减去原截断流量" data-i18n-aria="equation8Aria">
+                          <semantics>
+                            <mrow>
+                              <msubsup><mi>δ</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>=</mo>
+                              <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>+</mo><mi>q</mi><mo>⁡</mo><mo>(</mo><msubsup><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>)</mo><mo>}</mo><mo>−</mo>
+                              <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>}</mo><mo>.</mo>
+                            </mrow>
+                            <annotation encoding="application/x-tex">\delta_{u,r}^{(s)}=\min\{B_u,Y_u+q(z_{u,r}^{(s)})\}-\min\{B_u,Y_u\}.</annotation>
+                          </semantics>
+                        </math>
+                        <span class="equation-number" aria-hidden="true">(8)</span>
+                      </div>
+                    </div>
+                    <p class="equation-note" data-i18n="equation8Note">这里的保留容量排除了当前资源；共享基数固定后，每个用户的边际量彼此独立，因此取最大的 s 项即为最优。</p>
+                  </div>
+                </article>
+                <article class="theory-item"><span>SCOPE</span><h3 data-i18n="methodLimitTitle">保证不等于近似比</h3><div class="theory-copy"><p data-i18n="methodLimitBody">FPTR 的理论契约是“始终能发布可行解，并只接受严格改进”。它不为最终方案提供全局最优或固定近似比保证。</p></div></article>
               </div>
               <a class="paper-figure-link" href="../images/Deadline_Aware_FPTR_Scheduler.png" target="_blank" rel="noreferrer"><span data-i18n="viewPaperFigure">查看论文原始方法图</span><span aria-hidden="true">↗</span></a>
               <a class="button button-primary" href="../evidence/" style="margin: 1.5rem 0 0 1rem"><span data-i18n="continueResults">继续阅读实验结果</span><span aria-hidden="true">→</span></a>
