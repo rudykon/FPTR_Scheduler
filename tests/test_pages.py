@@ -363,7 +363,7 @@ class PagesContractTests(unittest.TestCase):
         self.assertEqual([symbol for _, symbol in bounded_stretch], ["{", "}"])
         for attrs, _ in bounded_stretch:
             self.assertIn('symmetric="true"', attrs)
-            self.assertIn('maxsize="1.6em"', attrs)
+            self.assertIn('maxsize="1.5em"', attrs)
 
         site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")
         for required in (
