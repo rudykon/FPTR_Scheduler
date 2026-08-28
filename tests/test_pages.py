@@ -307,8 +307,8 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn(required, site_css)
         inline_rule = re.search(r'\.inline-math\s*\{(?P<body>[^}]*)\}', site_css)
         self.assertIsNotNone(inline_rule)
-        self.assertIn('width: auto;', inline_rule.group('body'))
-        self.assertNotIn('width: max-content;', inline_rule.group('body'))
+        self.assertNotRegex(inline_rule.group('body'), r'\bdisplay\s*:')
+        self.assertNotRegex(inline_rule.group('body'), r'\b(?:min-|max-)?width\s*:')
 
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
