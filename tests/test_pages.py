@@ -223,6 +223,8 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn(".terms-desktop", site_css)
         self.assertIn(".rq-nav.is-open", site_css)
         self.assertIn('html[lang="en"] .home-hero h1', site_css)
+        self.assertIn('html[lang="en"] .page-hero h1', site_css)
+        self.assertIn('html[lang="en"] .page-hero p:last-of-type', site_css)
 
         site_js = (DOCS / "assets/site.js").read_text(encoding="utf-8")
         for behavior in ("nav-toggle", "rq-toggle", "copy-code", "dataset.scrollRegion"):
