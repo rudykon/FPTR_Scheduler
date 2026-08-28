@@ -67,13 +67,13 @@
                   <span class="lane-label" data-i18n="candidateTitle">候选解</span>
                   <article><strong><math class="inline-math"><mi>I</mi><mo>→</mo><mi>C</mi></math></strong><p data-i18n="candidateIsolation">隔离构造候选</p></article>
                   <i aria-hidden="true" data-i18n="refineArrow">细化 →</i>
-                  <article><strong><math class="inline-math"><mi mathvariant="normal">gate</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math></strong><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
+                  <article><strong><math class="inline-math"><mi mathvariant="normal">gate</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo></math></strong><p data-i18n="gateBody">同时检查完整、及时、合法和严格更优。</p></article>
                 </div>
                 <div class="gate-checks">
-                  <div><math class="inline-math"><mi mathvariant="normal">complete</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo></math><p data-i18n="checkComplete">完整</p></div>
-                  <div><math class="inline-math"><msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub></math><p data-i18n="checkTime">及时</p></div>
-                  <div><math class="inline-math"><mi>V</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>=</mo><mn>1</mn></math><p data-i18n="checkValid">合法</p></div>
-                  <div><math class="inline-math"><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>I</mi><mo>)</mo></math><p data-i18n="checkImprove">更优</p></div>
+                  <div><math class="inline-math"><mi mathvariant="normal">complete</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo></math><p data-i18n="checkComplete">完整</p></div>
+                  <div><math class="inline-math"><msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub></math><p data-i18n="checkTime">及时</p></div>
+                  <div><math class="inline-math"><mi>V</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo><mo>=</mo><mn>1</mn></math><p data-i18n="checkValid">合法</p></div>
+                  <div><math class="inline-math"><mi>F</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>I</mi><mo fence="true" stretchy="false">)</mo></math><p data-i18n="checkImprove">更优</p></div>
                 </div>
                 <div class="gate-branches">
                   <strong><span data-i18n="pass">全部通过</span> <span aria-hidden="true">→</span> <span data-i18n="commit">COMMIT · 更新</span> <math class="inline-math"><mi>I</mi><mo>←</mo><mi>C</mi></math></strong>
@@ -88,10 +88,10 @@
                     <semantics>
                       <mrow>
                         <mi>I</mi><mo>←</mo><mi>C</mi><mspace width=".6em"></mspace><mo>⇔</mo><mspace width=".6em"></mspace>
-                        <mi mathvariant="normal">complete</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>∧</mo>
-                        <msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub><mo>∧</mo>
-                        <mi>V</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>=</mo><mn>1</mn><mo>∧</mo>
-                        <mi>F</mi><mo>⁡</mo><mo>(</mo><mi>C</mi><mo>)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>I</mi><mo>)</mo><mo>.</mo>
+                        <mi mathvariant="normal">complete</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo><mo>∧</mo>
+                        <msub><mi>τ</mi><mtext>done</mtext></msub><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo><mo>&lt;</mo><msub><mi>t</mi><mi>j</mi></msub><mo>∧</mo>
+                        <mi>V</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo>∧</mo>
+                        <mi>F</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>C</mi><mo fence="true" stretchy="false">)</mo><mo>&gt;</mo><mi>F</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>I</mi><mo fence="true" stretchy="false">)</mo><mo>.</mo>
                       </mrow>
                       <annotation encoding="application/x-tex">I\leftarrow C\iff\operatorname{complete}(C)\land\tau_{\mathrm{done}}(C)&lt;t_j\land V(C)=1\land F(C)&gt;F(I).</annotation>
                     </semantics>
@@ -122,8 +122,8 @@
                   <math display="block" aria-label="阶段比例 rho 等于 45、60、70、78、84；尾部预留时间等于 3 毫秒；阶段 j 的截止时间等于 B 减尾部预留时间，再乘 rho 下标 j 并除以 84" data-i18n-aria="budgetRuleAria">
                     <semantics>
                       <mtable columnalign="left" rowspacing=".45em">
-                        <mtr><mtd><mrow><mi>ρ</mi><mo>=</mo><mo>(</mo><mn>45</mn><mo>,</mo><mn>60</mn><mo>,</mo><mn>70</mn><mo>,</mo><mn>78</mn><mo>,</mo><mn>84</mn><mo>)</mo><mo>,</mo><mspace width=".5em"></mspace><msub><mi>τ</mi><mtext>tail</mtext></msub><mo>=</mo><mn>3</mn><mspace width=".2em"></mspace><mtext>ms</mtext><mo>,</mo></mrow></mtd></mtr>
-                        <mtr><mtd><mrow><msub><mi>t</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><mo>(</mo><mi>B</mi><mo>−</mo><msub><mi>τ</mi><mtext>tail</mtext></msub><mo>)</mo><msub><mi>ρ</mi><mi>j</mi></msub></mrow><mn>84</mn></mfrac><mo>.</mo></mrow></mtd></mtr>
+                        <mtr><mtd><mrow><mi>ρ</mi><mo>=</mo><mo fence="true" stretchy="false">(</mo><mn>45</mn><mo>,</mo><mn>60</mn><mo>,</mo><mn>70</mn><mo>,</mo><mn>78</mn><mo>,</mo><mn>84</mn><mo fence="true" stretchy="false">)</mo><mo>,</mo><mspace width=".5em"></mspace><msub><mi>τ</mi><mtext>tail</mtext></msub><mo>=</mo><mn>3</mn><mspace width=".2em"></mspace><mtext>ms</mtext><mo>,</mo></mrow></mtd></mtr>
+                        <mtr><mtd><mrow><msub><mi>t</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><mo fence="true" stretchy="false">(</mo><mi>B</mi><mo>−</mo><msub><mi>τ</mi><mtext>tail</mtext></msub><mo fence="true" stretchy="false">)</mo><msub><mi>ρ</mi><mi>j</mi></msub></mrow><mn>84</mn></mfrac><mo>.</mo></mrow></mtd></mtr>
                       </mtable>
                       <annotation encoding="application/x-tex">\rho=(45,60,70,78,84),\quad\tau_{\mathrm{tail}}=3\,\mathrm{ms},\quad t_j=\frac{(B-\tau_{\mathrm{tail}})\rho_j}{84}.</annotation>
                     </semantics>
@@ -170,9 +170,9 @@
                             <math display="block" aria-label="式（8）：固定共享人数 s 时，用户 u 在资源 r 上的边际增益等于加入该资源后的截断流量减去原截断流量" data-i18n-aria="equation8Aria">
                               <semantics>
                                 <mrow>
-                                  <msubsup><mi>δ</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>=</mo>
-                                  <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>+</mo><mi>q</mi><mo>⁡</mo><mo>(</mo><msubsup><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo>(</mo><mi>s</mi><mo>)</mo></mrow></msubsup><mo>)</mo><mo>}</mo><mo>−</mo>
-                                  <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>}</mo><mo>.</mo>
+                                  <msubsup><mi>δ</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo fence="true" stretchy="false">(</mo><mi>s</mi><mo fence="true" stretchy="false">)</mo></mrow></msubsup><mo>=</mo>
+                                  <mi mathvariant="normal">min</mi><mo>⁡</mo><mo fence="true" stretchy="false">{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo>+</mo><mi>q</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><msubsup><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow><mrow><mo fence="true" stretchy="false">(</mo><mi>s</mi><mo fence="true" stretchy="false">)</mo></mrow></msubsup><mo fence="true" stretchy="false">)</mo><mo fence="true" stretchy="false">}</mo><mo>−</mo>
+                                  <mi mathvariant="normal">min</mi><mo>⁡</mo><mo fence="true" stretchy="false">{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo><msub><mi>Y</mi><mi>u</mi></msub><mo fence="true" stretchy="false">}</mo><mo>.</mo>
                                 </mrow>
                                 <annotation encoding="application/x-tex">\delta_{u,r}^{(s)}=\min\{B_u,Y_u+q(z_{u,r}^{(s)})\}-\min\{B_u,Y_u\}.</annotation>
                               </semantics>

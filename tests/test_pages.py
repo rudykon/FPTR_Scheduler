@@ -349,6 +349,22 @@ class PagesContractTests(unittest.TestCase):
         ):
             self.assertNotIn(legacy, problem + method)
 
+        delimiters = re.findall(
+            r'<mo(?P<attrs>[^>]*)>(?P<symbol>[(){}\[\]|])</mo>',
+            sources,
+        )
+        self.assertGreater(len(delimiters), 40)
+        bounded_stretch = []
+        for attrs, symbol in delimiters:
+            self.assertIn('fence="true"', attrs, f"Math delimiter {symbol} is not marked as a fence")
+            self.assertRegex(attrs, r'stretchy="(?:false|true)"')
+            if 'stretchy="true"' in attrs:
+                bounded_stretch.append((attrs, symbol))
+        self.assertEqual([symbol for _, symbol in bounded_stretch], ["{", "}"])
+        for attrs, _ in bounded_stretch:
+            self.assertIn('symmetric="true"', attrs)
+            self.assertIn('maxsize="1.6em"', attrs)
+
         site_css = (DOCS / "assets/site.css").read_text(encoding="utf-8")
         for required in (
             '--math:',

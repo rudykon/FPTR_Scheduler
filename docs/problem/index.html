@@ -89,7 +89,7 @@
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>G</mi><mi>r</mi></msub></math></th><td data-i18n="symbolGroupMeaning">资源 r 的用户集合</td><td data-i18n="symbolGroupRole">必须满足兼容组与共享人数约束</td></tr>
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub></math></th><td data-i18n="symbolSelectedCapabilityMeaning">所选波束的归一化能力</td><td data-i18n="symbolSelectedCapabilityRole">连接激活决策与有效链路值</td></tr>
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub></math></th><td data-i18n="symbolLinkMeaning">用户—资源有效链路值</td><td data-i18n="symbolLinkRole">综合基础质量、共享惩罚与所选能力</td></tr>
-                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>q</mi><mo>⁡</mo><mo>(</mo><mi>z</mi><mo>)</mo></math></th><td data-i18n="symbolTrafficMeaning">确定性流量映射</td><td data-i18n="symbolTrafficRole">把有效链路值映射为离散可交付流量</td></tr>
+                      <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>q</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>z</mi><mo fence="true" stretchy="false">)</mo></math></th><td data-i18n="symbolTrafficMeaning">确定性流量映射</td><td data-i18n="symbolTrafficRole">把有效链路值映射为离散可交付流量</td></tr>
                       <tr><th scope="row" class="math-symbol"><math class="inline-math"><mi>D</mi></math></th><td data-i18n="symbolDeadlineMeaning">外部截止时间</td><td data-i18n="symbolDeadlineRole">迟到、非法或失败输出均计零效用</td></tr>
                     </tbody>
                     </table>
@@ -137,9 +137,9 @@
                         <math display="block" aria-label="式（3）：资源用户集合的兼容组合法域" data-i18n-aria="equation3Aria">
                           <semantics>
                             <mrow>
-                              <msub><mi>G</mi><mi>r</mi></msub><mo>∈</mo><mo>{</mo><mi>∅</mi><mo>}</mo><mo>∪</mo><mo>{</mo><mo>{</mo><mi>u</mi><mo>}</mo><mo>:</mo><mi>u</mi><mo>∈</mo><mi>U</mi><mo>}</mo><mo>∪</mo>
+                              <msub><mi>G</mi><mi>r</mi></msub><mo>∈</mo><mo fence="true" stretchy="false">{</mo><mi>∅</mi><mo fence="true" stretchy="false">}</mo><mo>∪</mo><mo fence="true" stretchy="false">{</mo><mo fence="true" stretchy="false">{</mo><mi>u</mi><mo fence="true" stretchy="false">}</mo><mo>:</mo><mi>u</mi><mo>∈</mo><mi>U</mi><mo fence="true" stretchy="false">}</mo><mo>∪</mo>
                               <munderover><mo>⋃</mo><mrow><mi>m</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover>
-                              <mo>{</mo><mi>G</mi><mo>:</mo><mi>G</mi><mo>⊆</mo><msub><mi>C</mi><mi>m</mi></msub><mo>,</mo><mrow><mo>|</mo><mi>G</mi><mo>|</mo></mrow><mo>≥</mo><mn>2</mn><mo>}</mo><mo>.</mo>
+                              <mo fence="true" stretchy="false">{</mo><mi>G</mi><mo>:</mo><mi>G</mi><mo>⊆</mo><msub><mi>C</mi><mi>m</mi></msub><mo>,</mo><mrow><mo fence="true" stretchy="false">|</mo><mi>G</mi><mo fence="true" stretchy="false">|</mo></mrow><mo>≥</mo><mn>2</mn><mo fence="true" stretchy="false">}</mo><mo>.</mo>
                             </mrow>
                             <annotation encoding="application/x-tex">G_r\in\{\varnothing\}\cup\{\{u\}:u\in U\}\cup\bigcup_{m=1}^{M}\{G:G\subseteq C_m,\lvert G\rvert\ge2\}.</annotation>
                           </semantics>
@@ -155,7 +155,7 @@
                         <math display="block" aria-label="式（4）：归一化的所选波束能力" data-i18n-aria="equation4Aria">
                           <semantics>
                             <mrow>
-                              <msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>)</mo><mo>=</mo>
+                              <msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>α</mi><mo fence="true" stretchy="false">)</mo><mo>=</mo>
                               <mfrac><mrow><munder><mo>∑</mo><mrow><mi>t</mi><mo>∈</mo><msub><mi>T</mi><mi>r</mi></msub></mrow></munder><munder><mo>∑</mo><mrow><mi>p</mi><mo>∈</mo><mi>P</mi></mrow></munder><msub><mi>c</mi><mrow><mi>u</mi><mo>,</mo><mi>p</mi></mrow></msub><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub></mrow><msub><mi>d</mi><mi>r</mi></msub></mfrac><mo>.</mo>
                             </mrow>
                             <annotation encoding="application/x-tex">\bar c_{u,r}(\alpha)=\frac{\sum_{t\in T_r}\sum_{p\in P}c_{u,p}\alpha_{t,p}}{d_r}.</annotation>
@@ -172,8 +172,8 @@
                         <math display="block" aria-label="式（5）：用户在资源上的有效链路值" data-i18n-aria="equation5Aria">
                           <semantics>
                             <mrow>
-                              <msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>=</mo><msub><mi>γ</mi><mi>u</mi></msub><mo>+</mo><mn>10</mn><msub><mi mathvariant="normal">log</mi><mn>10</mn></msub><mo>⁡</mo><mfrac><mn>1</mn><mrow><mo>|</mo><msub><mi>G</mi><mi>r</mi></msub><mo>|</mo></mrow></mfrac><mo>+</mo>
-                              <mn>10</mn><msub><mi mathvariant="normal">log</mi><mn>10</mn></msub><mo>⁡</mo><mfrac><mrow><msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>)</mo></mrow><mrow><munder><mo>∑</mo><mrow><mi>p</mi><mo>∈</mo><mi>P</mi></mrow></munder><msub><mi>c</mi><mrow><mi>u</mi><mo>,</mo><mi>p</mi></mrow></msub></mrow></mfrac><mo>.</mo>
+                              <msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>=</mo><msub><mi>γ</mi><mi>u</mi></msub><mo>+</mo><mn>10</mn><msub><mi mathvariant="normal">log</mi><mn>10</mn></msub><mo>⁡</mo><mfrac><mn>1</mn><mrow><mo fence="true" stretchy="false">|</mo><msub><mi>G</mi><mi>r</mi></msub><mo fence="true" stretchy="false">|</mo></mrow></mfrac><mo>+</mo>
+                              <mn>10</mn><msub><mi mathvariant="normal">log</mi><mn>10</mn></msub><mo>⁡</mo><mfrac><mrow><msub><mover accent="true"><mi>c</mi><mo>¯</mo></mover><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>α</mi><mo fence="true" stretchy="false">)</mo></mrow><mrow><munder><mo>∑</mo><mrow><mi>p</mi><mo>∈</mo><mi>P</mi></mrow></munder><msub><mi>c</mi><mrow><mi>u</mi><mo>,</mo><mi>p</mi></mrow></msub></mrow></mfrac><mo>.</mo>
                             </mrow>
                             <annotation encoding="application/x-tex">z_{u,r}=\gamma_u+10\log_{10}\frac{1}{\lvert G_r\rvert}+10\log_{10}\frac{\bar c_{u,r}(\alpha)}{\sum_{p\in P}c_{u,p}}.</annotation>
                           </semantics>
@@ -196,11 +196,11 @@
                     <math display="block" aria-label="式（6）：F 关于 alpha 和 G 等于对所有用户求和，每项取用户缓存与该用户跨资源流量总和的较小值" data-i18n-aria="equation6Aria">
                       <semantics>
                         <mrow>
-                          <mi>F</mi><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>,</mo><mi>G</mi><mo>)</mo><mo>=</mo>
+                          <mi>F</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>α</mi><mo>,</mo><mi>G</mi><mo fence="true" stretchy="false">)</mo><mo>=</mo>
                           <munder><mo>∑</mo><mrow><mi>u</mi><mo>∈</mo><mi>U</mi></mrow></munder>
-                          <mi mathvariant="normal">min</mi><mo>⁡</mo><mo>{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo>
+                          <mi mathvariant="normal">min</mi><mo>⁡</mo><mo fence="true" stretchy="true" symmetric="true" maxsize="1.6em">{</mo><msub><mi>B</mi><mi>u</mi></msub><mo>,</mo>
                           <munder><mo>∑</mo><mrow><mi>r</mi><mo>:</mo><mi>u</mi><mo>∈</mo><msub><mi>G</mi><mi>r</mi></msub></mrow></munder>
-                          <mi>q</mi><mo>⁡</mo><mo>(</mo><msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo>)</mo><mo>}</mo><mo>.</mo>
+                          <mi>q</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><msub><mi>z</mi><mrow><mi>u</mi><mo>,</mo><mi>r</mi></mrow></msub><mo fence="true" stretchy="false">)</mo><mo fence="true" stretchy="true" symmetric="true" maxsize="1.6em">}</mo><mo>.</mo>
                         </mrow>
                         <annotation encoding="application/x-tex">F(\alpha,G)=\sum_{u\in U}\min\left\{B_u,\sum_{r:u\in G_r}q(z_{u,r})\right\}.</annotation>
                       </semantics>
@@ -215,8 +215,8 @@
                     <math display="block" aria-label="式（7）：在约束（2）、（3）和二值激活条件下，对 alpha 与 G 最大化 F" data-i18n-aria="equation7Aria">
                       <semantics>
                         <mtable columnalign="right left" columnspacing="1em" rowspacing=".45em">
-                          <mtr><mtd><munder><mi mathvariant="normal">max</mi><mrow><mi>α</mi><mo>,</mo><mi>G</mi></mrow></munder></mtd><mtd><mrow><mi>F</mi><mo>⁡</mo><mo>(</mo><mi>α</mi><mo>,</mo><mi>G</mi><mo>)</mo></mrow></mtd></mtr>
-                          <mtr><mtd><mtext>s.t.</mtext></mtd><mtd><mrow><mo>(</mo><mn>2</mn><mo>)</mo><mo>,</mo><mspace width=".2em"></mspace><mo>(</mo><mn>3</mn><mo>)</mo><mo>,</mo><mspace width=".35em"></mspace><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub><mo>∈</mo><mo>{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>}</mo><mspace width=".35em"></mspace><mo>∀</mo><mo>(</mo><mi>t</mi><mo>,</mo><mi>p</mi><mo>)</mo><mo>.</mo></mrow></mtd></mtr>
+                          <mtr><mtd><munder><mi mathvariant="normal">max</mi><mrow><mi>α</mi><mo>,</mo><mi>G</mi></mrow></munder></mtd><mtd><mrow><mi>F</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>α</mi><mo>,</mo><mi>G</mi><mo fence="true" stretchy="false">)</mo></mrow></mtd></mtr>
+                          <mtr><mtd><mtext>s.t.</mtext></mtd><mtd><mrow><mo fence="true" stretchy="false">(</mo><mn>2</mn><mo fence="true" stretchy="false">)</mo><mo>,</mo><mspace width=".2em"></mspace><mo fence="true" stretchy="false">(</mo><mn>3</mn><mo fence="true" stretchy="false">)</mo><mo>,</mo><mspace width=".35em"></mspace><msub><mi>α</mi><mrow><mi>t</mi><mo>,</mo><mi>p</mi></mrow></msub><mo>∈</mo><mo fence="true" stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo fence="true" stretchy="false">}</mo><mspace width=".35em"></mspace><mo>∀</mo><mo fence="true" stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>p</mi><mo fence="true" stretchy="false">)</mo><mo>.</mo></mrow></mtd></mtr>
                         </mtable>
                         <annotation encoding="application/x-tex">\max_{\alpha,G} F(\alpha,G)\quad\text{s.t.}\quad (2),(3),\ \alpha_{t,p}\in\{0,1\}\ \forall(t,p).</annotation>
                       </semantics>
@@ -234,8 +234,8 @@
                 <summary data-i18n="trafficDetails">展开确定性阶梯映射</summary>
                 <div class="traffic-table-wrap">
                   <table>
-                    <thead><tr><th><math class="inline-math"><mi>z</mi></math></th><th><math class="inline-math"><mi>z</mi><mo>≤</mo><mo>−</mo><mn>10</mn></math></th><th><math class="inline-math"><mo>(</mo><mo>−</mo><mn>10</mn><mo>,</mo><mn>0</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>3</mn><mo>,</mo><mn>10</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>10</mn><mo>,</mo><mn>15</mn><mo>]</mo></math></th><th><math class="inline-math"><mo>(</mo><mn>15</mn><mo>,</mo><mn>20</mn><mo>]</mo></math></th><th><math class="inline-math"><mi>z</mi><mo>&gt;</mo><mn>20</mn></math></th></tr></thead>
-                    <tbody><tr><th><math class="inline-math"><mi>q</mi><mo>⁡</mo><mo>(</mo><mi>z</mi><mo>)</mo></math></th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
+                    <thead><tr><th><math class="inline-math"><mi>z</mi></math></th><th><math class="inline-math"><mi>z</mi><mo>≤</mo><mo>−</mo><mn>10</mn></math></th><th><math class="inline-math"><mo fence="true" stretchy="false">(</mo><mo>−</mo><mn>10</mn><mo>,</mo><mn>0</mn><mo fence="true" stretchy="false">]</mo></math></th><th><math class="inline-math"><mo fence="true" stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>3</mn><mo fence="true" stretchy="false">]</mo></math></th><th><math class="inline-math"><mo fence="true" stretchy="false">(</mo><mn>3</mn><mo>,</mo><mn>10</mn><mo fence="true" stretchy="false">]</mo></math></th><th><math class="inline-math"><mo fence="true" stretchy="false">(</mo><mn>10</mn><mo>,</mo><mn>15</mn><mo fence="true" stretchy="false">]</mo></math></th><th><math class="inline-math"><mo fence="true" stretchy="false">(</mo><mn>15</mn><mo>,</mo><mn>20</mn><mo fence="true" stretchy="false">]</mo></math></th><th><math class="inline-math"><mi>z</mi><mo>&gt;</mo><mn>20</mn></math></th></tr></thead>
+                    <tbody><tr><th><math class="inline-math"><mi>q</mi><mo>⁡</mo><mo fence="true" stretchy="false">(</mo><mi>z</mi><mo fence="true" stretchy="false">)</mo></math></th><td>0</td><td>8</td><td>24</td><td>90</td><td>120</td><td>162</td><td>222</td></tr></tbody>
                   </table>
                 </div>
               </details>

@@ -235,6 +235,19 @@ async function assertEquations(page, route) {
     if (document.documentElement.scrollWidth > viewportWidth + 1) {
       errors.push(`expanded equations overflow page: ${document.documentElement.scrollWidth} > ${viewportWidth}`);
     }
+    const checkDelimiterScale = (root, label) => {
+      [...root.querySelectorAll("mo")]
+        .filter((node) => /^[()[\]{}|]$/.test(node.textContent.trim()))
+        .forEach((node, index) => {
+          const fontSize = parseFloat(getComputedStyle(node).fontSize);
+          const height = node.getBoundingClientRect().height;
+          if (fontSize > 0 && height / fontSize > 1.85) {
+            errors.push(`${label}-delimiter-${index + 1}: delimiter is ${(
+              height / fontSize
+            ).toFixed(2)}em tall`);
+          }
+        });
+    };
     blocks.forEach((block) => {
       const id = block.dataset.equation || block.id || "unknown";
       const math = block.querySelector('math[display="block"]');
@@ -250,6 +263,7 @@ async function assertEquations(page, route) {
       if (block.tabIndex < 0 || block.dataset.scrollRegion !== "true") errors.push(`${id}: scroll region is not focusable`);
       if (rect.left < -1 || rect.right > viewportWidth + 1) errors.push(`${id}: formula container leaves viewport`);
       if (id !== "budget" && !number) errors.push(`${id}: missing equation number`);
+      if (math) checkDelimiterScale(math, id);
     });
     [...document.querySelectorAll(".inline-math")].forEach((math, index) => {
       if (getComputedStyle(math).whiteSpace !== "nowrap") {
@@ -261,6 +275,7 @@ async function assertEquations(page, route) {
       if (tokens.length > 1 && tokens.every((rect) => Math.abs(rect.left - tokens[0].left) < 1)) {
         errors.push(`inline-${index + 1}: inline MathML tokens collapsed into a vertical stack`);
       }
+      checkDelimiterScale(math, `inline-${index + 1}`);
     });
     details.forEach((node, index) => { node.open = previous[index]; });
     return { count: blocks.length, errors };
