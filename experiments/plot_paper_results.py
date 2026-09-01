@@ -711,7 +711,7 @@ def draw_budget_tradeoff(
         ax.text(
             99.0,
             0.04,
-            "100 ms",
+            "D = 100 ms",
             transform=ax.get_xaxis_transform(),
             rotation=90,
             ha="right",
@@ -724,7 +724,7 @@ def draw_budget_tradeoff(
     ax.set_ylim(-0.15, 3.00)
     ax.set_xticks([20, 40, 60, 80, 100])
     ax.set_yticks([0, 1, 2, 3])
-    ax.set_xlabel("Search target (ms)")
+    ax.set_xlabel("Internal budget B (ms)")
     ax.set_ylabel("Gain vs 20 ms (%)")
     annotations.append(
         ax.text(
@@ -803,7 +803,7 @@ def draw_runtime_ecdf(
     ax.set_xlabel("Solver wall time (ms)")
     ax.set_ylabel("ECDF")
     ax.set_xticks([0, 20, 40, 60, 80, 100])
-    ax.set_title("Runtime ECDF (87 ms)", pad=1.5)
+    ax.set_title("Runtime ECDF (B = 87 ms)", pad=1.5)
     ax.grid(True)
     return {"methods": summaries, "deadline_misses": deadline_misses}, annotations
 
@@ -1378,7 +1378,7 @@ def validate_layout(
         "median of 5",
         "Budget trade-off",
         "labels: wall p95 (ms)",
-        "Search target (ms)",
+        "Internal budget B (ms)",
         "CG-size stress",
         "coverage co-varies",
         "11 core + 1 wider",
@@ -1975,7 +1975,7 @@ def build_web_figures(
         ),
         (
             "web_runtime_ecdf",
-            "Runtime ECDF under the 87 ms budget",
+            "Runtime ECDF under internal budget B = 87 ms",
             lambda ax: draw_runtime_ecdf(ax, main_run_rows),
         ),
         (
@@ -2202,7 +2202,7 @@ def split_main() -> None:
             "Scenario-wise Full gain",
             "Budget trade-off",
             "labels: wall p95 (ms)",
-            "Search target (ms)",
+            "Internal budget B (ms)",
             "Runtime ECDF",
         ),
         zero_anchor_checks={

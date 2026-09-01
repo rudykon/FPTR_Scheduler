@@ -137,10 +137,10 @@
                 <details>
                   <summary data-i18n="baselineDetails">展开六种匹配外部基线的完整结果</summary>
                   <div class="details-body">
-                    <p data-i18n="baselineBody">这些程序共享输入输出契约、目标和验证过程，但不调用 FPTR 核心代码。结果仅说明本模型、主机和实现族下的匹配比较，不代表对所有已发表求解器的普遍排名。</p>
+                    <p data-i18n="baselineBody">这些程序共享输入输出契约、目标和验证过程，但不调用 FPTR 核心代码。表中未命中按 D = 100 ms 的端到端外部墙钟统计，B = 87 ms 是共同的内部预算。结果仅说明本模型、主机和实现族下的匹配比较，不代表对所有已发表求解器的普遍排名。</p>
                     <div class="table-wrap">
                       <table class="baseline-table">
-                        <thead><tr><th data-i18n="baselineMethod">基线</th><th data-i18n="baselineGain">完整配置相对增益</th><th>W / T / L</th><th data-i18n="baselineMisses">750 次中的 87 ms 未命中</th></tr></thead>
+                        <thead><tr><th data-i18n="baselineMethod">基线</th><th data-i18n="baselineGain">完整配置相对增益</th><th>W / T / L</th><th data-i18n="baselineMisses">750 次中的 100 ms 外部截止未命中</th></tr></thead>
                         <tbody>
                           <tr><th>ALNS</th><td>+7.61%</td><td>134 / 5 / 11</td><td>74</td></tr>
                           <tr><th>Tabu</th><td>+7.75%</td><td>139 / 4 / 7</td><td>18</td></tr>

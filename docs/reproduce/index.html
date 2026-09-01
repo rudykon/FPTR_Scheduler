@@ -76,6 +76,7 @@ cp space/data/cases/small-balanced.in \
   --samples /tmp/fptr-samples \
   --output-dir /tmp/fptr-output</code></pre></div></article>
               </div>
+              <p class="reproduce-timing-note" data-i18n="reproduceTimingContract">时间口径：--budget-ms 87 只设置内部预算 B；论文另以 D = 100 ms 检查原生 C++ 子进程端到端墙钟。B = 87 ms 时，84 ms 后停止细化，并在 87 ms 前完成验证与序列化。</p>
               <details class="experiment-command">
                 <summary data-i18n="experimentLabel">快速实验</summary>
                 <div class="details-body"><div class="code-shell"><button class="copy-code" type="button"><span data-copy-default data-i18n="copyCode">复制命令</span><span data-copy-success data-i18n="copiedCode" hidden>已复制</span></button><pre data-shell tabindex="0" aria-label="运行快速实验命令" data-i18n-aria="experimentCodeAria"><code class="language-bash">python3 experiments/paper_experiments.py \

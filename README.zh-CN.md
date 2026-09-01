@@ -120,6 +120,12 @@ g++ -std=c++17 -O2 src/scheduler.cpp src/core.cpp -o scheduler
 ./scheduler --stage full --budget-ms 87 < instance.in
 ```
 
+`--budget-ms 87` 只设置调度器内部预算 `B`，并不设置论文的外部计分截止。
+在论文工作点，FPTR 于 84 ms 后停止细化，并在 `B = 87 ms` 内完成验证与
+序列化。实验脚本另以 `D = 100 ms` 检查原生 C++ 子进程端到端墙钟时间，
+其中包含进程启动、输入和输出收集；87--100 ms 是外部余量，不是额外的
+FPTR 阶段。
+
 加入 `--trace` 可查看累积阶段轨迹，同时不改变写入标准输出的分配结果：
 
 ```bash

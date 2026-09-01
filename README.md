@@ -120,6 +120,13 @@ Run the full cumulative scheduler on one instance:
 ./scheduler --stage full --budget-ms 87 < instance.in
 ```
 
+`--budget-ms 87` sets the scheduler's internal budget `B`; it does not set the
+paper's external crediting deadline. At the paper operating point, refinement
+stops after 84 ms and validation/serialization complete within `B = 87 ms`.
+The experiment harness separately measures native subprocess wall time against
+`D = 100 ms`, including process launch, input, and output collection. The
+87--100 ms interval is external margin, not another FPTR stage.
+
 Use `--trace` to inspect cumulative stages without changing the allocation written to standard output:
 
 ```bash

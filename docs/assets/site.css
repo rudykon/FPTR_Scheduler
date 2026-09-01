@@ -686,6 +686,7 @@ summary { min-height: 52px; padding: .75rem 1rem; cursor: pointer; font-weight: 
 .quick-step pre { min-height: 275px; max-width: 100%; margin: 0; padding: 3.4rem 1rem 1rem; overflow: auto; color: var(--code-text); font: .875rem/1.62 var(--mono); white-space: pre; }
 .experiment-command .code-shell { border-radius: 12px; }
 .experiment-command pre { max-width: 100%; margin: 0; padding: 3.4rem 1rem 1rem; overflow: auto; color: var(--code-text); font: .875rem/1.62 var(--mono); white-space: pre; }
+.reproduce-timing-note { margin: 1rem 0 0; padding: .8rem 1rem; border-left: 4px solid var(--signal); border-radius: 0 12px 12px 0; color: var(--ink-soft); background: var(--blue-soft); font-size: var(--text-small); }
 .repro-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.4rem; }
 .expected-result { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: .8rem 1rem; align-items: center; margin-top: 1rem; padding: 1rem 1.15rem; border: 1px solid color-mix(in srgb, var(--feasible) 28%, transparent); border-radius: 16px; background: var(--green-soft); }
 .expected-result strong { color: var(--feasible); }

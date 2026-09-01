@@ -81,6 +81,50 @@ class PagesContractTests(unittest.TestCase):
         ):
             self.assertIn(required, source)
 
+    def test_public_timing_contract_separates_b_from_d(self) -> None:
+        en = json.loads((DOCS / "content/en.json").read_text(encoding="utf-8"))
+        zh = json.loads((DOCS / "content/zh.json").read_text(encoding="utf-8"))
+        evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
+        reproduce = (DOCS / "reproduce/index.html").read_text(encoding="utf-8")
+        plotter = (ROOT / "experiments/plot_paper_results.py").read_text(
+            encoding="utf-8"
+        )
+
+        for readme_name in ("README.md", "README.zh-CN.md"):
+            readme = (ROOT / readme_name).read_text(encoding="utf-8")
+            for required in ("--budget-ms 87", "B = 87 ms", "D = 100 ms", "84 ms"):
+                self.assertIn(required, readme, f"{readme_name}: {required}")
+
+        self.assertEqual(
+            en["baselineMisses"],
+            "100 ms external-deadline misses in 750 runs",
+        )
+        self.assertEqual(
+            zh["baselineMisses"],
+            "750 次中的 100 ms 外部截止未命中",
+        )
+        self.assertNotIn("87 ms misses", en["baselineMisses"])
+        self.assertNotIn("87 ms 未命中", zh["baselineMisses"])
+        for copy in (
+            en["baselineBody"], zh["baselineBody"],
+            en["reproduceTimingContract"], zh["reproduceTimingContract"],
+        ):
+            self.assertIn("B = 87 ms", copy)
+            self.assertIn("D = 100 ms", copy)
+
+        self.assertIn('data-i18n="reproduceTimingContract"', reproduce)
+        self.assertIn("750 次中的 100 ms 外部截止未命中", evidence)
+        self.assertIn('ax.set_xlabel("Internal budget B (ms)")', plotter)
+        self.assertIn('ax.set_title("Runtime ECDF (B = 87 ms)"', plotter)
+
+        for harness_name in (
+            "experiments/paper_experiments.py",
+            "experiments/external_comparison.py",
+        ):
+            harness = (ROOT / harness_name).read_text(encoding="utf-8")
+            self.assertIn('"--main-budget-ms", type=int, default=87', harness)
+            self.assertIn('"--deadline-ms", type=float, default=100.0', harness)
+
     def test_native_sample_closes_compile_run_validate_loop(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
