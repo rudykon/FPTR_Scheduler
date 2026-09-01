@@ -42,6 +42,7 @@ class BrowserDemoTests(unittest.TestCase):
         self.assertIn('const DEMO_BASE_URL', script)
         self.assertIn('ccall("fptr_run"', script)
         self.assertIn('"fptr_baseline_run"', script)
+        self.assertNotIn('font-size="11"', script)
         self.assertNotIn("data/results.json", script)
         self.assertIn("bash space/build_wasm.sh", workflow)
         self.assertIn("node space/tests/smoke_wasm.js", workflow)
