@@ -93,10 +93,16 @@
             </div>
 
             <div class="control-toolbar">
-              <label class="toolbar-field scenario-field">
-                <span data-i18n="scenario">流量场景</span>
-                <select id="scenarioSelect" disabled></select>
-              </label>
+              <div class="scenario-field">
+                <label class="toolbar-field">
+                  <span data-i18n="scenario">流量场景</span>
+                  <select id="scenarioSelect" disabled></select>
+                </label>
+                <div class="input-source" aria-live="polite">
+                  <span class="live-mark" aria-hidden="true"></span>
+                  <div><b id="inputSourceLabel">—</b><small id="inputSourceDetail">—</small></div>
+                </div>
+              </div>
 
               <fieldset class="toolbar-field budget-field">
                 <legend data-i18n="deadline">FPTR 内部预算 B</legend>
@@ -132,20 +138,9 @@
                   </div>
                 </div>
               </fieldset>
-
-              <div class="run-cluster">
-                <span id="dataStatus" class="status-pill loading" data-i18n="engineLoading">正在加载 C++ WebAssembly…</span>
-                <button id="runButton" class="run-button" type="button" disabled>
-                  <span class="run-icon" aria-hidden="true">▶</span><span data-i18n="runEight">运行 8 种方法</span>
-                </button>
-              </div>
             </div>
 
             <div class="control-meta">
-              <div class="input-source" aria-live="polite">
-                <span class="live-mark" aria-hidden="true"></span>
-                <div><b id="inputSourceLabel">—</b><small id="inputSourceDetail">—</small></div>
-              </div>
               <details class="advanced-controls">
                 <summary data-i18n="advancedSettings">高级设置</summary>
                 <div class="advanced-controls-body">
@@ -163,6 +158,12 @@
                   </div>
                 </div>
               </details>
+            </div>
+            <div class="run-cluster">
+              <span id="dataStatus" class="status-pill loading" data-i18n="engineLoading">正在加载 C++ WebAssembly…</span>
+              <button id="runButton" class="run-button" type="button" disabled>
+                <span class="run-icon" aria-hidden="true">▶</span><span data-i18n="runEight">运行 8 种方法</span>
+              </button>
             </div>
             <p id="executionNote" class="execution-note" data-i18n="executionNote">
               输入不会上传；8 种方法使用同一实例和内部预算 B。
