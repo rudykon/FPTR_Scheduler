@@ -12,7 +12,7 @@ from pathlib import Path
 
 PAGES = (
     Path("index.html"),
-    Path("problem/index.html"),
+    Path("problem-formulation/index.html"),
     Path("method/index.html"),
     Path("evidence/index.html"),
     Path("reproduce/index.html"),
@@ -209,6 +209,25 @@ def referenced_keys(source: str) -> set[str]:
     return keys
 
 
+def render_redirect(relative: Path, locale: str, title: str) -> str:
+    target = route_path(relative, locale)
+    lang = "zh-CN" if locale == "zh" else "en"
+    return f'''<!doctype html>
+<html lang="{lang}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{html.escape(title)} · FPTR Scheduler</title>
+    <link rel="canonical" href="{html.escape(public_url(relative, locale), quote=True)}" />
+    <script>window.location.replace({json.dumps(target)} + window.location.search + window.location.hash);</script>
+    <noscript><meta http-equiv="refresh" content="0; url={html.escape(target, quote=True)}" /></noscript>
+  </head>
+  <body><a href="{html.escape(target, quote=True)}">{html.escape(title)}</a></body>
+</html>
+'''
+
+
 def build(source_dir: Path, output_dir: Path, prune_unused: bool = False) -> None:
     content_paths = {locale: source_dir / "content" / f"{locale}.json" for locale in ("zh", "en")}
     content = {
@@ -252,6 +271,14 @@ def build(source_dir: Path, output_dir: Path, prune_unused: bool = False) -> Non
                 render_page(template, relative, locale, content[locale], localized=True),
                 encoding="utf-8",
             )
+    for locale in ("zh", "en"):
+        locale_root = output_dir if locale == "zh" else output_dir / locale
+        destination = locale_root / "problem/index.html"
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(
+            render_redirect(Path("problem-formulation/index.html"), locale, content[locale]["problemTitle"]),
+            encoding="utf-8",
+        )
     shutil.rmtree(output_dir / "zh", ignore_errors=True)
 
 

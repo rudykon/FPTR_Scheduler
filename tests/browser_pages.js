@@ -18,7 +18,7 @@ const viewports = [
 ];
 const routes = [
   { path: "/", name: "home-zh", home: "zh" },
-  { path: "/problem/", name: "problem", interior: true, equations: 7 },
+  { path: "/problem-formulation/", name: "problem", interior: true, equations: 7 },
   { path: "/method/", name: "method", interior: true, equations: 3 },
   { path: "/evidence/", name: "evidence", interior: true, evidence: true, equations: 1 },
   { path: "/reproduce/", name: "reproduce", interior: true },
@@ -26,7 +26,7 @@ const routes = [
   { path: "/en/", name: "home-en", home: "en" }
 ];
 const englishSubpageRoutes = [
-  { path: "/en/problem/", name: "problem-en", interior: true, equations: 7 },
+  { path: "/en/problem-formulation/", name: "problem-en", interior: true, equations: 7 },
   { path: "/en/method/", name: "method-en", interior: true, equations: 3 },
   { path: "/en/evidence/", name: "evidence-en", interior: true, evidence: true, equations: 1 },
   { path: "/en/reproduce/", name: "reproduce-en", interior: true },
@@ -298,6 +298,30 @@ async function assertEquations(page, route) {
   assert.deepEqual(result.errors, [], `${route.name} equation errors: ${result.errors.join("; ")}`);
 }
 
+async function assertProblemRouteMigration(browser, origin) {
+  for (const javaScriptEnabled of [true, false]) {
+    const context = await browser.newContext({ javaScriptEnabled });
+    try {
+      for (const prefix of ["/", "/en/"]) {
+        const page = await context.newPage();
+        const target = `${origin}${prefix}problem-formulation/`;
+        const suffix = javaScriptEnabled ? "?source=bookmark#eq-6" : "";
+        await page.goto(`${origin}${prefix}problem/${suffix}`, { waitUntil: "load" });
+        await page.waitForURL(target + suffix);
+        assert.equal(await page.locator("h1").textContent(), prefix === "/" ? "问题建模" : "Problem Formulation");
+        assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"),
+          `https://rudykon.github.io/FPTR_Scheduler${prefix}problem-formulation/`);
+        const otherPrefix = prefix === "/" ? "/en/" : "/";
+        await page.locator(".language-switch a:not(.active)").click();
+        await page.waitForURL(`${origin}${otherPrefix}problem-formulation/`);
+        await page.close();
+      }
+    } finally {
+      await context.close();
+    }
+  }
+}
+
 async function runLiveDemo(browser, origin, {
   path: routePath,
   screenshot,
@@ -413,6 +437,7 @@ async function runLiveDemo(browser, origin, {
   const origin = `http://127.0.0.1:${port}${basePath}`;
   const browser = await chromium.launch({ headless: true });
   try {
+    await assertProblemRouteMigration(browser, origin);
     const requestContext = await browser.newContext();
     const missingZh = await requestContext.request.get(`${origin}/zh/`);
     assert.equal(missingZh.status(), 404, "duplicate /zh/ route must not be published");

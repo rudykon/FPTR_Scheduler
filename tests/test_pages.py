@@ -175,7 +175,7 @@ class PagesContractTests(unittest.TestCase):
                 ],
                 check=True,
             )
-            for page in ("index.html", "problem/index.html", "method/index.html", "evidence/index.html", "reproduce/index.html", "demo/index.html"):
+            for page in ("index.html", "problem-formulation/index.html", "method/index.html", "evidence/index.html", "reproduce/index.html", "demo/index.html"):
                 self.assertTrue((output / page).is_file(), f"missing root/{page}")
                 self.assertTrue((output / "en" / page).is_file(), f"missing en/{page}")
             self.assertFalse((output / "zh").exists())
@@ -220,7 +220,7 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn(f'data-i18n="{key}"', home)
 
         hero_kicker_keys = {
-            "problem": "problemKicker",
+            "problem-formulation": "problemKicker",
             "method": "methodKicker",
             "evidence": "evidenceKicker",
             "reproduce": "reproduceKicker",
@@ -283,7 +283,7 @@ class PagesContractTests(unittest.TestCase):
         for key in ("invariantSummary", "topSSummary", "methodLimitSummary", "proofDetails", "scopeDetails"):
             self.assertIn(f'data-i18n="{key}"', method)
 
-        problem = (DOCS / "problem/index.html").read_text(encoding="utf-8")
+        problem = (DOCS / "problem-formulation/index.html").read_text(encoding="utf-8")
         self.assertIn('class="key-symbols"', problem)
         self.assertIn('class="symbol-details"', problem)
 
@@ -303,7 +303,7 @@ class PagesContractTests(unittest.TestCase):
         self.assertEqual(en["runLabel"], "Run the public sample")
         self.assertEqual(zh["stageFinalizeShort"], "验证输出")
         self.assertEqual(en["stageFinalizeShort"], "Validate and serialize")
-        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem-formulation", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
             source = page.read_text(encoding="utf-8")
             self.assertEqual(len(re.findall(r"<h1\b", source)), 1, page)
@@ -326,12 +326,12 @@ class PagesContractTests(unittest.TestCase):
 
     def test_chinese_template_fallbacks_and_aria_match_catalog(self) -> None:
         zh = json.loads((DOCS / "content/zh.json").read_text(encoding="utf-8"))
-        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem-formulation", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
             source = page.read_text(encoding="utf-8")
             validate_template_fallbacks(page.relative_to(DOCS), source, zh)
         for page, key in (
-            (DOCS / "problem/index.html", "coreSymbolsAria"),
+            (DOCS / "problem-formulation/index.html", "coreSymbolsAria"),
             (DOCS / "method/index.html", "transactionDiagramAria"),
             (DOCS / "evidence/index.html", "keyResultsAria"),
             (DOCS / "evidence/index.html", "evidenceSectionsAria"),
@@ -344,7 +344,7 @@ class PagesContractTests(unittest.TestCase):
             self.assertIn(f'data-i18n-aria="{key}"', page.read_text(encoding="utf-8"))
 
     def test_acm_equation_contract(self) -> None:
-        problem = (DOCS / "problem/index.html").read_text(encoding="utf-8")
+        problem = (DOCS / "problem-formulation/index.html").read_text(encoding="utf-8")
         method = (DOCS / "method/index.html").read_text(encoding="utf-8")
         evidence = (DOCS / "evidence/index.html").read_text(encoding="utf-8")
         sources = problem + method + evidence
@@ -447,7 +447,7 @@ class PagesContractTests(unittest.TestCase):
                 ["python3", str(ROOT / "tools/build_pages.py"), "--source", str(DOCS), "--output", str(output)],
                 check=True,
             )
-            en_problem = (output / "en/problem/index.html").read_text(encoding="utf-8")
+            en_problem = (output / "en/problem-formulation/index.html").read_text(encoding="utf-8")
             en_method = (output / "en/method/index.html").read_text(encoding="utf-8")
             self.assertIn('aria-label="Equation 6:', en_problem)
             self.assertIn('aria-label="Equation 9:', en_method)
@@ -576,7 +576,7 @@ class PagesContractTests(unittest.TestCase):
         self.assertNotIn('font-size="10"', source)
         self.assertEqual(source.count('ctx.font = "12px system-ui"'), 2)
 
-        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem-formulation", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
             source = page.read_text(encoding="utf-8")
             self.assertIn('document.documentElement.classList.add("js")', source)
@@ -618,7 +618,7 @@ class PagesContractTests(unittest.TestCase):
         self.assertIn("background: var(--chart-baseline)", demo_css)
         self.assertIn("background: var(--method-full)", demo_css)
 
-        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem", "method", "evidence", "reproduce", "demo"))]
+        pages = [DOCS / "index.html", *(DOCS / name / "index.html" for name in ("problem-formulation", "method", "evidence", "reproduce", "demo"))]
         for page in pages:
             source = page.read_text(encoding="utf-8")
             self.assertIn("assets/palette.css", source)
@@ -688,7 +688,7 @@ class PagesContractTests(unittest.TestCase):
         for required in (
             "{ width: 360, height: 800 }",
             "{ width: 375, height: 812 }",
-            'path: "/en/problem/"',
+            'path: "/en/problem-formulation/"',
             'path: "/en/demo/"',
             "image.naturalWidth === 0",
             "response.status() >= 400",
