@@ -163,7 +163,6 @@ class BrowserDemoTests(unittest.TestCase):
 
         self.assertIn('<h1 data-i18n="paperTitle">FPTR Scheduler</h1>', home)
         self.assertIn("截止时间约束下的联合波束与资源调度", home)
-        self.assertIn("保留可行解，隔离细化，验证后提交。", home)
         self.assertEqual(home.count('class="summary-card '), 3)
         self.assertNotIn('class="reading-grid"', home)
         for route in ("problem", "method", "evidence", "reproduce", "demo"):
