@@ -7,12 +7,12 @@
     <meta name="theme-color" content="#f6f8fa" />
     <meta name="description" content="FPTR 联合波束与资源调度的系统模型、目标函数、确定性链路映射与耦合约束。" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="问题建模 · FPTR Scheduler" />
+    <meta property="og:title" content="建模 · FPTR Scheduler" />
     <meta property="og:description" content="The model and coupled constraints behind deadline-aware joint beam and resource scheduling." />
-    <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/problem-formulation/" />
+    <meta property="og:url" content="https://rudykon.github.io/FPTR_Scheduler/modeling/" />
     <meta property="og:image" content="https://rudykon.github.io/FPTR_Scheduler/images/scenario_constraint_coupling.png" />
-    <title>问题建模 · FPTR Scheduler</title>
-    <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/problem-formulation/" />
+    <title>建模 · FPTR Scheduler</title>
+    <link rel="canonical" href="https://rudykon.github.io/FPTR_Scheduler/modeling/" />
     <link rel="icon" type="image/png" href="../assets/brand/favicon-32.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
     <link rel="stylesheet" href="../assets/palette.css" />
@@ -27,14 +27,14 @@
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="navMenu">目录</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" /></svg></button>
         <nav class="main-nav" id="mainNav" aria-label="主要导航" data-i18n-aria="navAria">
           <a href="../"><span data-i18n="navOverview">概览</span></a>
-          <a href="../problem-formulation/" aria-current="page"><span data-i18n="navProblem">问题建模</span></a>
+          <a href="../modeling/" aria-current="page"><span data-i18n="navProblem">建模</span></a>
           <a href="../method/"><span data-i18n="navMethod">方法</span></a>
           <a href="../evidence/"><span data-i18n="navEvidence">结果</span></a>
           <a href="../reproduce/"><span data-i18n="navReproduce">复现</span></a>
           <a href="../demo/"><span data-i18n="navDemo">Demo</span></a>
         </nav>
         <div class="header-actions">
-          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria"><a href="../problem-formulation/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/problem-formulation/" data-locale="en" lang="en">EN</a></div>
+          <div class="language-switch" aria-label="语言切换" data-i18n-aria="languageAria"><a href="../modeling/" data-locale="zh" class="active" aria-current="page">中</a><a href="../en/modeling/" data-locale="en" lang="en">EN</a></div>
           <a class="icon-link github-icon" href="https://github.com/rudykon/FPTR_Scheduler" target="_blank" rel="noreferrer" aria-label="GitHub 仓库" data-i18n-aria="githubAria"></a>
         </div>
       </header>
@@ -42,7 +42,7 @@
       <main id="main">
         <section class="page-hero page-hero-problem">
           <div class="section-wrap">
-            <h1 data-i18n="problemTitle">问题建模</h1>
+            <h1 data-i18n="problemTitle">建模</h1>
             <p data-i18n="problemBody">波束选择会改变可用速率，资源成员关系会影响共享，缓存上限又会改变每一步的真实收益。任何局部修改，都可能让原本合法的分配越界。</p>
           </div>
           <img class="page-mascot" src="../assets/brand/submark.png" alt="" aria-hidden="true" />

@@ -165,7 +165,7 @@ class BrowserDemoTests(unittest.TestCase):
         self.assertIn("截止时间约束下的联合波束与资源调度", home)
         self.assertEqual(home.count('class="summary-card '), 3)
         self.assertNotIn('class="reading-grid"', home)
-        for route in ("problem-formulation", "method", "evidence", "reproduce", "demo"):
+        for route in ("modeling", "method", "evidence", "reproduce", "demo"):
             self.assertIn(f'href="./{route}/"', home)
 
         for cutoff in (

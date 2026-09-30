@@ -12,7 +12,7 @@ from pathlib import Path
 
 PAGES = (
     Path("index.html"),
-    Path("problem-formulation/index.html"),
+    Path("modeling/index.html"),
     Path("method/index.html"),
     Path("evidence/index.html"),
     Path("reproduce/index.html"),
@@ -273,12 +273,13 @@ def build(source_dir: Path, output_dir: Path, prune_unused: bool = False) -> Non
             )
     for locale in ("zh", "en"):
         locale_root = output_dir if locale == "zh" else output_dir / locale
-        destination = locale_root / "problem/index.html"
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_text(
-            render_redirect(Path("problem-formulation/index.html"), locale, content[locale]["problemTitle"]),
-            encoding="utf-8",
-        )
+        for legacy_slug in ("problem", "problem-formulation"):
+            destination = locale_root / legacy_slug / "index.html"
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(
+                render_redirect(Path("modeling/index.html"), locale, content[locale]["problemTitle"]),
+                encoding="utf-8",
+            )
     shutil.rmtree(output_dir / "zh", ignore_errors=True)
 
 
