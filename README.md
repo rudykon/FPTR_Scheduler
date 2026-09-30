@@ -77,8 +77,8 @@ Across stages, the commit rule is the same: rejected, expired, incomplete, or in
 <p align="center"><em>Figure 1 | Resource capacities, demands, masks, sharing groups, link adaptation, and deadlines define the coupled scheduling instance.</em></p>
 
 <p align="center">
-  <a href="https://github.com/rudykon/FPTR_Scheduler/blob/main/docs/images/Deadline_Aware_FPTR_Scheduler.pdf">
-    <img src="docs/images/Deadline_Aware_FPTR_Scheduler.png?v=20260806-2338" alt="Deadline-aware FPTR scheduler" width="92%">
+  <a href="docs/images/figure2_fptr_anessuite.pdf">
+    <img src="docs/images/figure2_fptr_anessuite.png" alt="Deadline-aware FPTR scheduler with cumulative cutoffs, candidate eligibility, and commit-or-discard validation" width="92%">
   </a>
 </p>
 <p align="center"><em>Figure 2 | Each bounded refinement stage builds a private candidate and reaches the incumbent only through commit-or-discard validation.</em></p>
@@ -121,8 +121,10 @@ Run the full cumulative scheduler on one instance:
 ```
 
 `--budget-ms 87` sets the scheduler's internal budget `B`; it does not set the
-paper's external crediting deadline. At the paper operating point, refinement
-stops after 84 ms and validation/serialization complete within `B = 87 ms`.
+paper's external crediting deadline. At the paper operating point, the final
+search cutoff is 84 ms, with 3 ms reserved for validation and serialization
+within `B = 87 ms`. Elapsed time includes input parsing; this budget allocation
+does not establish a platform-independent completion-time guarantee.
 The experiment harness separately measures native subprocess wall time against
 `D = 100 ms`, including process launch, input, and output collection. The
 87--100 ms interval is external margin, not another FPTR stage.

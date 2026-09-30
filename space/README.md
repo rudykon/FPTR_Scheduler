@@ -46,6 +46,6 @@ python3 -m http.server --directory space 8000
 The build emits a standard `wasm/fptr_solver.js` loader and
 `wasm/fptr_solver.wasm` binary pair.
 
-![FPTR cumulative transactional refinement pipeline](assets/pipeline.png)
+[![FPTR cumulative cutoffs, candidate eligibility, and commit-or-discard pipeline](assets/pipeline.png?v=20261001)](../docs/images/figure2_fptr_anessuite.pdf)
 
 Source: [rudykon/FPTR_Scheduler](https://github.com/rudykon/FPTR_Scheduler)

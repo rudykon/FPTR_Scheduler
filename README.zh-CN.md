@@ -77,8 +77,8 @@ FPTR 是 Feasibility-Preserving Transactional Refinement（可行性保持事务
 <p align="center"><em>图 1｜资源容量、用户需求、掩码、共享组、链路自适应和截止时间共同定义耦合调度实例。</em></p>
 
 <p align="center">
-  <a href="https://github.com/rudykon/FPTR_Scheduler/blob/main/docs/images/Deadline_Aware_FPTR_Scheduler.pdf">
-    <img src="docs/images/Deadline_Aware_FPTR_Scheduler.png?v=20260806-2338" alt="面向截止时间的 FPTR 调度器" width="92%">
+  <a href="docs/images/figure2_fptr_anessuite.pdf">
+    <img src="docs/images/figure2_fptr_anessuite.png" alt="FPTR 累计截止点、候选启动检查与提交或丢弃验证流程" width="92%">
   </a>
 </p>
 <p align="center"><em>图 2｜每个有界细化阶段都构造私有候选解，并且只能通过提交或丢弃验证进入当前可行解。</em></p>
@@ -121,8 +121,9 @@ g++ -std=c++17 -O2 src/scheduler.cpp src/core.cpp -o scheduler
 ```
 
 `--budget-ms 87` 只设置调度器内部预算 `B`，并不设置论文的外部计分截止。
-在论文工作点，FPTR 于 84 ms 后停止细化，并在 `B = 87 ms` 内完成验证与
-序列化。实验脚本另以 `D = 100 ms` 检查原生 C++ 子进程端到端墙钟时间，
+在论文工作点，最终搜索截止点为 84 ms，内部预算 `B = 87 ms` 中预留
+3 ms 用于验证和序列化。计时包含输入解析，这一预算划分不构成跨平台的
+完成时间保证。实验脚本另以 `D = 100 ms` 检查原生 C++ 子进程端到端墙钟时间，
 其中包含进程启动、输入和输出收集；87--100 ms 是外部余量，不是额外的
 FPTR 阶段。
 
