@@ -221,11 +221,11 @@ main { min-width: 0; flex: 1; }
 .button-secondary { border-color: var(--line-strong); color: var(--signal); background: var(--white); }
 .button-ghost { border-color: var(--line); color: var(--ink-soft); background: color-mix(in srgb, var(--white) 68%, transparent); }
 
-/* Home: three compact parts */
+/* Home */
 .home-hero {
   position: relative;
   display: grid;
-  min-height: 520px;
+  min-height: 460px;
   grid-template-columns: minmax(0, 1.1fr) minmax(330px, .9fr);
   gap: clamp(2rem, 5vw, 4rem);
   align-items: center;
@@ -270,7 +270,6 @@ html[lang="en"] .home-hero h1 {
   font-weight: 850;
   line-height: 1.3;
 }
-.paper-thesis { max-width: 690px; margin: .75rem 0 0; color: var(--ink-soft); font-size: var(--text-lead); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.3rem; }
 .home-visual {
   position: relative;
@@ -282,20 +281,7 @@ html[lang="en"] .home-hero h1 {
   box-shadow: 0 24px 55px color-mix(in srgb, var(--structure) 14%, transparent);
 }
 .home-visual img { width: 100%; min-height: 330px; object-fit: cover; }
-.home-visual figcaption {
-  position: absolute;
-  right: .8rem;
-  bottom: .8rem;
-  left: .8rem;
-  padding: .7rem .85rem;
-  border: 1px solid color-mix(in srgb, var(--white) 78%, transparent);
-  border-radius: 13px;
-  color: var(--ink-soft);
-  background: color-mix(in srgb, var(--white) 89%, transparent);
-  backdrop-filter: blur(12px);
-  font-size: var(--text-meta);
-}
-.home-summary { padding: 3.8rem 0 4.5rem; background: color-mix(in srgb, var(--white) 74%, transparent); }
+.home-summary { padding: 2.5rem 0 3rem; background: color-mix(in srgb, var(--white) 74%, transparent); }
 .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.1rem; }
 .summary-card {
   position: relative;
@@ -322,10 +308,7 @@ html[lang="en"] .home-hero h1 {
   letter-spacing: 0;
 }
 .summary-card h3 { margin: .65rem 0 .35rem; font-size: 1.25rem; }
-.summary-card p { margin: 0; color: var(--ink-soft); font-size: var(--text-small); }
 .card-arrow { position: absolute; right: 1.3rem; bottom: 1.15rem; color: var(--signal); font-size: 1.3rem; }
-.release-line { margin: 1rem 0 0; color: var(--muted); font-size: var(--text-meta); }
-.release-line strong { color: var(--structure); }
 .secondary-links { display: flex; flex-wrap: wrap; gap: .75rem 1.1rem; align-items: center; margin-top: 1.5rem; color: var(--ink-soft); font-size: var(--text-small); }
 .secondary-links > span { color: var(--muted); font-weight: 800; }
 .secondary-links a { display: inline-flex; min-height: 44px; align-items: center; gap: .35rem; color: var(--signal); font-weight: 800; }
@@ -756,11 +739,10 @@ summary { min-height: 52px; padding: .75rem 1rem; cursor: pointer; font-weight: 
   html[lang="en"] .home-hero { padding: 1.5rem 1.05rem; }
   html[lang="en"] .home-hero h1 { font-size: 2.25rem; line-height: 1.02; }
   html[lang="en"] .home-hero .home-subtitle { font-size: 1.2rem; line-height: 1.3; }
-  html[lang="en"] .home-hero .paper-thesis { font-size: .975rem; line-height: 1.55; }
   html[lang="en"] .home-hero .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: 1rem; }
   html[lang="en"] .home-hero .hero-actions .button { min-height: 46px; padding: .62rem .7rem; }
   .home-subtitle { font-size: 1.2rem; }
-  .home-summary { padding-block: 3.5rem; }
+  .home-summary { padding-block: 2.5rem; }
   .summary-grid { margin-top: 1.6rem; }
   .page-hero { padding-block: 1.45rem 1.35rem; }
   .page-hero h1 { font-size: clamp(2rem, 9vw, 2.5rem); }
