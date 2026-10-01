@@ -117,6 +117,8 @@
   "scopeDetails": "View scope",
   "methodLimitBody": "FPTR promises an always-releasable feasible incumbent and accepts only strict improvements. It does not provide a global-optimality or fixed approximation-ratio guarantee.",
   "viewPaperFigure": "Open the original paper figure",
+  "methodFigureAlt": "Figure 2: FPTR cumulative stage cutoffs, candidate eligibility, commit-or-discard gate, and final output paths",
+  "methodFigureCaption": "Figure 2 | FPTR stage cutoffs and commit-or-discard control flow. Click the image to open the PDF at full resolution.",
   "continueResults": "Continue to the results",
   "evidenceTitle": "Results",
   "evidenceBody": "Five research questions examine quality, deadline behavior, compatibility-group stress, matched external baselines, and exact optimality calibration.",

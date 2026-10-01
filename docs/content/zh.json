@@ -117,6 +117,8 @@
   "scopeDetails": "查看适用范围",
   "methodLimitBody": "FPTR 的理论契约是“始终能发布可行解，并只接受严格改进”。它不为最终方案提供全局最优或固定近似比保证。",
   "viewPaperFigure": "查看论文原始方法图",
+  "methodFigureAlt": "图 2：FPTR 五阶段累计截止点、候选启动检查、提交或丢弃门控与最终输出流程",
+  "methodFigureCaption": "图 2｜FPTR 的阶段截止点与提交或丢弃流程。点击图片可查看清晰 PDF。",
   "continueResults": "继续阅读实验结果",
   "evidenceTitle": "实验结果",
   "evidenceBody": "五个研究问题分别检验质量、截止时间、兼容组压力、匹配外部基线与精确最优性校准。",

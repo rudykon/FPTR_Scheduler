@@ -614,6 +614,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
 .web-figure { margin: 1.3rem 0 0; }
 .web-figure .figure-image-link { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: var(--white); box-shadow: var(--shadow-card); }
 .web-figure img, .web-figure picture { width: 100%; }
+.web-figure img { height: auto; }
 .web-figure figcaption { margin-top: .65rem; color: var(--muted); font-size: var(--text-meta); }
 .figure-size-link { display: inline-flex; min-height: 42px; align-items: center; margin-top: .45rem; color: var(--signal); font-weight: 850; }
 .secondary-figure > .details-body { padding-top: .2rem; }
