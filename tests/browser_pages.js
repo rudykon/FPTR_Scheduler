@@ -17,15 +17,21 @@ const viewports = [
   { width: 1440, height: 1000 }
 ];
 const routes = [
-  { path: "/", name: "home-zh", home: "zh" },
+  { path: "/", name: "home-en", home: "en" },
   { path: "/modeling/", name: "problem", interior: true, equations: 7 },
   { path: "/method/", name: "method", interior: true, equations: 3 },
   { path: "/evidence/", name: "evidence", interior: true, evidence: true, equations: 1 },
   { path: "/reproduce/", name: "reproduce", interior: true },
   { path: "/demo/", name: "demo", demo: true },
-  { path: "/en/", name: "home-en", home: "en" }
+  { path: "/zh/", name: "home-zh", home: "zh" }
 ];
-const englishSubpageRoutes = [
+const localizedRoutes = [
+  { path: "/en/", name: "home-en-legacy", home: "en" },
+  { path: "/zh/modeling/", name: "problem-zh", interior: true, equations: 7 },
+  { path: "/zh/method/", name: "method-zh", interior: true, equations: 3 },
+  { path: "/zh/evidence/", name: "evidence-zh", interior: true, evidence: true, equations: 1 },
+  { path: "/zh/reproduce/", name: "reproduce-zh", interior: true },
+  { path: "/zh/demo/", name: "demo-zh", demo: true },
   { path: "/en/modeling/", name: "problem-en", interior: true, equations: 7 },
   { path: "/en/method/", name: "method-en", interior: true, equations: 3 },
   { path: "/en/evidence/", name: "evidence-en", interior: true, evidence: true, equations: 1 },
@@ -302,17 +308,18 @@ async function assertModelingRouteMigration(browser, origin) {
   for (const javaScriptEnabled of [true, false]) {
     const context = await browser.newContext({ javaScriptEnabled });
     try {
-      for (const prefix of ["/", "/en/"]) {
+      for (const prefix of ["/", "/zh/", "/en/"]) {
         for (const legacySlug of ["problem", "problem-formulation"]) {
           const page = await context.newPage();
-          const target = `${origin}${prefix}modeling/`;
+          const canonicalPrefix = prefix === "/zh/" ? "/zh/" : "/";
+          const target = `${origin}${canonicalPrefix}modeling/`;
           const suffix = javaScriptEnabled ? "?source=bookmark#eq-6" : "";
           await page.goto(`${origin}${prefix}${legacySlug}/${suffix}`, { waitUntil: "load" });
           await page.waitForURL(target + suffix);
-          assert.equal(await page.locator("h1").textContent(), prefix === "/" ? "建模" : "Modeling");
+          assert.equal(await page.locator("h1").textContent(), prefix === "/zh/" ? "建模" : "Modeling");
           assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"),
-            `https://rudykon.github.io/FPTR_Scheduler${prefix}modeling/`);
-          const otherPrefix = prefix === "/" ? "/en/" : "/";
+            `https://rudykon.github.io/FPTR_Scheduler${canonicalPrefix}modeling/`);
+          const otherPrefix = prefix === "/zh/" ? "/" : "/zh/";
           await page.locator(".language-switch a:not(.active)").click();
           await page.waitForURL(`${origin}${otherPrefix}modeling/`);
           await page.close();
@@ -441,8 +448,8 @@ async function runLiveDemo(browser, origin, {
   try {
     await assertModelingRouteMigration(browser, origin);
     const requestContext = await browser.newContext();
-    const missingZh = await requestContext.request.get(`${origin}/zh/`);
-    assert.equal(missingZh.status(), 404, "duplicate /zh/ route must not be published");
+    const chineseHome = await requestContext.request.get(`${origin}/zh/`);
+    assert.equal(chineseHome.status(), 200, "Chinese home must remain accessible");
     await requestContext.close();
 
     const noJsContext = await browser.newContext({
@@ -451,6 +458,7 @@ async function runLiveDemo(browser, origin, {
     });
     const noJsPage = await noJsContext.newPage();
     await noJsPage.goto(`${origin}/`, { waitUntil: "load" });
+    assert.equal(await noJsPage.locator("html").getAttribute("lang"), "en", "home must default to English without JavaScript");
     assert.equal(await visible(noJsPage.locator("#mainNav")), true, "navigation must remain visible without JavaScript");
     assert.equal(await noJsPage.locator("#mainNav a").count(), 6);
     assert.equal(await visible(noJsPage.locator(".nav-toggle")), false, "inactive menu toggle must be hidden without JavaScript");
@@ -460,7 +468,7 @@ async function runLiveDemo(browser, origin, {
     for (const viewport of viewports) {
       const context = await browser.newContext({ viewport });
       const viewportRoutes = (viewport.width === 390 || viewport.width === 1440)
-        ? [...routes, ...englishSubpageRoutes]
+        ? [...routes, ...localizedRoutes]
         : routes;
       for (const route of viewportRoutes) {
         const page = await context.newPage();
@@ -473,6 +481,7 @@ async function runLiveDemo(browser, origin, {
         page.on("requestfailed", (request) => responseErrors.push(`request failed: ${request.url()} ${request.failure()?.errorText || "failed"}`));
         const response = await page.goto(`${origin}${route.path}`, { waitUntil: "load" });
         assert.ok(response && response.ok(), `${route.path} returned ${response?.status()}`);
+        assert.equal(await page.locator("html").getAttribute("lang"), route.path.startsWith("/zh/") ? "zh-CN" : "en");
         await page.evaluate(() => document.fonts?.ready);
         await assertLayout(page, route, viewport);
         await assertEquations(page, route);
@@ -504,8 +513,8 @@ async function runLiveDemo(browser, origin, {
       verifyLinearRerun: true
     });
     await runLiveDemo(browser, origin, {
-      path: "/en/demo/",
-      screenshot: "demo-live-mobile-en.png",
+      path: "/zh/demo/",
+      screenshot: "demo-live-mobile-zh.png",
       stageId: "base"
     });
     await runLiveDemo(browser, origin, {

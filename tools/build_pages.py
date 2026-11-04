@@ -7,7 +7,6 @@ import argparse
 import html
 import json
 import re
-import shutil
 from pathlib import Path
 
 PAGES = (
@@ -27,7 +26,7 @@ def page_slug(relative: Path) -> str:
 
 
 def public_url(relative: Path, locale: str | None) -> str:
-    prefix = "" if locale in (None, "zh") else f"/{locale}"
+    prefix = "" if locale in (None, "en") else f"/{locale}"
     slug = page_slug(relative)
     suffix = f"/{slug}" if slug else ""
     return f"{SITE_ORIGIN}{prefix}{suffix}/"
@@ -36,7 +35,7 @@ def public_url(relative: Path, locale: str | None) -> str:
 def route_path(relative: Path, locale: str) -> str:
     slug = page_slug(relative)
     suffix = f"/{slug}/" if slug else "/"
-    locale_prefix = "" if locale == "zh" else f"/{locale}"
+    locale_prefix = "" if locale == "en" else f"/{locale}"
     return f"{SITE_PATH}{locale_prefix}{suffix}"
 
 
@@ -170,12 +169,12 @@ def render_page(template: str, relative: Path, locale: str, strings: dict[str, s
     output = replace_meta_content(output, r'property="og:title"', title)
     output = replace_meta_content(output, r'property="og:description"', description)
 
-    url = public_url(relative, locale if localized else None)
+    url = public_url(relative, locale)
     output = re.sub(r'(<link\b[^>]*\brel="canonical"[^>]*\bhref=")[^"]*(")', rf'\g<1>{url}\2', output, count=1)
     output = replace_meta_content(output, r'property="og:url"', url)
 
     alternates = (
-        f'    <link rel="alternate" hreflang="zh-CN" href="{public_url(relative, None)}" />\n'
+        f'    <link rel="alternate" hreflang="zh-CN" href="{public_url(relative, "zh")}" />\n'
         f'    <link rel="alternate" hreflang="en" href="{public_url(relative, "en")}" />\n'
         f'    <link rel="alternate" hreflang="x-default" href="{public_url(relative, None)}" />'
     )
@@ -261,18 +260,18 @@ def build(source_dir: Path, output_dir: Path, prune_unused: bool = False) -> Non
         root_destination = output_dir / relative
         root_destination.parent.mkdir(parents=True, exist_ok=True)
         root_destination.write_text(
-            render_page(template, relative, "zh", content["zh"], localized=False),
+            render_page(template, relative, "en", content["en"], localized=False),
             encoding="utf-8",
         )
-        for locale in ("en",):
+        for locale in ("zh", "en"):
             destination = output_dir / locale / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_text(
                 render_page(template, relative, locale, content[locale], localized=True),
                 encoding="utf-8",
             )
-    for locale in ("zh", "en"):
-        locale_root = output_dir if locale == "zh" else output_dir / locale
+    for prefix, locale in (("", "en"), ("zh", "zh"), ("en", "en")):
+        locale_root = output_dir / prefix
         for legacy_slug in ("problem", "problem-formulation"):
             destination = locale_root / legacy_slug / "index.html"
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -280,7 +279,6 @@ def build(source_dir: Path, output_dir: Path, prune_unused: bool = False) -> Non
                 render_redirect(Path("modeling/index.html"), locale, content[locale]["problemTitle"]),
                 encoding="utf-8",
             )
-    shutil.rmtree(output_dir / "zh", ignore_errors=True)
 
 
 def parse_args() -> argparse.Namespace:
